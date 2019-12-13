@@ -49,19 +49,25 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v3-dependencies-{{ checksum "pom.xml" }}
+            - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
 
-      - run: mvn dependency:go-offline
+      - run: mvn dependency:go-offline compile -DprocessAllModules
+      - run:
+          command: |
+            cd ~/repo/examples/gradle-example
+            ./gradlew clean build
 
       - persist_to_workspace:
           root: /root
           paths:
             - repo
             - .m2
+            - .gradle
 
       - save_cache:
           paths:
             - ~/.m2
+            - ~/.gradle
           key: v3-dependencies-{{ checksum "pom.xml" }}
 
   test:
@@ -69,19 +75,8 @@ jobs:
     steps:
       - attach_workspace:
           at: /root
-  #      - checkout
-  #
-  #      # Download and cache dependencies
-  #      - restore_cache:
-  #          keys:
-  #            - v3-dependencies-{{ checksum "pom.xml" }}
 
       - run: mvn -Pintegration-tests verify
-
-  #      - save_cache:
-  #          paths:
-  #            - ~/repo/target/
-  #          key: v3-test-results-{{ .Revision }}
 
       - run:
           name: Save test results
@@ -106,12 +101,6 @@ jobs:
     steps:
       - attach_workspace:
           at: /root
-    #        - checkout
-    #
-    #        # Download and cache dependencies
-    #        - restore_cache:
-    #            keys:
-    #              - v3-dependencies-{{ checksum "pom.xml" }}
       - run:
           name: Run Maven Example
           command: |
@@ -121,20 +110,13 @@ jobs:
           name: Run Gradle Example
           command: |
             cd ~/repo/examples/gradle-example
-            ./gradlew clean build run
+            ./gradlew run
 
   sonar:
     executor: sonar-image
     steps:
       - attach_workspace:
           at: /root
-  #      - checkout
-  #      - restore_cache:
-  #          keys:
-  #            - v3-dependencies-{{ checksum "pom.xml" }}
-  #      - restore_cache:
-  #          keys:
-  #            - v3-test-results-{{ .Revision }}
       - run:
           name: Analyze on SonarCloud
           command: ../sonar.sh
