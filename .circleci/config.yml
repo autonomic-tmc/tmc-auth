@@ -164,9 +164,11 @@ workflows:
       - test:
           requires:
             - build
+          context: tmc-oss-context
       - examples:
           requires:
             - build
+          context: tmc-oss-context
       - sonar:
           requires:
             - test
