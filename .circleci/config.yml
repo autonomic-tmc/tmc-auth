@@ -58,7 +58,7 @@ jobs:
       - run:
           command: |
             cd ~/repo
-            mvn dependency:go-offline compile -DprocessAllModules
+            mvn dependency:go-offline compile -DprocessAllModules -Pintegration-tests
 
       - persist_to_workspace:
           root: /root
