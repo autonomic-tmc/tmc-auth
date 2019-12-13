@@ -28,6 +28,16 @@ repositories {
 }
 ```
 
+## Including the tmc-auth Gradle Dependency
+
+Add the `tmc-auth` client library to the `dependencies` section of your build.gradle. **Note:** Verify the version you wish to include. This dependency is already included in this example application.
+
+```groovy
+dependencies {
+    compile 'com.autonomic.tmc:tmc-auth:2.0.0-alpha'
+}
+```
+
 ## Configuration
 
 The following properties should be added to your environment or this example's `application.resources` file.

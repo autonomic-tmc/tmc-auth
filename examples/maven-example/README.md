@@ -1,4 +1,4 @@
-# Maven Auth Example
+# TMC Auth Example Using Maven
 
 This example shows you how to:
  1. Get a REST Authentication token for Production 
@@ -51,6 +51,21 @@ To access Autonomic's open source dependencies, you can add a Maven url to the r
 
 To use this settings file, it needs to either be placed in your `~/.m2` directory on Mac or `%userprofile%\.m2` on Windows. The settings file can also be invoked directly with the `-s` command line option (eg, `./mvnw -s these-settings.xml clean verify`).
 
+## Including the tmc-auth Maven Dependency
+
+Add the `tmc-auth` client library to the `<dependencies>` section of your pom.xml. **Note:** Verify the version you wish to include. This dependency is already included in this example application.
+
+```maven
+<dependency>
+  <groupId>com.autonomic.tmc</groupId>
+  <artifactId>tmc-auth</artifactId>
+  <version>2.0.0-alpha</version>
+</dependency>
+```
+
+## Example Application
+
+Familiarize yourself with the `MavenAuthExample.java` class for an example of using the `tmc-auth` client library to retrieve an access token to the TMC. This class also provides an example of creating an authenticated gRPC channel.
 
 ## Configuration
 
@@ -63,19 +78,24 @@ The following properties should be added to your environment or this example's `
 |TMC_TOKEN_URL|This is the URL for authenticating against the TMC. Use the default value unless Autonomic has provided you a different value.|Required|<https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token>|
 |TMC_BASE_URL|This is the URL for accessing the TMC. Use the default value unless Autonomic has provided you a different value.|Required|<https://api.autonomic.ai/>|
 
-## Running the Example
+## Compiling the Code
 
-Use the command below:
+A Maven wrapper is included in this project and references a project specific settings.xml. See [Maven Setup](#maven-setup) for an example of the `settings.xml` file.
 
-*Linux/Mac:*
-```bash
-./mvnw clean verify spring-boot:run 
-```
+By using the maven wrapper, you will be able to build the project without having to install Maven locally.
 
-*Windows:*
-```cmd
-mvnw clean verify spring-boot:run
-```
+Linux/Mac: `./mvnw -s ./settings.xml clean install`
+
+Windows: `mvnw -s .\settings.xml clean install`
+
+## Running the Application
+
+From the project directory, run the following:
+
+Linux/Mac: `./mvnw -s ./settings.xml spring-boot:run`
+
+Windows: `mvnw -s .\settings.xml spring-boot:run`
+
 ## Support
 
 If you require support with this SDK, please reach out to your Customer Representative or send an email to support@autonomic.ai
