@@ -20,16 +20,16 @@ public class GradleAuthExample implements CommandLineRunner {
 
     private static final Logger LOGGER = Logger.getLogger("GradleAuthExample");
 
-    @Value("${TMC_CLIENT_ID}")
+    @Value("${tmc.auth.clientId}")
     private String clientId;
 
-    @Value("${TMC_CLIENT_SECRET}")
+    @Value("${tmc.auth.clientSecret}")
     private String clientSecret;
 
-    @Value("${TMC_TOKEN_URL:https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token}")
+    @Value("${tmc.auth.tokenUrl:https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token}")
     private String tokenUrl;
 
-    @Value("${TMC_BASE_URL:https://api.autonomic.ai}")
+    @Value("${tmc.some-service.serviceUrl:https://api.autonomic.ai}")
     private String baseUrl;
 
     public static void main(String[] args) {

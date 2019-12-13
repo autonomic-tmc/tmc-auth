@@ -53,29 +53,35 @@ jobs:
 
       - run: mvn dependency:go-offline
 
+      - persist_to_workspace:
+          root: /root
+          paths:
+            - repo
+            - .m2
+
       - save_cache:
           paths:
             - ~/.m2
           key: v3-dependencies-{{ checksum "pom.xml" }}
 
+  test:
+    executor: java-image
+    steps:
+      - attach_workspace:
+          at: /root
+  #      - checkout
+  #
+  #      # Download and cache dependencies
+  #      - restore_cache:
+  #          keys:
+  #            - v3-dependencies-{{ checksum "pom.xml" }}
+
       - run: mvn -Pintegration-tests verify
 
-      - run:
-          name: Run Maven Example
-          command: |
-            cd ~/repo/examples/maven-example
-            mvn spring-boot:run
-
-      - run:
-          name: Run Gradle Example
-          command: |
-            cd ~/repo/examples/gradle-example
-            ./gradlew clean build run
-
-      - save_cache:
-          paths:
-            - ~/repo/target/
-          key: v3-test-results-{{ .Revision }}
+  #      - save_cache:
+  #          paths:
+  #            - ~/repo/target/
+  #          key: v3-test-results-{{ .Revision }}
 
       - run:
           name: Save test results
@@ -90,17 +96,45 @@ jobs:
       - store_artifacts:
           path: ~/test-output
 
+      - persist_to_workspace:
+          root: /root
+          paths:
+            - repo
+
+  examples:
+    executor: java-image
+    steps:
+      - attach_workspace:
+          at: /root
+    #        - checkout
+    #
+    #        # Download and cache dependencies
+    #        - restore_cache:
+    #            keys:
+    #              - v3-dependencies-{{ checksum "pom.xml" }}
+      - run:
+          name: Run Maven Example
+          command: |
+            cd ~/repo/examples/maven-example
+            mvn spring-boot:run
+      - run:
+          name: Run Gradle Example
+          command: |
+            cd ~/repo/examples/gradle-example
+            ./gradlew clean build run
+
   sonar:
     executor: sonar-image
-
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v3-dependencies-{{ checksum "pom.xml" }}
-      - restore_cache:
-          keys:
-            - v3-test-results-{{ .Revision }}
+      - attach_workspace:
+          at: /root
+  #      - checkout
+  #      - restore_cache:
+  #          keys:
+  #            - v3-dependencies-{{ checksum "pom.xml" }}
+  #      - restore_cache:
+  #          keys:
+  #            - v3-test-results-{{ .Revision }}
       - run:
           name: Analyze on SonarCloud
           command: ../sonar.sh
@@ -119,7 +153,7 @@ jobs:
       - run: mvn deploy -Prun-revapi
 
 workflows:
-  version: 2
+  version: 2.1
   build_and_test:
     jobs:
       - scan_secrets
@@ -127,9 +161,15 @@ workflows:
           requires:
             - scan_secrets
           context: tmc-oss-context
-      - sonar:
+      - test:
           requires:
             - build
+      - examples:
+          requires:
+            - build
+      - sonar:
+          requires:
+            - test
   release:
     jobs:
       #Run Publish on GitHub release
