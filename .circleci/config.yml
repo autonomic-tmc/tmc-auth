@@ -54,7 +54,9 @@ jobs:
       - restore_cache:
           keys:
             - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
-      - run: ./gradlew build
+      - run: |
+          cd ~/repo/examples/gradle-example
+          ./gradlew build
       - run:
           command: |
             cd ~/repo
