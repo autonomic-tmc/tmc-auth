@@ -46,16 +46,19 @@ jobs:
       - checkout
 
       - run: mvn clean
+      - run:
+          command: |
+            cd ~/repo/examples/gradle-example
+            ./gradlew clean
       # Download and cache dependencies
       - restore_cache:
           keys:
             - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
-
-      - run: mvn dependency:go-offline compile -DprocessAllModules
+      - run: ./gradlew build
       - run:
           command: |
-            cd ~/repo/examples/gradle-example
-            ./gradlew clean build
+            cd ~/repo
+            mvn dependency:go-offline compile -DprocessAllModules
 
       - persist_to_workspace:
           root: /root
