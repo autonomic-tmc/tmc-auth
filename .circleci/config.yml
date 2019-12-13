@@ -75,6 +75,7 @@ jobs:
             - ~/.gradle
           key: v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
 
+
   test:
     executor: java-image
     steps:
