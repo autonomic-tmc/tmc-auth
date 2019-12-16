@@ -46,36 +46,42 @@ jobs:
       - checkout
 
       - run: mvn clean
+      - run:
+          command: |
+            cd ~/repo/examples/gradle-example
+            ./gradlew clean
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v3-dependencies-{{ checksum "pom.xml" }}
+            - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
+      - run: |
+          cd ~/repo/examples/gradle-example
+          ./gradlew build
+      - run:
+          command: |
+            cd ~/repo
+            mvn dependency:go-offline compile -DprocessAllModules -Pintegration-tests
 
-      - run: mvn dependency:go-offline
+      - persist_to_workspace:
+          root: /root
+          paths:
+            - repo
+            - .m2
+            - .gradle
 
       - save_cache:
           paths:
             - ~/.m2
-          key: v3-dependencies-{{ checksum "pom.xml" }}
+            - ~/.gradle
+          key: v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
+
+  test:
+    executor: java-image
+    steps:
+      - attach_workspace:
+          at: /root
 
       - run: mvn -Pintegration-tests verify
-
-      - run:
-          name: Run Maven Example
-          command: |
-            cd ~/repo/examples/maven-example
-            mvn spring-boot:run
-
-      - run:
-          name: Run Gradle Example
-          command: |
-            cd ~/repo/examples/gradle-example
-            ./gradlew clean build run
-
-      - save_cache:
-          paths:
-            - ~/repo/target/
-          key: v3-test-results-{{ .Revision }}
 
       - run:
           name: Save test results
@@ -90,17 +96,32 @@ jobs:
       - store_artifacts:
           path: ~/test-output
 
+      - persist_to_workspace:
+          root: /root
+          paths:
+            - repo
+
+  examples:
+    executor: java-image
+    steps:
+      - attach_workspace:
+          at: /root
+      - run:
+          name: Run Maven Example
+          command: |
+            cd ~/repo/examples/maven-example
+            mvn spring-boot:run
+      - run:
+          name: Run Gradle Example
+          command: |
+            cd ~/repo/examples/gradle-example
+            ./gradlew run
+
   sonar:
     executor: sonar-image
-
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v3-dependencies-{{ checksum "pom.xml" }}
-      - restore_cache:
-          keys:
-            - v3-test-results-{{ .Revision }}
+      - attach_workspace:
+          at: /root
       - run:
           name: Analyze on SonarCloud
           command: ../sonar.sh
@@ -119,7 +140,7 @@ jobs:
       - run: mvn deploy -Prun-revapi
 
 workflows:
-  version: 2
+  version: 2.1
   build_and_test:
     jobs:
       - scan_secrets
@@ -127,9 +148,17 @@ workflows:
           requires:
             - scan_secrets
           context: tmc-oss-context
-      - sonar:
+      - test:
           requires:
             - build
+          context: tmc-oss-context
+      - examples:
+          requires:
+            - build
+          context: tmc-oss-context
+      - sonar:
+          requires:
+            - test
   release:
     jobs:
       #Run Publish on GitHub release
