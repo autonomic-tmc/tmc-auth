@@ -71,10 +71,10 @@ Familiarize yourself with the `MavenAuthExample.java` class for an example of us
 
 The following properties should be added to your environment or this example's `application.yml` file.
 
-|Property|Description|Required/Optional|Default Value|
-|------|------|-----------------------|-----------|
-|TMC_CLIENT_ID|This is your TMC Client identifier.|Required| |
-|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required| |
+|Property|Description|Required/Optional|
+|------|------|-----------------------|
+|TMC_CLIENT_ID|This is your TMC Client identifier.|Required|
+|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required|
 
 ## Compiling the Code
 

@@ -110,12 +110,12 @@ jobs:
           name: Run Maven Example
           command: |
             cd ~/repo/examples/maven-example
-            mvn spring-boot:run
+            ./run.sh
       - run:
           name: Run Gradle Example
           command: |
             cd ~/repo/examples/gradle-example
-            ./gradlew run
+            ./run.sh
 
   sonar:
     executor: sonar-image

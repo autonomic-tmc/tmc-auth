@@ -1,1 +1,1 @@
-./mvnw spring-boot:run
+./mvnw -s ./settings.xml spring-boot:run
