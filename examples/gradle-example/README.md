@@ -34,7 +34,11 @@ Add the `tmc-auth` client library to the `dependencies` section of your build.gr
 
 ```groovy
 dependencies {
-    compile 'com.autonomic.tmc:tmc-auth:2.0.0-alpha'
+    implementation("com.autonomic.tmc:tmc-auth:2.0.0-alpha")
+    implementation("io.grpc:grpc-stub:1.25.0")
+    implementation("io.grpc:grpc-netty:1.25.0")
+    implementation("io.netty:netty-tcnative-boringssl-static:2.0.28.Final")
+    implementation("org.springframework.boot:spring-boot-starter:2.2.1.RELEASE")
 }
 ```
 
