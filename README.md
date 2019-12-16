@@ -1,5 +1,6 @@
 # Autonomic Authentication Module
 
+
 ## Overview
 
 Using the tmc-auth module with credentials provided by Autonomic, you can obtain a time-limited access token to be used with other services available on the platform.
