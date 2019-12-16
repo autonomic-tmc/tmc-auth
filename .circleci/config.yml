@@ -110,6 +110,7 @@ jobs:
           name: Run Maven Example
           command: |
             cd ~/repo/examples/maven-example
+            export MAVEN_CONFIG=
             ./run.sh
       - run:
           name: Run Gradle Example
