@@ -69,14 +69,12 @@ Familiarize yourself with the `MavenAuthExample.java` class for an example of us
 
 ## Configuration
 
-The following properties should be added to your environment or this example's `application.resources` file.
+The following properties should be added to your environment or this example's `application.yml` file.
 
 |Property|Description|Required/Optional|Default Value|
 |------|------|-----------------------|-----------|
 |TMC_CLIENT_ID|This is your TMC Client identifier.|Required| |
 |TMC_CLIENT_SECRET|This is your TMC Client secret.|Required| |
-|TMC_TOKEN_URL|This is the URL for authenticating against the TMC. Use the default value unless Autonomic has provided you a different value.|Required|<https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token>|
-|TMC_BASE_URL|This is the URL for accessing the TMC. Use the default value unless Autonomic has provided you a different value.|Required|<https://api.autonomic.ai/>|
 
 ## Compiling the Code
 

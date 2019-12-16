@@ -5,4 +5,5 @@ tmc:
 
     # You generally should not set secrets in plain text configuration files.
     # This property can be read from environment variables, you will need to do the following:
-    # `export TMC_CLIENT_SECRET=mySuperSecretPassword`
+    # export TMC_CLIENT_ID=myClientId
+    # export TMC_CLIENT_SECRET=mySuperSecretPassword
