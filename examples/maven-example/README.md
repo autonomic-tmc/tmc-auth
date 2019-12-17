@@ -9,7 +9,6 @@ This example shows you how to:
 
 ### Prerequisites
 
-
 In order to begin integrating with the TMC, we require the following:
 
 - At least Java 8 installed
@@ -69,12 +68,28 @@ Familiarize yourself with the `MavenAuthExample.java` class for an example of us
 
 ## Configuration
 
-The following properties should be added to your environment or this example's `application.yml` file.
+The following properties should be added to your environment or this example's `application.yml` file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
 
-|Property|Description|Required/Optional|
-|------|------|-----------------------|
-|TMC_CLIENT_ID|This is your TMC Client identifier.|Required|
-|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required|
+|Property|Environment Variable|Description|Required/Optional|
+|------|------|------|-----------------------|
+|tmc.auth.clientId|TMC_CLIENT_ID|This is your TMC Client identifier.|Required|
+|tmc.auth.clientSecret|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required|
+
+## Configuration for Another Environment
+
+Autonomic may have provided you access to another environment for testing and validation. You should set the following values to connect to a different environment:
+
+Property|Description|Required/Optional|Default Value|
+|------|------|-----------------------|------|
+|tmc.auth.tokenUrl|The authentication url.|Optional|https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token|
+
+## Configuration for a Secure gRPC Channel
+
+This example exposes the `tmc.some-service.serviceUrl` property for establishing a secure gRPC channel. This is just an example value and you should configure it for the service you wish to interact with.
+
+Property|Description|Required/Optional|Default Value|
+|------|------|-----------------------|------|
+|tmc.some-service.serviceUrl|The url of the service you wish to connect to securely.|Optional| Dependent on service. |
 
 ## Compiling the Code
 
