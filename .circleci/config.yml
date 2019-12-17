@@ -32,7 +32,6 @@ executors:
           username: ${BT_PRIVATE_USERNAME}
           password: ${BT_PRIVATE_API_TOKEN}
 
-
 jobs:
   scan_secrets:
     executor: gitleaks-image
@@ -108,6 +107,8 @@ jobs:
           at: /root
       - run:
           name: Run Maven Example
+          # M2_HOME so ./mvnw can leverage the cache
+          # unset MAVEN_CONFIG so that ./mvnw will not error
           command: |
             cd ~/repo/examples/maven-example
             export M2_HOME=$MAVEN_CONFIG
@@ -127,7 +128,6 @@ jobs:
       - run:
           name: Analyze on SonarCloud
           command: ../sonar.sh
-
 
   #publish artifact to OSS repo
   publish-public:
