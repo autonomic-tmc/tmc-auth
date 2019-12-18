@@ -1,4 +1,4 @@
-# Gradle Auth Example
+# TMC Auth Example Using Gradle
 
 This example shows you how to:
  1. Get a REST Authentication token for Production 
@@ -28,18 +28,58 @@ repositories {
 }
 ```
 
+## Including the tmc-auth Gradle Dependency
+
+Add the `tmc-auth` client library to the `dependencies` section of your build.gradle. **Note:** Verify the version you wish to include. This dependency is already included in this example application.
+
+```groovy
+dependencies {
+    implementation("com.autonomic.tmc:tmc-auth:2.0.0-alpha")
+    implementation("io.grpc:grpc-stub:1.25.0")
+    implementation("io.grpc:grpc-netty:1.25.0")
+    implementation("io.netty:netty-tcnative-boringssl-static:2.0.28.Final")
+    implementation("org.springframework.boot:spring-boot-starter:2.2.1.RELEASE")
+}
+```
+
+## Example Application
+
+Familiarize yourself with the `GradleAuthExample.java` class for an example of using the `tmc-auth` client library to retrieve an access token to the TMC. This class also provides an example of creating an authenticated gRPC channel.
+
 ## Configuration
 
-The following properties should be added to your environment or this example's `application.resources` file.
+The following properties should be added to your environment or this example's `application.yml` file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
 
-|Property|Description|Required/Optional|Default Value|
-|------|------|-----------------------|-----------|
-|TMC_CLIENT_ID|This is your TMC Client identifier.|Required| |
-|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required| |
-|TMC_TOKEN_URL|This is the URL for authenticating against the TMC. Use the default value unless Autonomic has provided you a different value.|Required|<https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token>|
-|TMC_BASE_URL|This is the URL for accessing the TMC. Use the default value unless Autonomic has provided you a different value.|Required|<https://api.autonomic.ai/>|
+|Property|Environment Variable|Description|Required/Optional|
+|------|------|------|-----------------------|
+|tmc.auth.clientId|TMC_CLIENT_ID|This is your TMC Client identifier.|Required|
+|tmc.auth.clientSecret|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required|
 
-## Running the Example
+### Optional: Configuration for Another Environment
+
+By default, this example assumes you want to connect to Autonomic's production environment.  However, Autonomic may have provided you access to another environment for testing and validation. To test tmc-auth in another environment, you should set the following value:
+
+Property|Description|Required/Optional|Default Value|
+|------|------|-----------------------|------|
+|tmc.auth.tokenUrl|The authentication url.|Optional|https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token|
+
+### Optional: Configuration for a Secure gRPC Channel
+
+This example exposes the `tmc.some-service.serviceUrl` property for testing and establishing a secure gRPC channel. This is just an example value and you should configure it for the Autonomic gRPC service you wish to interact with.
+
+Property|Description|Required/Optional|Default Value|
+|------|------|-----------------------|------|
+|tmc.some-service.serviceUrl|The url of the service you wish to connect to securely.|Optional| Dependent on service. |
+
+## Compiling the Code
+
+A Gradle wrapper is included in this project for you. By using the Gradle wrapper, you will be able to build the project without having to install Gradle locally.
+
+Linux/Mac: `./gradlew clean build`
+
+Windows: `gradlew clean build`
+
+## Running the Application
 
 Use the command below:
 

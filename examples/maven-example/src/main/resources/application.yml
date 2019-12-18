@@ -1,8 +1,11 @@
+# You generally should not set secrets in plain text configuration files.
+# This property can be read from environment variables, you will need to do the following:
+# export TMC_CLIENT_ID=<your-client-id>
+# export TMC_CLIENT_SECRET=<your-client-secret>
 tmc:
   auth:
     clientId: ${TMC_CLIENT_ID} # SHOULD BE STORED IN YOUR ENVIRONMENT
     clientSecret: ${TMC_CLIENT_SECRET} # SHOULD BE STORED IN YOUR ENVIRONMENT
-
-    # You generally should not set secrets in plain text configuration files.
-    # This property can be read from environment variables, you will need to do the following:
-    # `export TMC_CLIENT_SECRET=mySuperSecretPassword`
+    tokenUrl: https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token
+  some-service:
+    serviceUrl: https://api.autonomic.ai

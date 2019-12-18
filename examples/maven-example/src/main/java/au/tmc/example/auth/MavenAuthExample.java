@@ -30,7 +30,7 @@ public class MavenAuthExample implements CommandLineRunner {
     private String tokenUrl;
 
     @Value("${tmc.some-service.serviceUrl:https://api.autonomic.ai}")
-    private String baseUrl;
+    private String serviceUrl;
 
     public static void main(String[] args) {
         SpringApplication.run(MavenAuthExample.class, args);
@@ -62,7 +62,7 @@ public class MavenAuthExample implements CommandLineRunner {
             AuthenticatedChannelBuilder channelBuilder = new AuthenticatedChannelBuilder(
                 tokenSupplier);
 
-            Channel authenticatedGRPCChannel = channelBuilder.buildWithUrl(baseUrl);
+            Channel authenticatedGRPCChannel = channelBuilder.buildWithUrl(serviceUrl);
 
             String msg = format("Authenticated Channel: %s", authenticatedGRPCChannel);
             LOGGER.info(msg);
