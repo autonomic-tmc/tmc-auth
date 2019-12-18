@@ -75,21 +75,30 @@ The following properties should be added to your environment or this example's `
 |tmc.auth.clientId|TMC_CLIENT_ID|This is your TMC Client identifier.|Required|
 |tmc.auth.clientSecret|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required|
 
-## Configuration for Another Environment
+## Configuration
 
-Autonomic may have provided you access to another environment for testing and validation. You should set the following values to connect to a different environment:
+The following properties should be added to your environment or this example's `application.yml` file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
+
+|Property|Environment Variable|Description|Required/Optional|
+|------|------|------|-----------------------|
+|tmc.auth.clientId|TMC_CLIENT_ID|This is your TMC Client identifier.|Required|
+|tmc.auth.clientSecret|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required|
+
+### Optional: Configuration for Another Environment
+
+By default, this example assumes you want to connect to Autonomic's production environment.  However, Autonomic may have provided you access to another environment for testing and validation. To test tmc-auth in another environment, you should set the following value:
 
 Property|Description|Required/Optional|Default Value|
 |------|------|-----------------------|------|
 |tmc.auth.tokenUrl|The authentication url.|Optional|https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token|
 
-## Configuration for a Secure gRPC Channel
+### Optional: Configuration for a Secure gRPC Channel
 
-This example exposes the `tmc.some-service.serviceUrl` property for establishing a secure gRPC channel. This is just an example value and you should configure it for the service you wish to interact with.
+This example exposes the `tmc.some-service.serviceUrl` property for testing and establishing a secure gRPC channel. This is just an example value and you should configure it for the Autonomic gRPC service you wish to interact with.
 
 Property|Description|Required/Optional|Default Value|
 |------|------|-----------------------|------|
-|tmc.some-service.serviceUrl|The url of the service you wish to connect to securely.|Optional| Dependent on service. |
+|tmc.some-service.serviceUrl|The url of the service you wish to connect to securely.|Optional| Dependent on service. 
 
 ## Compiling the Code
 

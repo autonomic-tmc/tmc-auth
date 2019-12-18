@@ -8,4 +8,4 @@ tmc:
     clientSecret: ${TMC_CLIENT_SECRET} # SHOULD BE STORED IN YOUR ENVIRONMENT
     tokenUrl: https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token
   some-service:
-      serviceUr: https://api.autonomic.ai
+      serviceUrl: https://api.autonomic.ai
