@@ -139,16 +139,16 @@ jobs:
           command: ../sonar.sh
 
   #publish artifact to OSS repo
-#  publish-public:
-#    executor: java-image
-#    steps:
-#      - checkout
-#
-#      - restore_cache:
-#          keys:
-#            - v3-publish-dependencies-{{ checksum "pom.xml" }}
-#      - run: mvn versions:set -DnewVersion=${CIRCLE_TAG}
-#      - run: mvn deploy -Prun-revapi
+  publish-public:
+    executor: java-image
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v3-publish-dependencies-{{ checksum "pom.xml" }}
+      - run: mvn versions:set -DnewVersion=${CIRCLE_TAG}
+      - run: mvn deploy -Prun-revapi,public
   publish-private:
     executor: private-java-image
     steps:
@@ -158,7 +158,7 @@ jobs:
           keys:
             - v3-publish-dependencies-{{ checksum "pom.xml" }}
       - run: mvn versions:set -DnewVersion=${CIRCLE_TAG}
-      - run: mvn deploy -Prun-revapi
+      - run: mvn deploy -Prun-revapi,private
 
 workflows:
   version: 2.1
@@ -183,6 +183,12 @@ workflows:
   release:
     jobs:
       #Run Publish on GitHub release
+      - publish-public:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
       - publish-private:
           filters:
             tags:
