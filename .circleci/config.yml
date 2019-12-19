@@ -14,6 +14,15 @@ executors:
         auth:
           username: ${BT_PUBLIC_USERNAME}
           password: ${BT_PUBLIC_API_TOKEN}
+  private-java-image:
+    working_directory: ~/repo
+    environment:
+      JAVA_TOOL_OPTIONS: -Xmx1024m
+    docker:
+      - image: autonomic-docker-private-images.bintray.io/tmc/java
+        auth:
+          username: ${BT_PRIVATE_USERNAME}
+          password: ${BT_PRIVATE_API_TOKEN}
   sonar-image:
     working_directory: ~/repo
     environment:
@@ -130,8 +139,18 @@ jobs:
           command: ../sonar.sh
 
   #publish artifact to OSS repo
-  publish-public:
-    executor: java-image
+#  publish-public:
+#    executor: java-image
+#    steps:
+#      - checkout
+#
+#      - restore_cache:
+#          keys:
+#            - v3-publish-dependencies-{{ checksum "pom.xml" }}
+#      - run: mvn versions:set -DnewVersion=${CIRCLE_TAG}
+#      - run: mvn deploy -Prun-revapi
+  publish-private:
+    executor: private-java-image
     steps:
       - checkout
 
@@ -164,7 +183,7 @@ workflows:
   release:
     jobs:
       #Run Publish on GitHub release
-      - publish-public:
+      - publish-private:
           filters:
             tags:
               only: /.*/
