@@ -23,12 +23,12 @@ ex. [autonomic-tmc/tmc-oss-root-pom:21](https://github.com/autonomic-tmc/tmc-oss
 ***
 ## Review readiness
 This pull request is considered a _Work In Progress_ unless all of the following boxes are checked.
-Items not required for this release have been removed from this list by using a ~~strikethrough~~.
+Items not required for this PR should be removed from the below list.
 
 - [ ] A secret scan was run:
     - [ ] on every commit
     - [ ] on every push
-- [ ] Existing tests of the following types were run
+- [ ] Existing tests of the following types were run:
     - [ ] unit tests
     - [ ] integration tests
 - [ ] Application was run to ensure it is still working as expected
@@ -37,7 +37,7 @@ Items not required for this release have been removed from this list by using a 
     - [ ] Code Coverage
     - [ ] Sonar Quality Gate     
 - [ ] Ensured no breaking changes to the public interface
-- [ ] One of the following has been done
+- [ ] One of the following has been done:
     - [ ] Documentation was updated
     - [ ] A story was created to update the documentation
 
