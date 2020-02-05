@@ -20,5 +20,5 @@ dependencies {
 }
 
 application {
-    mainClassName = "au.tmc.example.auth.GradleAuthExample"
+    mainClassName = "com.autonomic.tmc.example.auth.GradleAuthExample"
 }

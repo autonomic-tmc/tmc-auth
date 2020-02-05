@@ -1,9 +1,10 @@
-package au.tmc.example.auth;
+package com.autonomic.tmc.example.auth;
 
 import static java.lang.String.format;
 
 import com.autonomic.tmc.auth.ClientCredentialsTokenSupplier;
 import com.autonomic.tmc.auth.TokenSupplier;
+import com.autonomic.tmc.example.auth.AuthenticatedChannelBuilder;
 import io.grpc.Channel;
 import java.net.MalformedURLException;
 import java.util.logging.Level;
@@ -16,9 +17,9 @@ import org.springframework.context.annotation.Configuration;
 
 @SpringBootApplication
 @Configuration
-public class MavenAuthExample implements CommandLineRunner {
+public class GradleAuthExample implements CommandLineRunner {
 
-    private static final Logger LOGGER = Logger.getLogger("MavenAuthExample");
+    private static final Logger LOGGER = Logger.getLogger("GradleAuthExample");
 
     @Value("${tmc.auth.clientId}")
     private String clientId;
@@ -33,7 +34,7 @@ public class MavenAuthExample implements CommandLineRunner {
     private String serviceUrl;
 
     public static void main(String[] args) {
-        SpringApplication.run(MavenAuthExample.class, args);
+        SpringApplication.run(GradleAuthExample.class, args);
     }
 
     @Override
@@ -115,4 +116,5 @@ public class MavenAuthExample implements CommandLineRunner {
             .tokenUrl(tokenUrl)
             .build();
     }
+
 }

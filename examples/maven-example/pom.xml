@@ -64,7 +64,7 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${spring.boot.version}</version>
         <configuration>
-          <mainClass>au.tmc.example.auth.MavenAuthExample</mainClass>
+          <mainClass>com.autonomic.tmc.example.auth.MavenAuthExample</mainClass>
         </configuration>
         <executions>
           <execution>

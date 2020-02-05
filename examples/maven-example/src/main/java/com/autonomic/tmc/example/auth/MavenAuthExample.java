@@ -1,4 +1,4 @@
-package au.tmc.example.auth;
+package com.autonomic.tmc.example.auth;
 
 import static java.lang.String.format;
 
@@ -16,9 +16,9 @@ import org.springframework.context.annotation.Configuration;
 
 @SpringBootApplication
 @Configuration
-public class GradleAuthExample implements CommandLineRunner {
+public class MavenAuthExample implements CommandLineRunner {
 
-    private static final Logger LOGGER = Logger.getLogger("GradleAuthExample");
+    private static final Logger LOGGER = Logger.getLogger("MavenAuthExample");
 
     @Value("${tmc.auth.clientId}")
     private String clientId;
@@ -33,7 +33,7 @@ public class GradleAuthExample implements CommandLineRunner {
     private String serviceUrl;
 
     public static void main(String[] args) {
-        SpringApplication.run(GradleAuthExample.class, args);
+        SpringApplication.run(MavenAuthExample.class, args);
     }
 
     @Override
@@ -115,5 +115,4 @@ public class GradleAuthExample implements CommandLineRunner {
             .tokenUrl(tokenUrl)
             .build();
     }
-
 }
