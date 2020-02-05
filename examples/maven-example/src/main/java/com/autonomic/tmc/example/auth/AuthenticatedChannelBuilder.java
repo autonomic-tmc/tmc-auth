@@ -1,4 +1,4 @@
-package au.tmc.example.auth;
+package com.autonomic.tmc.example.auth;
 
 import static java.lang.String.format;
 

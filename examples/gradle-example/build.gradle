@@ -33,4 +33,4 @@ dependencies {
 }
 
 // Define the main class for the application
-mainClassName = 'au.tmc.example.auth.GradleAuthExample'
+mainClassName = 'com.autonomic.tmc.example.auth.GradleAuthExample'
