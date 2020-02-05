@@ -4,7 +4,6 @@ import static java.lang.String.format;
 
 import com.autonomic.tmc.auth.ClientCredentialsTokenSupplier;
 import com.autonomic.tmc.auth.TokenSupplier;
-import com.autonomic.tmc.example.auth.AuthenticatedChannelBuilder;
 import io.grpc.Channel;
 import java.net.MalformedURLException;
 import java.util.logging.Level;
@@ -42,7 +41,7 @@ public class GradleAuthExample implements CommandLineRunner {
         try {
             this.run();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(),e.getStackTrace());
+            LOGGER.log(Level.SEVERE, e.getMessage(), e.getStackTrace());
         }
     }
 
@@ -88,10 +87,10 @@ public class GradleAuthExample implements CommandLineRunner {
     }
 
     /**
-     * Configure token supplier with your clientId and clientSecret.  In most use-cases, this is all that is required. Conventionally (for
-     * security reasons), you would typically read these values in from an externalized source like environment variables or properties
-     * files.
-     *
+     * Configure token supplier with your clientId and clientSecret.  In most use-cases, this is all
+     * that is required. Conventionally (for security reasons), you would typically read these
+     * values in from an externalized source like environment variables or properties files.
+     * <p>
      * By default, the token supplier is configured to communicate with the production environment.
      */
     private TokenSupplier createTokenSupplier(String clientId, String clientSecret) {
@@ -102,8 +101,8 @@ public class GradleAuthExample implements CommandLineRunner {
     }
 
     /**
-     * This is an example of how to retrieve a token from a non-production environment. When not explicitly set, the default value of
-     * tokenUrl is 'https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token'.
+     * This is an example of how to retrieve a token from a non-production environment. When not
+     * explicitly set, the default value of tokenUrl is 'https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token'.
      *
      * @param tokenUrl - String representation of a token URL
      * @return TokenSupplier
