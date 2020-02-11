@@ -179,7 +179,7 @@ class ClientCredentialsTokenSupplierTest {
         authServer.verify(1, postRequestedFor(urlEqualTo("/relative-token-url")));
 
         // when the token expires
-        await().atMost(3, TimeUnit.SECONDS)
+        await().atMost(2, TimeUnit.SECONDS)
             .until(() -> tokenSupplier.getExistingToken().isExpired());
 
         // and auth token is retrieved again
@@ -223,7 +223,7 @@ class ClientCredentialsTokenSupplierTest {
     }
 
     private String sampleOauthResponse() {
-        return "{\"access_token\":\"mock-auth-token\",\"expires_in\":\"31\",\"token_type\":\"bearer\"}";
+        return "{\"access_token\":\"mock-auth-token\",\"expires_in\":\"11\",\"token_type\":\"bearer\"}";
     }
 
 }
