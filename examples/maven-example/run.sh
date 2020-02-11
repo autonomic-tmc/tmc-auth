@@ -1,5 +1,4 @@
 #!/bin/bash
-set -o errexit
-set -o pipefail
+set -eo errexit
 
 ./mvnw -s ./settings.xml spring-boot:run
