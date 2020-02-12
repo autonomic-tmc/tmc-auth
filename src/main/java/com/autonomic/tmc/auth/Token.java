@@ -82,8 +82,8 @@ public class Token {
      * @return true if this token is expired
      */
     boolean isExpired() {
-        // Treat tokens set to expire within 30 seconds as expired.
-        // The aim of this is to <strike>reduce</strike> eliminate number of tokens that expire while in-flight.
+        // Treat tokens set to expire within 10 seconds as expired.
+        // The aim of this is to eliminate number of tokens that expire while in-flight.
         return clock.instant().plus(10, ChronoUnit.SECONDS)
             .isAfter(expiration);
     }
