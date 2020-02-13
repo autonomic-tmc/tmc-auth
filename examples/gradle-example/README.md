@@ -92,6 +92,11 @@ Use the command below:
 ```cmd
 gradlew clean build run
 ```
+
+## Helpful Information
+
+The `tmc-auth` SDK used in this example application provides a mechanism that automatically will refresh your access token for you. This feature provides a buffer of roughly 10 seconds in order to compensate for network latency.
+
 ## Support
 
 If you require support with this SDK, please reach out to your Customer Representative or send an email to support@autonomic.ai
