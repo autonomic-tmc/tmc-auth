@@ -12,7 +12,7 @@ RESULTING FROM ANY USE OR DISTRIBUTION OF THIS LIST.
 
 In case of any license issues related to TMC Auth SDK, please contact support@autonomic.ai.
 
-Date Generated: 2020-02-14 18:00
+Date Generated: 2020-02-21 17:58
 
  (Apache License, Version 2.0) Jackson-annotations (com.fasterxml.jackson.core:jackson-annotations:2.10.2 - http://github.com/FasterXML/jackson)
  (Apache License, Version 2.0) Jackson-core (com.fasterxml.jackson.core:jackson-core:2.10.2 - https://github.com/FasterXML/jackson-core)
@@ -34,7 +34,6 @@ Date Generated: 2020-02-14 18:00
  (Apache License, Version 2.0) Apache Commons Logging (commons-logging:commons-logging:1.2 - http://commons.apache.org/proper/commons-logging/)
  (CDDL 1.1) JavaBeans Activation Framework (JAF) (javax.activation:activation:1.1 - http://java.sun.com/products/javabeans/jaf/index.jsp)
  (CDDL 1.1) Java Servlet API (javax.servlet:javax.servlet-api:3.1.0 - http://servlet-spec.java.net)
- (CDDL 1.1) (GPL2 w/ CPE) jaxb-api (javax.xml.bind:jaxb-api:2.3.0 - https://github.com/javaee/jaxb-spec/jaxb-api)
  (Apache License, Version 2.0) ASM based accessors helper used by json-smart (net.minidev:accessors-smart:1.2 - http://www.minidev.net/)
  (Apache License, Version 2.0) JSON Small and Fast Parser (net.minidev:json-smart:2.3 - http://www.minidev.net/)
  (MIT-License) JOpt Simple (net.sf.jopt-simple:jopt-simple:5.0.3 - http://pholser.github.io/jopt-simple)

@@ -25,7 +25,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.autonomic.tmc:tmc-auth:2.0.1-alpha")
+    implementation("com.autonomic.tmc:tmc-auth:2.0.3-alpha")
     implementation("io.grpc:grpc-stub:1.25.0")
     implementation("io.grpc:grpc-netty:1.25.0")
     implementation("io.netty:netty-tcnative-boringssl-static:2.0.28.Final")
