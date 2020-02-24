@@ -1,4 +1,4 @@
 #!/bin/bash
 set -eo errexit
 
-./mvnw -s ./settings.xml spring-boot:run
+mvn spring-boot:run

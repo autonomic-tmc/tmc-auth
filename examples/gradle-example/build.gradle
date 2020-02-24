@@ -11,19 +11,6 @@ plugins {
     id 'application'
 }
 
-repositories {
-    maven {
-        url "https://autonomic.bintray.com/au-tmc-oss"
-        credentials {
-            username System.getenv('BT_PUBLIC_USERNAME')
-            password System.getenv('BT_PUBLIC_API_TOKEN')
-        }
-    }
-    maven {
-        url "https://repo.maven.apache.org/maven2"
-    }
-}
-
 dependencies {
     implementation("com.autonomic.tmc:tmc-auth:2.0.3-alpha")
     implementation("io.grpc:grpc-stub:1.25.0")
