@@ -57,14 +57,14 @@ jobs:
       - run:
           command: |
             cd ~/repo/examples/gradle-example
-            ./gradle clean
+            gradle clean
       # Download and cache dependencies
       - restore_cache:
           keys:
             - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
       - run: |
           cd ~/repo/examples/gradle-example
-          ./gradle build
+          gradle build -x test
       - run:
           command: |
             cd ~/repo
