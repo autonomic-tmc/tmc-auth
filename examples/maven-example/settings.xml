@@ -3,8 +3,6 @@
   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
   <servers>
     <server>
-      <username>${env.BT_PUBLIC_USERNAME}</username>
-      <password>${env.BT_PUBLIC_API_TOKEN}</password>
       <id>tmc</id>
     </server>
   </servers>
