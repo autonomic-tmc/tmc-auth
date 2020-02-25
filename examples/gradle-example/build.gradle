@@ -14,10 +14,6 @@ plugins {
 repositories {
     maven {
         url "https://autonomic.bintray.com/au-tmc-oss"
-        credentials {
-            username System.getenv('BT_PUBLIC_USERNAME')
-            password System.getenv('BT_PUBLIC_API_TOKEN')
-        }
     }
     maven {
         url "https://repo.maven.apache.org/maven2"
