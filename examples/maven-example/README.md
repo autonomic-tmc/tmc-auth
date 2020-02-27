@@ -13,9 +13,9 @@ The following properties should be added to your environment or this example's `
 
 From the project directory, run the following:
 
-Linux/Mac: `./mvnw -s ./settings.xml spring-boot:run` or `./run.sh`
+*Linux/Mac*: `./mvnw -s ./settings.xml spring-boot:run` or `./run.sh`
 
-Windows: `mvnw -s .\settings.xml spring-boot:run` or `run.bat`
+*Windows*: `mvnw -s .\settings.xml spring-boot:run` or `run.bat`
 
 ## Overview
 
@@ -30,7 +30,6 @@ This example shows you how to:
 In order to begin integrating with the TMC, we require the following:
 
 - At least Java 8 installed
-- Access to Autonomic's Bintray instance
 - Access to the TMC Platform (Your Client Id and Client Secret that have been provided to you)
 
 ### Maven Setup

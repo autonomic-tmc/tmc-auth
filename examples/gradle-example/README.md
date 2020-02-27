@@ -1,18 +1,35 @@
 # TMC Auth Example Using Gradle
 
-This example shows you how to:
- 1. Get a REST Authentication token for Production 
- 2. Get a REST Authentication token when you want to tell the tokenSupplier what environment to connect to 
- 3. Create an authenticated gRPC channel that can be used when creating a client stub 
+## Step 1: Configure the example application
 
-## Steps to get started
+The following properties should be added to your environment or this example's `application.yml` file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
+
+|Property|Environment Variable|Description|Required/Optional|
+|------|------|------|-----------------------|
+|tmc.auth.clientId|TMC_CLIENT_ID|This is your TMC Client identifier.|Required|
+|tmc.auth.clientSecret|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required|
+
+## Step 2: Run the example application
+
+From the project directory, run the following:
+
+*Linux/Mac:* `./gradlew clean build run` or `./run.sh`
+
+*Windows:* `gradlew clean build run` or `run.bat`
+
+## Overview
+
+This example shows you how to:
+
+ 1. Get a REST Authentication token for Production
+ 2. Get a REST Authentication token when you want to tell the tokenSupplier what environment to connect to
+ 3. Create an authenticated gRPC channel that can be used when creating a client stub
 
 ### Prerequisites
 
 In order to begin integrating with the TMC, we require the following:
 
 - At least Java 8 installed
-- Access to Autonomic's Bintray instance
 - Access to the TMC Platform (Your Client Id and Client Secret that have been provided to you)
 
 ### Gradle Setup
@@ -46,15 +63,6 @@ dependencies {
 
 Familiarize yourself with the `GradleAuthExample.java` class for an example of using the `tmc-auth` client library to retrieve an access token to the TMC. This class also provides an example of creating an authenticated gRPC channel.
 
-## Configuration
-
-The following properties should be added to your environment or this example's `application.yml` file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
-
-|Property|Environment Variable|Description|Required/Optional|
-|------|------|------|-----------------------|
-|tmc.auth.clientId|TMC_CLIENT_ID|This is your TMC Client identifier.|Required|
-|tmc.auth.clientSecret|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required|
-
 ### Optional: Configuration for Another Environment
 
 By default, this example assumes you want to connect to Autonomic's production environment.  However, Autonomic may have provided you access to another environment for testing and validation. To test tmc-auth in another environment, you should set the following value:
@@ -78,20 +86,6 @@ A Gradle wrapper is included in this project for you. By using the Gradle wrappe
 Linux/Mac: `./gradlew clean build`
 
 Windows: `gradlew clean build`
-
-## Running the Application
-
-Use the command below:
-
-*Linux/Mac:*
-```bash
-./gradlew clean build run
-```
-
-*Windows:*
-```cmd
-gradlew clean build run
-```
 
 ## Helpful Information
 
