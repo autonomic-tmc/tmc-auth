@@ -1,12 +1,29 @@
 # TMC Auth Example Using Maven
 
+## Step 1: Configure the example application
+
+The following properties should be added to your environment or this example's `application.yml` file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
+
+|Property|Environment Variable|Description|Required/Optional|
+|------|------|------|-----------------------|
+|tmc.auth.clientId|TMC_CLIENT_ID|This is your TMC Client identifier.|Required|
+|tmc.auth.clientSecret|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required|
+
+## Step 2: Run the example application
+
+From the project directory, run the following:
+
+Linux/Mac: `./mvnw -s ./settings.xml spring-boot:run` or `./run.sh`
+
+Windows: `mvnw -s .\settings.xml spring-boot:run` or `run.bat`
+
+## Overview
+
 This example shows you how to:
 
  1. Get a REST Authentication token for Production
  2. Get a REST Authentication token when you want to tell the tokenSupplier what environment to connect to
  3. Create an authenticated gRPC channel that can be used when creating a client stub
-
-## Steps to get started
 
 ### Prerequisites
 
@@ -67,15 +84,6 @@ Add the `tmc-auth` client library to the `<dependencies>` section of your pom.xm
 
 Familiarize yourself with the `MavenAuthExample.java` class for an example of using the `tmc-auth` client library to retrieve an access token to the TMC. This class also provides an example of creating an authenticated gRPC channel.
 
-## Configuration
-
-The following properties should be added to your environment or this example's `application.yml` file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
-
-|Property|Environment Variable|Description|Required/Optional|
-|------|------|------|-----------------------|
-|tmc.auth.clientId|TMC_CLIENT_ID|This is your TMC Client identifier.|Required|
-|tmc.auth.clientSecret|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required|
-
 ### Optional: Configuration for Another Environment
 
 By default, this example assumes you want to connect to Autonomic's production environment.  However, Autonomic may have provided you access to another environment for testing and validation. To test tmc-auth in another environment, you should set the following value:
@@ -101,14 +109,6 @@ By using the maven wrapper, you will be able to build the project without having
 Linux/Mac: `./mvnw -s ./settings.xml clean install`
 
 Windows: `mvnw -s .\settings.xml clean install`
-
-## Running the Application
-
-From the project directory, run the following:
-
-Linux/Mac: `./mvnw -s ./settings.xml spring-boot:run`
-
-Windows: `mvnw -s .\settings.xml spring-boot:run`
 
 ## Helpful Information
 
