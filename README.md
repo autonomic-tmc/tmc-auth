@@ -10,8 +10,8 @@ With this library, you don't need to worry about expiring tokens. The token you 
 In order to use this dependency in your application, you will need to include the Autonomic's distribution repository as part of your build configuration.
 See our [examples](examples) for more information on including this library in a Maven or Gradle project.
 
-- [Maven Setup](./examples/maven-example/README.md#maven-setup)
-- [Gradle Setup](./examples/gradle-example/README.md#gradle-setup)
+- [Maven Setup](./examples/maven-example)
+- [Gradle Setup](./examples/gradle-example)
 
 ## Example Usage
 ```java
