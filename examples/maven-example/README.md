@@ -1,9 +1,10 @@
 # TMC Auth Example Using Maven
 
 This example shows you how to:
- 1. Get a REST Authentication token for Production 
- 2. Get a REST Authentication token when you want to tell the tokenSupplier what environment to connect to 
- 3. Create an authenticated gRPC channel that can be used when creating a client stub 
+
+ 1. Get a REST Authentication token for Production
+ 2. Get a REST Authentication token when you want to tell the tokenSupplier what environment to connect to
+ 3. Create an authenticated gRPC channel that can be used when creating a client stub
 
 ## Steps to get started
 
@@ -65,15 +66,6 @@ Add the `tmc-auth` client library to the `<dependencies>` section of your pom.xm
 ## Example Application
 
 Familiarize yourself with the `MavenAuthExample.java` class for an example of using the `tmc-auth` client library to retrieve an access token to the TMC. This class also provides an example of creating an authenticated gRPC channel.
-
-## Configuration
-
-The following properties should be added to your environment or this example's `application.yml` file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
-
-|Property|Environment Variable|Description|Required/Optional|
-|------|------|------|-----------------------|
-|tmc.auth.clientId|TMC_CLIENT_ID|This is your TMC Client identifier.|Required|
-|tmc.auth.clientSecret|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required|
 
 ## Configuration
 

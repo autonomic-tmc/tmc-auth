@@ -13,7 +13,8 @@ See our [examples](examples) for more information on including this library in a
 - [Maven Setup](./examples/maven-example)
 - [Gradle Setup](./examples/gradle-example)
 
-## Example Usage
+## Usage
+
 ```java
     TokenSupplier supplier = ClientCredentialsTokenSupplier.builder()
         .clientId("<your-client-id>")
@@ -41,6 +42,7 @@ The `ClientCredentialsTokenSupplier.get()` primarily throws two exceptions:
 [AuthenticationFailedException](src/main/java/com/autonomic/tmc/auth/AuthenticationFailedException.java) Your credentials are incorrect and should be corrected before calling again.
 
 ## Building
+
 ```shell
 ./mvnw clean install
 ```
@@ -67,6 +69,7 @@ For example:
 ```
 
 ## 3rd Party Components
+
 This project has binary dependencies on other open source projects.  These components are listed in the [THIRD-PARTY.txt](THIRD-PARTY.txt) file.
 
 ## Tools we use
