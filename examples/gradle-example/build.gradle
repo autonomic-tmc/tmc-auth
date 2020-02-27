@@ -15,9 +15,6 @@ repositories {
     maven {
         url "https://autonomic.bintray.com/au-tmc-oss"
     }
-    maven {
-        url "https://repo.maven.apache.org/maven2"
-    }
 }
 
 dependencies {
