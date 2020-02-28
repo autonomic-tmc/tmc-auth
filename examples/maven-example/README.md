@@ -1,88 +1,51 @@
 # TMC Auth Example Using Maven
 
-This example shows you how to:
- 1. Get a REST Authentication token for Production 
- 2. Get a REST Authentication token when you want to tell the tokenSupplier what environment to connect to 
- 3. Create an authenticated gRPC channel that can be used when creating a client stub 
+## Overview
 
-## Steps to get started
+This example shows you how to:
+
+ 1. Get a REST Authentication token for Production
+ 2. Get a REST Authentication token when you want to tell the tokenSupplier what environment to connect to
+ 3. Create an authenticated gRPC channel that can be used when creating a client stub
 
 ### Prerequisites
 
 In order to begin integrating with the TMC, we require the following:
 
 - At least Java 8 installed
-- Access to Autonomic's Bintray instance
 - Access to the TMC Platform (Your Client Id and Client Secret that have been provided to you)
+
+## Step 1: Configure the example application
+
+The following properties should be added to your environment or this example's [application.yml](src/main/resources/application.yml) file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
+
+|Property|Environment Variable|Description|Required/Optional|
+|------|------|------|-----------------------|
+|tmc.auth.clientId|TMC_CLIENT_ID|This is your TMC Client identifier.|Required|
+|tmc.auth.clientSecret|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required|
+
+## Step 2: Run the example application
+
+From the project directory, run the following:
+
+*Linux/Mac*: `./mvnw -s ./settings.xml spring-boot:run` or `./run.sh`
+
+*Windows*: `mvnw -s .\settings.xml spring-boot:run` or `run.bat`
+
+## More information on the Example Application
+
+### How the Example Authenticates
+See [MavenAuthExample.java](src/main/java/com/autonomic/tmc/example/auth/MavenAuthExample.java) class for an example of using the `tmc-auth` SDK to retrieve an access token to the TMC. This class also provides an example of creating an authenticated gRPC channel.
 
 ### Maven Setup
 
-To access Autonomic's open source dependencies, you can add a Maven url to the repositories section of your `settings.xml` file, for example:
-
-```xml
-<settings xmlns='http://maven.apache.org/SETTINGS/1.0.0'
-  xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd'
-  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
-  <profiles>
-    <profile>
-      <repositories>
-        <repository>
-          <id>tmc</id>
-          <name>bintray</name>
-          <url>https://autonomic.bintray.com/au-tmc-oss</url>
-        </repository>
-      </repositories>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>tmc</id>
-          <name>bintray-plugins</name>
-          <url>https://autonomic.bintray.com/au-tmc-oss</url>
-        </pluginRepository>
-      </pluginRepositories>
-      <id>tmc</id>
-    </profile>
-  </profiles>
-  <activeProfiles>
-    <activeProfile>tmc</activeProfile>
-  </activeProfiles>
-</settings>
-```
+To access Autonomic's open source dependencies, you can add a Maven url to the repositories section of your `settings.xml` file. See the [settings.xml](settings.xml) file for an example.
 
 To use this settings file, it needs to either be placed in your `~/.m2` directory on Mac or `%userprofile%\.m2` on Windows. The settings file can also be invoked directly with the `-s` command line option (eg, `./mvnw -s these-settings.xml clean verify`).
 
-## Including the tmc-auth Maven Dependency
+### Including the tmc-auth Maven Dependency
 
-Add the `tmc-auth` client library to the `<dependencies>` section of your pom.xml. **Note:** Verify the version you wish to include. This dependency is already included in this example application.
-
-```maven
-<dependency>
-  <groupId>com.autonomic.tmc</groupId>
-  <artifactId>tmc-auth</artifactId>
-  <version>${TMC_AUTH_VERSION}</version>
-</dependency>
-```
-
-## Example Application
-
-Familiarize yourself with the `MavenAuthExample.java` class for an example of using the `tmc-auth` client library to retrieve an access token to the TMC. This class also provides an example of creating an authenticated gRPC channel.
-
-## Configuration
-
-The following properties should be added to your environment or this example's `application.yml` file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
-
-|Property|Environment Variable|Description|Required/Optional|
-|------|------|------|-----------------------|
-|tmc.auth.clientId|TMC_CLIENT_ID|This is your TMC Client identifier.|Required|
-|tmc.auth.clientSecret|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required|
-
-## Configuration
-
-The following properties should be added to your environment or this example's `application.yml` file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
-
-|Property|Environment Variable|Description|Required/Optional|
-|------|------|------|-----------------------|
-|tmc.auth.clientId|TMC_CLIENT_ID|This is your TMC Client identifier.|Required|
-|tmc.auth.clientSecret|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required|
+Add the `tmc-auth` client library to the `<dependencies>` section of your pom.xml. See the [pom.xml](pom.xml) file for an example.
 
 ### Optional: Configuration for Another Environment
 
@@ -98,9 +61,9 @@ This example exposes the `tmc.some-service.serviceUrl` property for testing and 
 
 Property|Description|Required/Optional|Default Value|
 |------|------|-----------------------|------|
-|tmc.some-service.serviceUrl|The url of the service you wish to connect to securely.|Optional| Dependent on service. 
+|tmc.some-service.serviceUrl|The url of the service you wish to connect to securely.|Optional| Dependent on service.
 
-## Compiling the Code
+### Compiling the Code
 
 A Maven wrapper is included in this project and references a project specific settings.xml. See [Maven Setup](#maven-setup) for an example of the `settings.xml` file.
 
@@ -109,14 +72,6 @@ By using the maven wrapper, you will be able to build the project without having
 Linux/Mac: `./mvnw -s ./settings.xml clean install`
 
 Windows: `mvnw -s .\settings.xml clean install`
-
-## Running the Application
-
-From the project directory, run the following:
-
-Linux/Mac: `./mvnw -s ./settings.xml spring-boot:run`
-
-Windows: `mvnw -s .\settings.xml spring-boot:run`
 
 ## Helpful Information
 

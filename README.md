@@ -1,19 +1,27 @@
-# Autonomic Authentication Module
+# Authenticating with the TMC
 
-## Overview
+## Let's get authenticated with an example application
 
-Using the tmc-auth module with credentials provided by Autonomic, you can obtain a time-limited access token to be used with other services available on the platform.
+We have built a runnable example application that demonstrates how to authenticate on the TMC using the `tmc-auth` SDK. This example application will login and retrieve an access token which is used when accessing TMC services.
+
+- [Getting authenticated using the Maven Example](./examples/maven-example)
+- [Getting authenticated using the Gradle Example](./examples/gradle-example)
+
+## tmc-auth SDK
+
+Using the tmc-auth SDK with credentials provided by Autonomic, you can obtain a time-limited access token to be used with other services available on the platform.
+
 With this library, you don't need to worry about expiring tokens. The token you `get()` is always valid.  If a token expires, this library will automatically get a new one.
 
 ## Adding tmc-auth as a dependency
 
-In order to use this dependency in your application, you will need to include the Autonomic's distribution repository as part of your build configuration.
-See our [examples](examples) for more information on including this library in a Maven or Gradle project.
+See our [examples](examples) for more information on including this library in your Maven or Gradle project. It is distributed as a JAR file for easy consumption.
 
-- [Maven Setup](./examples/maven-example/README.md#maven-setup)
-- [Gradle Setup](./examples/gradle-example/README.md#gradle-setup)
+- [Maven - pom.xml](./examples/maven-example/pom.xml)
+- [Gradle - build.gradle](./examples/gradle-example/build.gradle)
 
-## Example Usage
+## Usage
+
 ```java
     TokenSupplier supplier = ClientCredentialsTokenSupplier.builder()
         .clientId("<your-client-id>")
@@ -34,13 +42,14 @@ See our [examples](examples) for more information on including this library in a
 
 ## Troubleshooting
 
-The `ClientCredentialsTokenSupplier.get()` primarily throws two exceptions:
+The [ClientCredentialsTokenSupplier.get()](src/main/java/com/autonomic/tmc/auth/ClientCredentialsTokenSupplier.java) primarily throws two exceptions:
 
 [AuthenticationCommunicationException](src/main/java/com/autonomic/tmc/auth/AuthenticationCommunicationException.java) - A temporary communication problem, and retrying at a later point will likely succeed.
 
 [AuthenticationFailedException](src/main/java/com/autonomic/tmc/auth/AuthenticationFailedException.java) Your credentials are incorrect and should be corrected before calling again.
 
 ## Building
+
 ```shell
 ./mvnw clean install
 ```
@@ -67,6 +76,7 @@ For example:
 ```
 
 ## 3rd Party Components
+
 This project has binary dependencies on other open source projects.  These components are listed in the [THIRD-PARTY.txt](THIRD-PARTY.txt) file.
 
 ## Tools we use

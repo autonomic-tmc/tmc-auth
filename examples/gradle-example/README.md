@@ -1,59 +1,49 @@
 # TMC Auth Example Using Gradle
 
-This example shows you how to:
- 1. Get a REST Authentication token for Production 
- 2. Get a REST Authentication token when you want to tell the tokenSupplier what environment to connect to 
- 3. Create an authenticated gRPC channel that can be used when creating a client stub 
+## Overview
 
-## Steps to get started
+This example shows you how to:
+
+ 1. Get a REST Authentication token for Production
+ 2. Get a REST Authentication token when you want to tell the tokenSupplier what environment to connect to
+ 3. Create an authenticated gRPC channel that can be used when creating a client stub
 
 ### Prerequisites
 
 In order to begin integrating with the TMC, we require the following:
 
 - At least Java 8 installed
-- Access to Autonomic's Bintray instance
 - Access to the TMC Platform (Your Client Id and Client Secret that have been provided to you)
 
-### Gradle Setup
+## Step 1: Configure the example application
 
-To access Autonomic's open source dependencies, you can add a maven url to the repositories section of your `build.gradle` file, for example:
-
-```groovy
-repositories {
-    // other repositories here...
-    maven {
-        url "https://autonomic.bintray.com/au-tmc-oss"
-    }
-}
-```
-
-## Including the tmc-auth Gradle Dependency
-
-Add the `tmc-auth` client library to the `dependencies` section of your build.gradle. **Note:** Verify the version you wish to include. This dependency is already included in this example application.
-
-```groovy
-dependencies {
-    implementation("com.autonomic.tmc:tmc-auth:${TMC_AUTH_VERSION}")
-    implementation("io.grpc:grpc-stub:1.25.0")
-    implementation("io.grpc:grpc-netty:1.25.0")
-    implementation("io.netty:netty-tcnative-boringssl-static:2.0.28.Final")
-    implementation("org.springframework.boot:spring-boot-starter:2.2.1.RELEASE")
-}
-```
-
-## Example Application
-
-Familiarize yourself with the `GradleAuthExample.java` class for an example of using the `tmc-auth` client library to retrieve an access token to the TMC. This class also provides an example of creating an authenticated gRPC channel.
-
-## Configuration
-
-The following properties should be added to your environment or this example's `application.yml` file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
+The following properties should be added to your environment or this example's [application.yml](src/main/resources/application.yml) file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
 
 |Property|Environment Variable|Description|Required/Optional|
 |------|------|------|-----------------------|
 |tmc.auth.clientId|TMC_CLIENT_ID|This is your TMC Client identifier.|Required|
 |tmc.auth.clientSecret|TMC_CLIENT_SECRET|This is your TMC Client secret.|Required|
+
+## Step 2: Run the example application
+
+From the project directory, run the following:
+
+*Linux/Mac:* `./gradlew clean build run` or `./run.sh`
+
+*Windows:* `gradlew clean build run` or `run.bat`
+
+## More information on the Example Application
+
+### How the Example Authenticates
+See [GradleAuthExample.java](src/main/java/com/autonomic/tmc/example/auth/GradleAuthExample.java) class for an example of using the `tmc-auth` SDK to retrieve an access token to the TMC. This class also provides an example of creating an authenticated gRPC channel.
+
+### Gradle Setup
+
+To access Autonomic's open source dependencies, you can add a maven url to the repositories section of your `build.gradle` file.  See the [build.gradle](build.gradle) file for an example.
+
+### Including the tmc-auth Gradle Dependency
+
+Add the `tmc-auth` client library to the `dependencies` section of your `build.gradle`. See the [build.gradle](build.gradle) file for an example.
 
 ### Optional: Configuration for Another Environment
 
@@ -71,27 +61,13 @@ Property|Description|Required/Optional|Default Value|
 |------|------|-----------------------|------|
 |tmc.some-service.serviceUrl|The url of the service you wish to connect to securely.|Optional| Dependent on service. |
 
-## Compiling the Code
+### Compiling the Code
 
 A Gradle wrapper is included in this project for you. By using the Gradle wrapper, you will be able to build the project without having to install Gradle locally.
 
 Linux/Mac: `./gradlew clean build`
 
 Windows: `gradlew clean build`
-
-## Running the Application
-
-Use the command below:
-
-*Linux/Mac:*
-```bash
-./gradlew clean build run
-```
-
-*Windows:*
-```cmd
-gradlew clean build run
-```
 
 ## Helpful Information
 
