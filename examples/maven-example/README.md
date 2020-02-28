@@ -75,7 +75,7 @@ Add the `tmc-auth` client library to the `<dependencies>` section of your pom.xm
 <dependency>
   <groupId>com.autonomic.tmc</groupId>
   <artifactId>tmc-auth</artifactId>
-  <version>${TMC_AUTH_VERSION}</version>
+  <version>2.0.3-alpha</version>
 </dependency>
 ```
 
