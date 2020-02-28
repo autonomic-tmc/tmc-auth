@@ -1,8 +1,8 @@
-# Authenticating with TMC
+# Authenticating with the TMC
 
 ## Let's get authenticated with an example application
 
-We have built a runnable example application that demonstrates how to include the `tmc-auth` SDK and connect to TMC services in a secure manner. You can use this example application to login and retrieve an access token.
+We have built a runnable example application that demonstrates how to authenticate on the TMC using the `tmc-auth` SDK. This example application will login and retrieve an access token which is used when accessing TMC services.
 
 - [Getting authenticated using the Maven Example](./examples/maven-example)
 - [Getting authenticated using the Gradle Example](./examples/gradle-example)
@@ -15,10 +15,10 @@ With this library, you don't need to worry about expiring tokens. The token you 
 
 ## Adding tmc-auth as a dependency
 
+See our [examples](examples) for more information on including this library in your Maven or Gradle project. It is distributed as a JAR file for easy consumption.
+
 - [Maven - pom.xml](./examples/maven-example/pom.xml)
 - [Gradle - build.gradle](./examples/gradle-example/build.gradle)
-
-See our [examples](examples) for more information on including this library in your Maven or Gradle project.
 
 ## Usage
 
@@ -42,7 +42,7 @@ See our [examples](examples) for more information on including this library in y
 
 ## Troubleshooting
 
-The `ClientCredentialsTokenSupplier.get()` primarily throws two exceptions:
+The [ClientCredentialsTokenSupplier.get()](src/main/java/com/autonomic/tmc/auth/ClientCredentialsTokenSupplier.java) primarily throws two exceptions:
 
 [AuthenticationCommunicationException](src/main/java/com/autonomic/tmc/auth/AuthenticationCommunicationException.java) - A temporary communication problem, and retrying at a later point will likely succeed.
 

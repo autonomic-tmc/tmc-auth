@@ -12,6 +12,8 @@ plugins {
 }
 
 repositories {
+    mavenLocal()
+    jcenter()
     maven {
         url "https://autonomic.bintray.com/au-tmc-oss"
     }
