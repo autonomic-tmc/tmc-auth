@@ -2,7 +2,7 @@
 
 ## Step 1: Configure the example application
 
-The following properties should be added to your environment or this example's `application.yml` file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
+The following properties should be added to your environment or this example's [application.yml](src/main/resources/application.yml) file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
 
 |Property|Environment Variable|Description|Required/Optional|
 |------|------|------|-----------------------|
@@ -34,7 +34,7 @@ In order to begin integrating with the TMC, we require the following:
 
 ### Gradle Setup
 
-To access Autonomic's open source dependencies, you can add a maven url to the repositories section of your `build.gradle` file, for example:
+To access Autonomic's open source dependencies, you can add a maven url to the repositories section of your [build.gradle](build.gradle) file, for example:
 
 ```groovy
 repositories {
@@ -47,21 +47,18 @@ repositories {
 
 ## Including the tmc-auth Gradle Dependency
 
-Add the `tmc-auth` client library to the `dependencies` section of your build.gradle. **Note:** Verify the version you wish to include. This dependency is already included in this example application.
+Add the `tmc-auth` client library to the `dependencies` section of your [build.gradle](build.gradle). **Note:** Verify the version you wish to include. This dependency is already included in this example application, for example:
 
 ```groovy
 dependencies {
-    implementation("com.autonomic.tmc:tmc-auth:${TMC_AUTH_VERSION}")
-    implementation("io.grpc:grpc-stub:1.25.0")
-    implementation("io.grpc:grpc-netty:1.25.0")
-    implementation("io.netty:netty-tcnative-boringssl-static:2.0.28.Final")
-    implementation("org.springframework.boot:spring-boot-starter:2.2.1.RELEASE")
+    implementation("com.autonomic.tmc:tmc-auth:2.0.3-alpha")
+    ...
 }
 ```
 
 ## Example Application
 
-Familiarize yourself with the `GradleAuthExample.java` class for an example of using the `tmc-auth` client library to retrieve an access token to the TMC. This class also provides an example of creating an authenticated gRPC channel.
+Familiarize yourself with the [GradleAuthExample.java](src/main/java/com/autonomic/tmc/example/auth/GradleAuthExample.java) class for an example of using the `tmc-auth` client library to retrieve an access token to the TMC. This class also provides an example of creating an authenticated gRPC channel.
 
 ### Optional: Configuration for Another Environment
 

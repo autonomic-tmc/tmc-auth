@@ -2,7 +2,7 @@
 
 ## Step 1: Configure the example application
 
-The following properties should be added to your environment or this example's `application.yml` file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
+The following properties should be added to your environment or this example's [application.yml](src/main/resources/application.yml) file. Notice that the `application.yml` file references two environment variables which you should set in your environment in order to help protect sensitive credentials.
 
 |Property|Environment Variable|Description|Required/Optional|
 |------|------|------|-----------------------|
@@ -34,7 +34,7 @@ In order to begin integrating with the TMC, we require the following:
 
 ### Maven Setup
 
-To access Autonomic's open source dependencies, you can add a Maven url to the repositories section of your `settings.xml` file, for example:
+To access Autonomic's open source dependencies, you can add a Maven url to the repositories section of your [settings.xml](settings.xml) file, for example:
 
 ```xml
 <settings xmlns='http://maven.apache.org/SETTINGS/1.0.0'
@@ -81,7 +81,7 @@ Add the `tmc-auth` client library to the `<dependencies>` section of your pom.xm
 
 ## Example Application
 
-Familiarize yourself with the `MavenAuthExample.java` class for an example of using the `tmc-auth` client library to retrieve an access token to the TMC. This class also provides an example of creating an authenticated gRPC channel.
+Familiarize yourself with the [MavenAuthExample.java](src/main/java/com/autonomic/tmc/example/auth/MavenAuthExample.java) class for an example of using the `tmc-auth` client library to retrieve an access token to the TMC. This class also provides an example of creating an authenticated gRPC channel.
 
 ### Optional: Configuration for Another Environment
 
@@ -97,7 +97,7 @@ This example exposes the `tmc.some-service.serviceUrl` property for testing and 
 
 Property|Description|Required/Optional|Default Value|
 |------|------|-----------------------|------|
-|tmc.some-service.serviceUrl|The url of the service you wish to connect to securely.|Optional| Dependent on service. 
+|tmc.some-service.serviceUrl|The url of the service you wish to connect to securely.|Optional| Dependent on service.
 
 ## Compiling the Code
 
