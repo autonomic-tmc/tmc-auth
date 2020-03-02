@@ -28,6 +28,7 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.autonomic.tmc.auth.exception.SdkClientException;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import java.util.concurrent.TimeUnit;
@@ -54,7 +55,7 @@ class ClientCredentialsTokenSupplierTest {
 
     @Test
     void malformed_token_url_throws_exception() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(SdkClientException.class, () -> {
             ClientCredentialsTokenSupplier.builder()
                 .clientSecret("a-secret")
                 .clientId("a-client-id")

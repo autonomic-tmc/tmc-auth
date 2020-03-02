@@ -13,4 +13,11 @@ public class BaseSdkException extends RuntimeException {
         super(message, cause);
         this.errorSourceType = errorSourceType;
     }
+
+    @Override
+    public String toString() {
+        return "BaseSdkException{" +
+            "errorSourceType=" + errorSourceType +
+            '}';
+    }
 }

@@ -19,6 +19,9 @@
  */
 package com.autonomic.tmc.auth;
 
+import static com.autonomic.tmc.auth.exception.ErrorSourceType.SDK_CLIENT;
+
+import com.autonomic.tmc.auth.exception.SdkClientException;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 import com.nimbusds.oauth2.sdk.AuthorizationGrant;
 import com.nimbusds.oauth2.sdk.ClientCredentialsGrant;
@@ -88,7 +91,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
             this.tokenEndpoint = new URI(this.tokenUrl);
         } catch (URISyntaxException e) {
             //TODO: This is client exception
-            throw new IllegalArgumentException(
+            throw new SdkClientException(SDK_CLIENT,
                 String.format("tokenUrl [%s] is not a valid URL", tokenUrl), e);
         }
     }
