@@ -87,6 +87,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         try {
             this.tokenEndpoint = new URI(this.tokenUrl);
         } catch (URISyntaxException e) {
+            //TODO: This is client exception
             throw new IllegalArgumentException(
                 String.format("tokenUrl [%s] is not a valid URL", tokenUrl), e);
         }
@@ -138,10 +139,12 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
             HTTPResponse httpResponse = response.toHTTPResponse();
             int responseCode = httpResponse.getStatusCode();
             if (responseCode == 401 || responseCode == 400) {
+                //TODO: Service Exception
                 throw new AuthenticationFailedException(String
                     .format("Authorization failed for user [%s] at tokenUrl [%s]",
                         this.clientId, this.tokenUrl));
             }
+            // TODO: Service Exception
             throw new AuthenticationCommunicationException(String
                 .format("Unexpected response [%s] from tokenUrl [%s]: %s", responseCode,
                     this.tokenUrl, httpResponse.getContent()));
@@ -164,6 +167,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         try {
             return TokenResponse.parse(request.toHTTPRequest().send());
         } catch (IOException | ParseException e) {
+            //TODO: Service
             throw new AuthenticationCommunicationException(
                 String.format("Unexpected issue communicating with tokenUrl [%s]", this.tokenUrl),
                 e);
