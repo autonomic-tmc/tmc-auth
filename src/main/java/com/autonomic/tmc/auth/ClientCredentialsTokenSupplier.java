@@ -102,7 +102,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
      * @throws AuthenticationFailedException Thrown when the credentials that were provided are expressly rejected.
      */
     @Override
-    public String get() {
+    public synchronized String get() {
         if (token != null && !token.isExpired()) {
             return token.getValue();
         }
@@ -114,7 +114,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         return this.token;
     }
 
-    private synchronized void resetToken() {
+    private void resetToken() {
         // if not already reset
         if (token == null || token.isExpired()) {
             token = authenticate();
