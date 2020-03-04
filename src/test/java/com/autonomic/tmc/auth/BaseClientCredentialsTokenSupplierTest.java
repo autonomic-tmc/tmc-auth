@@ -28,16 +28,19 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.autonomic.tmc.auth.exception.SdkClientException;
+import com.autonomic.tmc.auth.exception.SdkServiceException;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import java.util.concurrent.TimeUnit;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class ClientCredentialsTokenSupplierTest {
+class BaseClientCredentialsTokenSupplierTest {
 
     private WireMockServer authServer;
 
@@ -54,8 +57,8 @@ class ClientCredentialsTokenSupplierTest {
 
     @Test
     void malformed_token_url_throws_exception() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            ClientCredentialsTokenSupplier.builder()
+        assertThrows(SdkClientException.class, () -> {
+            BaseClientCredentialsTokenSupplier.builder()
                 .clientSecret("a-secret")
                 .clientId("a-client-id")
                 .tokenUrl("\\\\")
@@ -65,8 +68,8 @@ class ClientCredentialsTokenSupplierTest {
 
     @Test
     void cannot_construct_without_clientId() {
-        assertThrows(Exception.class, () -> {
-            ClientCredentialsTokenSupplier.builder()
+        assertThrows(NullPointerException.class, () -> {
+            BaseClientCredentialsTokenSupplier.builder()
                 .clientId(null)
                 .clientSecret("a-secret")
                 .build();
@@ -75,8 +78,8 @@ class ClientCredentialsTokenSupplierTest {
 
     @Test
     void cannot_construct_without_clientSecret() {
-        assertThrows(Exception.class, () -> {
-            ClientCredentialsTokenSupplier.builder()
+        assertThrows(NullPointerException.class, () -> {
+            BaseClientCredentialsTokenSupplier.builder()
                 .clientId("a-client-id")
                 .clientSecret(null)
                 .build();
@@ -95,7 +98,7 @@ class ClientCredentialsTokenSupplierTest {
         );
 
         // and a token supplier
-        ClientCredentialsTokenSupplier tokenSupplier = ClientCredentialsTokenSupplier
+        BaseClientCredentialsTokenSupplier tokenSupplier = BaseClientCredentialsTokenSupplier
             .builder()
             .clientId("a-client-id")
             .clientSecret("a-client-secret")
@@ -103,7 +106,11 @@ class ClientCredentialsTokenSupplierTest {
             .build();
 
         // an auth failure exception is thrown when token is requested
-        assertThrows(AuthenticationFailedException.class, tokenSupplier::get);
+        Assertions.assertThatThrownBy(tokenSupplier::get)
+            .isInstanceOf(SdkServiceException.class)
+            .hasMessageContaining("Authorization failed for user [")
+            .hasMessageContaining("at tokenUrl [")
+            .hasFieldOrPropertyWithValue("statusCode", responseCode);
 
     }
 
@@ -120,7 +127,7 @@ class ClientCredentialsTokenSupplierTest {
         );
 
         // and a token supplier
-        ClientCredentialsTokenSupplier tokenSupplier = ClientCredentialsTokenSupplier
+        BaseClientCredentialsTokenSupplier tokenSupplier = BaseClientCredentialsTokenSupplier
             .builder()
             .clientId("a-client-id")
             .clientSecret("a-client-secret")
@@ -128,7 +135,11 @@ class ClientCredentialsTokenSupplierTest {
             .build();
 
         // a communication exception is thrown when token is requested
-        assertThrows(AuthenticationCommunicationException.class, tokenSupplier::get);
+        Assertions.assertThatThrownBy(tokenSupplier::get)
+            .isInstanceOf(SdkServiceException.class)
+            .hasMessageContaining("Unexpected response [")
+            .hasMessageContaining("from tokenUrl [")
+            .hasFieldOrPropertyWithValue("statusCode", responseCode);
 
     }
 
@@ -136,7 +147,7 @@ class ClientCredentialsTokenSupplierTest {
     void no_network_throws_communication_exception() {
 
         //given a client that points to nowhere
-        ClientCredentialsTokenSupplier tokenSupplier = ClientCredentialsTokenSupplier
+        BaseClientCredentialsTokenSupplier tokenSupplier = BaseClientCredentialsTokenSupplier
             .builder()
             .clientId("a-client-id")
             .clientSecret("a-client-secret")
@@ -144,7 +155,7 @@ class ClientCredentialsTokenSupplierTest {
             .build();
 
         // an exception is thrown when token is requested
-        assertThrows(AuthenticationCommunicationException.class, tokenSupplier::get);
+        assertThrows(SdkServiceException.class, tokenSupplier::get);
 
     }
 
@@ -163,7 +174,7 @@ class ClientCredentialsTokenSupplierTest {
         );
 
         // and a client
-        ClientCredentialsTokenSupplier tokenSupplier = ClientCredentialsTokenSupplier
+        BaseClientCredentialsTokenSupplier tokenSupplier = BaseClientCredentialsTokenSupplier
             .builder()
             .clientId("a-client-id")
             .clientSecret("a-client-secret")
@@ -207,7 +218,7 @@ class ClientCredentialsTokenSupplierTest {
         );
 
         //and a client
-        ClientCredentialsTokenSupplier tokenSupplier = ClientCredentialsTokenSupplier
+        BaseClientCredentialsTokenSupplier tokenSupplier = BaseClientCredentialsTokenSupplier
             .builder()
             .clientId("a-client-id")
             .clientSecret("a-client-secret")
