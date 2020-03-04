@@ -86,11 +86,11 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         @NonNull String clientSecret, String tokenUrl) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+        //TODO: Add validation for clientId and Secret
         this.tokenUrl = (tokenUrl != null) ? tokenUrl : DEFAULT_TOKEN_URL;
         try {
             this.tokenEndpoint = new URI(this.tokenUrl);
         } catch (URISyntaxException e) {
-            //TODO: This is client exception
             throw new SdkClientException(SDK_CLIENT,
                 String.format("tokenUrl [%s] is not a valid URL", tokenUrl), e);
         }
@@ -140,6 +140,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
 
         if (!response.indicatesSuccess()) {
             HTTPResponse httpResponse = response.toHTTPResponse();
+
             int responseCode = httpResponse.getStatusCode();
             if (responseCode == 401 || responseCode == 400) {
                 //TODO: Service Exception
