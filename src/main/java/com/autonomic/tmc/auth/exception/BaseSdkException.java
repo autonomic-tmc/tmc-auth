@@ -19,11 +19,6 @@
  */
 package com.autonomic.tmc.auth.exception;
 
-import java.io.FileReader;
-import java.util.Objects;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-
 public class BaseSdkException extends RuntimeException {
 
     private static String projectVersion;
@@ -40,25 +35,28 @@ public class BaseSdkException extends RuntimeException {
         this.errorSourceType = errorSourceType;
     }
 
-    static String projectVersion() {
-        if (!Objects.isNull(projectVersion)) {
-            return projectVersion;
-        }
+//    static String projectVersion() {
+//        Properties props = System.getProperties();
+//        props.size();
+//        if (!Objects.isNull(projectVersion)) {
+//            return projectVersion;
+//        }
+//
+//        MavenXpp3Reader reader = new MavenXpp3Reader();
+//        try {
+//            Model model = reader.read(new FileReader("pom.xml"));
+//            projectVersion = model.getVersion();
+//        } catch (Exception e) {
+//            projectVersion = "UNKNOWN";
+//        }
+//        return projectVersion;
+//        return "UNKNOWN";
+//    }
 
-        MavenXpp3Reader reader = new MavenXpp3Reader();
-        try {
-            Model model = reader.read(new FileReader("pom.xml"));
-            projectVersion = model.getVersion();
-        } catch (Exception e) {
-            projectVersion = "UNKNOWN";
-        }
-        return projectVersion;
-    }
-
-    @Override
-    public String toString() {
-        return "BaseSdkException{" +
-            "errorSourceType=" + errorSourceType +
-            '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "BaseSdkException{" +
+//            "errorSourceType=" + errorSourceType +
+//            '}';
+//    }
 }

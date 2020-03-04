@@ -19,17 +19,14 @@
  */
 package com.autonomic.tmc.auth.exception;
 
+import static com.autonomic.tmc.auth.exception.ErrorSourceType.SDK_CLIENT;
+
 public class SdkClientException extends BaseSdkException {
 
     private final String clientMessage;
 
-    public SdkClientException(ErrorSourceType errorSourceType, String clientMessage) {
-        super(errorSourceType, clientMessage);
-        this.clientMessage = clientMessage;
-    }
-
-    public SdkClientException(ErrorSourceType errorSourceType, String clientMessage, Throwable cause) {
-        super(errorSourceType, clientMessage, cause);
+    public SdkClientException(String clientMessage, Throwable cause) {
+        super(SDK_CLIENT, clientMessage, cause);
         this.clientMessage = clientMessage;
     }
 
@@ -39,11 +36,4 @@ public class SdkClientException extends BaseSdkException {
         return String.format("tmc-auth-%s-%s: %s", "2.2.0-alpha", errorSourceType, clientMessage);
     }
 
-    @Override
-    public String toString() {
-        return "SdkClientException{" +
-            "\nerrorSourceType=" + errorSourceType +
-            "\nerrorMessage=" + clientMessage +
-            '}';
-    }
 }

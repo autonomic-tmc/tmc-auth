@@ -19,11 +19,25 @@
  */
 package com.autonomic.tmc.auth;
 
-import com.autonomic.tmc.auth.exception.BaseSdkException;
 import com.autonomic.tmc.auth.exception.SdkClientException;
 import com.autonomic.tmc.auth.exception.SdkServiceException;
+import com.nimbusds.oauth2.sdk.AccessTokenResponse;
+import com.nimbusds.oauth2.sdk.AuthorizationGrant;
+import com.nimbusds.oauth2.sdk.ClientCredentialsGrant;
+import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.TokenRequest;
 import com.nimbusds.oauth2.sdk.TokenResponse;
+import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
+import com.nimbusds.oauth2.sdk.auth.ClientSecretPost;
+import com.nimbusds.oauth2.sdk.auth.Secret;
+import com.nimbusds.oauth2.sdk.http.HTTPResponse;
+import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import lombok.Builder;
 import lombok.NonNull;
 
@@ -34,10 +48,18 @@ import lombok.NonNull;
  * <p>Reference: <a target="_blank" href="https://tools.ietf.org/html/rfc6749#section-1.3.4">RFC
  * 6749 section-1.3.4</a></p>
  */
-public class ClientCredentialsTokenSupplier implements TokenSupplier {
+public class BaseClientCredentialsTokenSupplier implements TokenSupplier {
 
-    private final BaseClientCredentialsTokenSupplier baseSupplier;
-    private Token token;
+    private static final String DEFAULT_TOKEN_URL = "https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token";
+
+    // properties
+    final String clientId;
+    final String clientSecret;
+    final String tokenUrl;
+    final URI tokenEndpoint;
+
+    // state
+    Token token = null;
 
     /**
      * Public Constructor.
@@ -62,14 +84,18 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
      *                     https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token
      */
     @Builder
-    public ClientCredentialsTokenSupplier(@NonNull String clientId,
+    public BaseClientCredentialsTokenSupplier(@NonNull String clientId,
         @NonNull String clientSecret, String tokenUrl) {
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        //TODO: Add validation for clientId and Secret
+        this.tokenUrl = (tokenUrl != null) ? tokenUrl : DEFAULT_TOKEN_URL;
         try {
-            baseSupplier = new BaseClientCredentialsTokenSupplier(clientId, clientSecret, tokenUrl);
-        } catch (SdkClientException e) {
-            throw new IllegalArgumentException(e.getMessage(), e.getCause());
+            this.tokenEndpoint = new URI(this.tokenUrl);
+        } catch (URISyntaxException e) {
+            throw new SdkClientException(
+                String.format("tokenUrl [%s] is not a valid URL", tokenUrl), e);
         }
-
     }
 
     /**
@@ -93,11 +119,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         return token.getValue();
     }
 
-    Token getExistingToken() {
-        return token;
-    }
-
-    private void resetToken() {
+    private synchronized void resetToken() {
         // if not already reset
         if (token == null || token.isExpired()) {
             token = authenticate();
@@ -105,29 +127,73 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
     }
 
     private Token authenticate() {
+
         TokenResponse response = executeTokenRequest();
         AccessToken accessToken = processTokenResponse(response);
 
-        return baseSupplier.buildToken(accessToken);
+        return buildToken(accessToken);
     }
 
-    private AccessToken processTokenResponse(TokenResponse response) {
-        try {
-            return baseSupplier.processTokenResponse(response);
-        } catch (SdkServiceException e) {
-            int statusCode = e.getStatusCode();
-            if (statusCode == 401 || statusCode == 400) {
-                throw new AuthenticationFailedException(e.getMessage());
+    private TokenRequest createTokenRequest() {
+        AuthorizationGrant clientGrant = new ClientCredentialsGrant();
+        ClientID clientID = new ClientID(clientId);
+        Secret secret = new Secret(this.clientSecret);
+        ClientAuthentication clientAuthentication = new ClientSecretPost(clientID, secret);
+
+        return new TokenRequest(this.tokenEndpoint, clientAuthentication, clientGrant, null);
+    }
+
+    AccessToken processTokenResponse(TokenResponse response) {
+
+        if (!response.indicatesSuccess()) {
+            HTTPResponse httpResponse = response.toHTTPResponse();
+
+            int responseCode = httpResponse.getStatusCode();
+            if (responseCode == 401 || responseCode == 400) {
+                //TODO: pass in the error code object
+                throw new SdkServiceException(String
+                    .format("Authorization failed for user [%s] at tokenUrl [%s]",
+                        this.clientId, this.tokenUrl), responseCode);
             }
-            throw new AuthenticationCommunicationException(e.getMessage());
+            //TODO: pass in the error code object
+            throw new SdkServiceException(String
+                .format("Unexpected response [%s] from tokenUrl [%s]: %s", responseCode,
+                    this.tokenUrl, httpResponse.getContent()), responseCode);
+        }
+
+        AccessTokenResponse successResponse = response.toSuccessResponse();
+
+        return successResponse.getTokens().getAccessToken();
+    }
+
+    TokenResponse executeTokenRequest() {
+        TokenRequest request = createTokenRequest();
+
+        HTTPResponse response = null;
+        try {
+            response = request.toHTTPRequest().send();
+        } catch (IOException e) {
+            throw new SdkServiceException(String
+                .format("Unexpected issue communicating with tokenUrl [%s]", this.tokenUrl),
+                    e);
+        }
+        try {
+            return TokenResponse.parse(response);
+        } catch (ParseException e) {
+            throw new SdkClientException(String
+                .format("Unexpected issue parsing token response: [%s]", response.getContent()),
+                    e);
         }
     }
 
-    private TokenResponse executeTokenRequest() {
-        try {
-            return baseSupplier.executeTokenRequest();
-        } catch (BaseSdkException e) {
-            throw new AuthenticationCommunicationException(e.getMessage());
-        }
+    Token buildToken(AccessToken accessToken) {
+        return Token.builder()
+            .value(accessToken.getValue())
+            .expiration(Instant.now().plus(accessToken.getLifetime(), ChronoUnit.SECONDS))
+            .build();
+    }
+
+    Token getExistingToken() {
+        return this.token;
     }
 }

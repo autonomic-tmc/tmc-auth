@@ -19,15 +19,22 @@
  */
 package com.autonomic.tmc.auth.exception;
 
+import static com.autonomic.tmc.auth.exception.ErrorSourceType.SERVICE;
+
 public class SdkServiceException extends BaseSdkException {
 
-    // TODO: Add httpResponse?? as variable for adding more details
-    public SdkServiceException(ErrorSourceType errorSourceType, String message) {
-        super(errorSourceType, message);
+    private int statusCode = 500;
+
+    public SdkServiceException(String message, Throwable cause) {
+        super(SERVICE, message, cause);
     }
 
-    public SdkServiceException(ErrorSourceType errorSourceType, String message, Throwable cause) {
-        super(errorSourceType, message, cause);
+    public SdkServiceException(String message, int statusCode) {
+        super(SERVICE, message);
+        this.statusCode = statusCode;
     }
 
+    public int getStatusCode() {
+        return statusCode;
+    }
 }
