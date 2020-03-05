@@ -26,6 +26,7 @@ import com.nimbusds.oauth2.sdk.TokenResponse;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import lombok.Builder;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class provides an OAuth 2.0 - Client Credentials Grant based implementation of {@link
@@ -34,6 +35,7 @@ import lombok.NonNull;
  * <p>Reference: <a target="_blank" href="https://tools.ietf.org/html/rfc6749#section-1.3.4">RFC
  * 6749 section-1.3.4</a></p>
  */
+@Slf4j
 public class ClientCredentialsTokenSupplier implements TokenSupplier {
 
     private final BaseClientCredentialsTokenSupplier baseSupplier;
@@ -87,6 +89,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
     @Override
     public synchronized String get() {
         if (token != null && !token.isExpired()) {
+            log.debug("Cached token found.");
             return token.getValue();
         }
         resetToken();
@@ -100,6 +103,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
     private void resetToken() {
         // if not already reset
         if (token == null || token.isExpired()) {
+            log.debug("No cached token. Retrieving a new token.");
             token = authenticate();
         }
     }

@@ -30,7 +30,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 @Slf4j
 public class BaseSdkException extends RuntimeException {
 
-    private static Project project = new Project();
+    static Project project = new Project();
 
     private final ErrorSourceType errorSourceType;
 
@@ -46,14 +46,12 @@ public class BaseSdkException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        String message = String
-            .format("%s-%s-%s: %s", project.getName(), project.getVersion(), errorSourceType, super.getMessage());
-        //Todo: remove before prod
-        log.info(message);
-        return message;
+        return String.format("%s-%s-%s: %s", project.getName(), project.getVersion(), errorSourceType,
+                super.getMessage());
     }
 
-    public static class Project{
+    static class Project {
+
         final static String UNKNOWN = "[ UNKNOWN ]";
         static String pom = "pom.xml";
 

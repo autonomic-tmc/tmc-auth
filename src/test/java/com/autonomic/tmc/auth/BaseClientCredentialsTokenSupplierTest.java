@@ -33,6 +33,8 @@ import com.autonomic.tmc.auth.exception.SdkServiceException;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.log4j.BasicConfigurator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,12 +42,83 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+@Slf4j
 class BaseClientCredentialsTokenSupplierTest {
 
     private WireMockServer authServer;
 
     @BeforeEach
     void setUp() {
+//        Appender appender = new Appender(){
+//            @Override
+//            public void addFilter(Filter filter) {
+//
+//            }
+//
+//            @Override
+//            public org.apache.log4j.spi.Filter getFilter() {
+//                return new Filter() {
+//                    @Override
+//                    public int decide(LoggingEvent loggingEvent) {
+//                        if(loggingEvent.getLevel().equals(Level.INFO)){
+//                            return 1000;
+//                        }
+//                        return -1;
+//                    }
+//                };
+//            }
+//
+//            @Override
+//            public void clearFilters() {
+//
+//            }
+//
+//            @Override
+//            public void close() {
+//
+//            }
+//
+//            @Override
+//            public void doAppend(LoggingEvent loggingEvent) {
+//
+//            }
+//
+//            @Override
+//            public String getName() {
+//                return null;
+//            }
+//
+//            @Override
+//            public void setErrorHandler(ErrorHandler errorHandler) {
+//
+//            }
+//
+//            @Override
+//            public ErrorHandler getErrorHandler() {
+//                return null;
+//            }
+//
+//            @Override
+//            public void setLayout(Layout layout) {
+//
+//            }
+//
+//            @Override
+//            public Layout getLayout() {
+//                return null;
+//            }
+//
+//            @Override
+//            public void setName(String s) {
+//
+//            }
+//
+//            @Override
+//            public boolean requiresLayout() {
+//                return false;
+//            }
+//        };
+        BasicConfigurator.configure();
         authServer = new WireMockServer(WireMockConfiguration.options().dynamicPort());
         authServer.start();
     }

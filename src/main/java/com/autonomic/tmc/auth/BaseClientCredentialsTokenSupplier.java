@@ -40,6 +40,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import lombok.Builder;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class provides an OAuth 2.0 - Client Credentials Grant based implementation of {@link
@@ -48,6 +49,7 @@ import lombok.NonNull;
  * <p>Reference: <a target="_blank" href="https://tools.ietf.org/html/rfc6749#section-1.3.4">RFC
  * 6749 section-1.3.4</a></p>
  */
+@Slf4j
 public class BaseClientCredentialsTokenSupplier implements TokenSupplier {
 
     private static final String DEFAULT_TOKEN_URL = "https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token";
@@ -113,6 +115,7 @@ public class BaseClientCredentialsTokenSupplier implements TokenSupplier {
     @Override
     public synchronized String get() {
         if (token != null && !token.isExpired()) {
+            log.debug("Cached token found.");
             return token.getValue();
         }
         resetToken();
@@ -122,6 +125,7 @@ public class BaseClientCredentialsTokenSupplier implements TokenSupplier {
     private synchronized void resetToken() {
         // if not already reset
         if (token == null || token.isExpired()) {
+            log.debug("No cached token. Retrieving a new token.");
             token = authenticate();
         }
     }
