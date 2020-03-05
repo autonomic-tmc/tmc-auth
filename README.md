@@ -1,17 +1,17 @@
 # Authenticating with the TMC
 
+## tmc-auth SDK
+
+Using the tmc-auth SDK with credentials provided by Autonomic, you can obtain a time-limited access token to be used with other services available on the platform.
+
+With this library, you don't need to worry about expiring tokens. The token you `get()` is always valid.  If a token expires, this library will automatically get a new one.
+
 ## Let's get authenticated with an example application
 
 We have built a runnable example application that demonstrates how to authenticate on the TMC using the `tmc-auth` SDK. This example application will login and retrieve an access token which is used when accessing TMC services.
 
 - [Getting authenticated using the Maven Example](./examples/maven-example)
 - [Getting authenticated using the Gradle Example](./examples/gradle-example)
-
-## tmc-auth SDK
-
-Using the tmc-auth SDK with credentials provided by Autonomic, you can obtain a time-limited access token to be used with other services available on the platform.
-
-With this library, you don't need to worry about expiring tokens. The token you `get()` is always valid.  If a token expires, this library will automatically get a new one.
 
 ## Adding tmc-auth as a dependency
 
