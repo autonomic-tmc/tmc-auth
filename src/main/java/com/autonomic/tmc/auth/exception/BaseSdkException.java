@@ -21,24 +21,25 @@ package com.autonomic.tmc.auth.exception;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Objects;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 @Slf4j
 public class BaseSdkException extends RuntimeException {
 
-    private static String projectVersion;
+    private static Project project = new Project();
 
-    final ErrorSourceType errorSourceType;
+    private final ErrorSourceType errorSourceType;
 
-    public BaseSdkException(ErrorSourceType errorSourceType, String message) {
+    BaseSdkException(ErrorSourceType errorSourceType, String message) {
         super(message);
         this.errorSourceType = errorSourceType;
     }
 
-    public BaseSdkException(ErrorSourceType errorSourceType, String message, Throwable cause) {
+    BaseSdkException(ErrorSourceType errorSourceType, String message, Throwable cause) {
         super(message, cause);
         this.errorSourceType = errorSourceType;
     }
@@ -46,26 +47,34 @@ public class BaseSdkException extends RuntimeException {
     @Override
     public String getMessage() {
         String message = String
-            .format("tmc-auth-%s-%s: %s", getProjectVersion(), errorSourceType, super.getMessage());
+            .format("%s-%s-%s: %s", project.getName(), project.getVersion(), errorSourceType, super.getMessage());
         //Todo: remove before prod
         log.info(message);
         return message;
     }
 
-    private static String getProjectVersion() {
-        if (Objects.isNull(projectVersion)) {
-            projectVersion = loadProjectVersion("pom.xml");
-        }
-        return projectVersion;
-    }
+    public static class Project{
+        final static String UNKNOWN = "[ UNKNOWN ]";
+        static String pom = "pom.xml";
 
-    public static String loadProjectVersion(String from) {
-        try {
-            MavenXpp3Reader reader = new MavenXpp3Reader();
-            return reader.read(new FileReader(from)).getVersion();
-        } catch (XmlPullParserException | IOException e) {
-            log.warn("Failed to read " + from + " to retrieve library version", e);
-            return "[ UNKNOWN ]";
+        private Model properties;
+
+        public Project() {
+            try {
+                MavenXpp3Reader reader = new MavenXpp3Reader();
+                properties = reader.read(new FileReader(pom));
+            } catch (IOException | XmlPullParserException e) {
+                log.warn("Failed to read pom.xml while building BaseSdkException", e);
+                properties = new Model();
+            }
+        }
+
+        String getName() {
+            return Optional.ofNullable(properties.getArtifactId()).orElse(UNKNOWN);
+        }
+
+        String getVersion() {
+            return Optional.ofNullable(properties.getVersion()).orElse(UNKNOWN);
         }
     }
 }
