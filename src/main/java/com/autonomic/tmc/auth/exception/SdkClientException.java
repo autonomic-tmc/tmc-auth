@@ -29,11 +29,4 @@ public class SdkClientException extends BaseSdkException {
         super(SDK_CLIENT, clientMessage, cause);
         this.clientMessage = clientMessage;
     }
-
-    @Override
-    public String getMessage() {
-
-        return String.format("tmc-auth-%s-%s: %s", "2.2.0-alpha", errorSourceType, clientMessage);
-    }
-
 }

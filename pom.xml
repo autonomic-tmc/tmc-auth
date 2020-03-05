@@ -5,7 +5,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>tmc-auth</artifactId>
-  <version>LOCAL-SNAPSHOT</version>
+  <groupId>com.autonomic.tmc.auth</groupId>
+  <version>2.2.0</version>
   <packaging>jar</packaging>
 
   <!-- requires repo https://autonomic.bintray.com/au-tmc-oss -->
@@ -59,6 +60,12 @@
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model</artifactId>
       <version>3.6.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-jdk14</artifactId>
+      <version>1.7.30</version>
     </dependency>
     <!-- - - - - - - - - - - - - - - - - -
     BEGIN TEST ONLY DEPENCENCIES

@@ -28,6 +28,7 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.autonomic.tmc.auth.exception.BaseSdkException;
 import com.autonomic.tmc.auth.exception.SdkClientException;
 import com.autonomic.tmc.auth.exception.SdkServiceException;
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -143,6 +144,10 @@ class BaseClientCredentialsTokenSupplierTest {
 
     }
 
+    @Test
+    void givenAMissingPom_whenAnySdkExceptionIsThrown_ThenProjectVersionIsUnknown() {
+        Assertions.assertThat(BaseSdkException.loadProjectVersion("rom.xml")).isEqualTo("[ UNKNOWN ]");
+    }
     @Test
     void no_network_throws_communication_exception() {
 

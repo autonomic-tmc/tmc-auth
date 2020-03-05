@@ -23,6 +23,7 @@ package com.autonomic.tmc.auth;
  * Runtime exception thrown when there is a communication issue while attempting auth. IOException or
  * UnknownHostException being thrown are examples of communication issues.
  */
+@Deprecated
 public class AuthenticationCommunicationException extends RuntimeException {
 
     public AuthenticationCommunicationException(String msg, Throwable cause) {

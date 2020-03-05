@@ -19,6 +19,14 @@
  */
 package com.autonomic.tmc.auth.exception;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
+@Slf4j
 public class BaseSdkException extends RuntimeException {
 
     private static String projectVersion;
@@ -35,28 +43,29 @@ public class BaseSdkException extends RuntimeException {
         this.errorSourceType = errorSourceType;
     }
 
-//    static String projectVersion() {
-//        Properties props = System.getProperties();
-//        props.size();
-//        if (!Objects.isNull(projectVersion)) {
-//            return projectVersion;
-//        }
-//
-//        MavenXpp3Reader reader = new MavenXpp3Reader();
-//        try {
-//            Model model = reader.read(new FileReader("pom.xml"));
-//            projectVersion = model.getVersion();
-//        } catch (Exception e) {
-//            projectVersion = "UNKNOWN";
-//        }
-//        return projectVersion;
-//        return "UNKNOWN";
-//    }
+    @Override
+    public String getMessage() {
+        String message = String
+            .format("tmc-auth-%s-%s: %s", getProjectVersion(), errorSourceType, super.getMessage());
+        //Todo: remove before prod
+        log.info(message);
+        return message;
+    }
 
-//    @Override
-//    public String toString() {
-//        return "BaseSdkException{" +
-//            "errorSourceType=" + errorSourceType +
-//            '}';
-//    }
+    private static String getProjectVersion() {
+        if (Objects.isNull(projectVersion)) {
+            projectVersion = loadProjectVersion("pom.xml");
+        }
+        return projectVersion;
+    }
+
+    public static String loadProjectVersion(String from) {
+        try {
+            MavenXpp3Reader reader = new MavenXpp3Reader();
+            return reader.read(new FileReader(from)).getVersion();
+        } catch (XmlPullParserException | IOException e) {
+            log.warn("Failed to read " + from + " to retrieve library version", e);
+            return "[ UNKNOWN ]";
+        }
+    }
 }

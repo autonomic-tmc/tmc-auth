@@ -23,6 +23,7 @@ package com.autonomic.tmc.auth;
  * Exception thrown when a response from the token provider has a status code of 400 or 401
  * indicating that the credentials provided have been expressly rejected.
  */
+@Deprecated
 public class AuthenticationFailedException extends RuntimeException {
 
     public AuthenticationFailedException(String msg) {

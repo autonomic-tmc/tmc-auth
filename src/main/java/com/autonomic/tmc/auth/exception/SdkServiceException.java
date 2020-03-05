@@ -23,7 +23,7 @@ import static com.autonomic.tmc.auth.exception.ErrorSourceType.SERVICE;
 
 public class SdkServiceException extends BaseSdkException {
 
-    private int statusCode = 500;
+    private Integer statusCode = 500;
 
     public SdkServiceException(String message, Throwable cause) {
         super(SERVICE, message, cause);
