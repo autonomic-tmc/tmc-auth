@@ -154,15 +154,14 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
 
             int responseCode = httpResponse.getStatusCode();
             if (responseCode == 401 || responseCode == 400) {
-                //TODO: pass in the error code object
                 throw new SdkServiceException(String
                     .format("Authorization failed for user [%s] at tokenUrl [%s]",
-                        this.clientId, this.tokenUrl), responseCode);
+                        this.clientId, this.tokenUrl), response.toErrorResponse());
             }
-            //TODO: pass in the error code object
+
             throw new SdkServiceException(String
                 .format("Unexpected response [%s] from tokenUrl [%s]: %s", responseCode,
-                    this.tokenUrl, httpResponse.getContent()), responseCode);
+                    this.tokenUrl, httpResponse.getContent()), response.toErrorResponse());
         }
 
         AccessTokenResponse successResponse = response.toSuccessResponse();

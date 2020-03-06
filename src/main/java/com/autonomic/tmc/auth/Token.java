@@ -26,7 +26,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.function.Supplier;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NonNull;
 
 /**
@@ -45,7 +44,6 @@ import lombok.NonNull;
  *     </li>
  * </ul>
  */
-//@Getter
 @EqualsAndHashCode
 public class Token implements Supplier<String> {
 

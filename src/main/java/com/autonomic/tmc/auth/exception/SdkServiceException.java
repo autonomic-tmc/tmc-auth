@@ -21,20 +21,29 @@ package com.autonomic.tmc.auth.exception;
 
 import static com.autonomic.tmc.auth.exception.ErrorSourceType.SERVICE;
 
+import com.nimbusds.oauth2.sdk.TokenErrorResponse;
+import java.util.Optional;
+
 public class SdkServiceException extends BaseSdkException {
 
     private Integer statusCode = 500;
+    private Throwable cause;
 
     public SdkServiceException(String message, Throwable cause) {
         super(SERVICE, message, cause);
+        this.cause = cause;
     }
 
-    public SdkServiceException(String message, int statusCode) {
+    public SdkServiceException(String message, TokenErrorResponse errorResponse) {
         super(SERVICE, message);
-        this.statusCode = statusCode;
+        this.statusCode = errorResponse.toHTTPResponse().getStatusCode();
     }
 
     public int getStatusCode() {
         return statusCode;
+    }
+
+    public Optional<String> getErrorCause() {
+        return Optional.ofNullable(cause.getMessage());
     }
 }
