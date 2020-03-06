@@ -28,21 +28,28 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.autonomic.tmc.auth.exception.SdkClientException;
+import com.autonomic.tmc.auth.exception.SdkServiceException;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.log4j.BasicConfigurator;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+@Slf4j
 class ClientCredentialsTokenSupplierTest {
 
     private WireMockServer authServer;
 
     @BeforeEach
     void setUp() {
+        BasicConfigurator.configure();
         authServer = new WireMockServer(WireMockConfiguration.options().dynamicPort());
         authServer.start();
     }
@@ -54,7 +61,7 @@ class ClientCredentialsTokenSupplierTest {
 
     @Test
     void malformed_token_url_throws_exception() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(SdkClientException.class, () -> {
             ClientCredentialsTokenSupplier.builder()
                 .clientSecret("a-secret")
                 .clientId("a-client-id")
@@ -65,7 +72,7 @@ class ClientCredentialsTokenSupplierTest {
 
     @Test
     void cannot_construct_without_clientId() {
-        assertThrows(Exception.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             ClientCredentialsTokenSupplier.builder()
                 .clientId(null)
                 .clientSecret("a-secret")
@@ -75,7 +82,7 @@ class ClientCredentialsTokenSupplierTest {
 
     @Test
     void cannot_construct_without_clientSecret() {
-        assertThrows(Exception.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             ClientCredentialsTokenSupplier.builder()
                 .clientId("a-client-id")
                 .clientSecret(null)
@@ -103,7 +110,11 @@ class ClientCredentialsTokenSupplierTest {
             .build();
 
         // an auth failure exception is thrown when token is requested
-        assertThrows(AuthenticationFailedException.class, tokenSupplier::get);
+        Assertions.assertThatThrownBy(tokenSupplier::get)
+            .isInstanceOf(SdkServiceException.class)
+            .hasMessageContaining("Authorization failed for user [")
+            .hasMessageContaining("at tokenUrl [")
+            .hasFieldOrPropertyWithValue("statusCode", responseCode);
 
     }
 
@@ -128,7 +139,11 @@ class ClientCredentialsTokenSupplierTest {
             .build();
 
         // a communication exception is thrown when token is requested
-        assertThrows(AuthenticationCommunicationException.class, tokenSupplier::get);
+        Assertions.assertThatThrownBy(tokenSupplier::get)
+            .isInstanceOf(SdkServiceException.class)
+            .hasMessageContaining("Unexpected response [")
+            .hasMessageContaining("from tokenUrl [")
+            .hasFieldOrPropertyWithValue("statusCode", responseCode);
 
     }
 
@@ -144,7 +159,7 @@ class ClientCredentialsTokenSupplierTest {
             .build();
 
         // an exception is thrown when token is requested
-        assertThrows(AuthenticationCommunicationException.class, tokenSupplier::get);
+        assertThrows(SdkServiceException.class, tokenSupplier::get);
 
     }
 

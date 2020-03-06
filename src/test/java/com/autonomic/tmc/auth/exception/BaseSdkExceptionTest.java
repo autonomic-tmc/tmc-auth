@@ -22,7 +22,7 @@ package com.autonomic.tmc.auth.exception;
 import static com.autonomic.tmc.auth.exception.ErrorSourceType.SDK_CLIENT;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.autonomic.tmc.auth.exception.BaseSdkException.Project;
+import com.autonomic.tmc.auth.exception.BaseSdkException.ProjectProperties;
 import org.junit.jupiter.api.Test;
 
 public class BaseSdkExceptionTest {
@@ -31,7 +31,7 @@ public class BaseSdkExceptionTest {
     void givenApom_whenExceptionIsRaised_thenMessageDoesNotContainUnknown() {
 
         String actualMessage = "A test exception message";
-        Project.pom = "pom.xml";
+        ProjectProperties.pom = "pom.xml";
 
         assertThatThrownBy(() -> throwNewSDKClientException(actualMessage))
             .hasMessageContaining(actualMessage)
@@ -43,7 +43,7 @@ public class BaseSdkExceptionTest {
     void givenAMissingPom_whenExceptionIsRaised_thenMessageContainsUnknown() {
         String actualMessage = "A test exception message";
 
-        Project.pom = "rom.xml";
+        ProjectProperties.pom = "rom.xml";
 
         assertThatThrownBy(() -> throwNewSDKClientException(actualMessage))
             .hasMessageContaining(actualMessage)
@@ -52,7 +52,7 @@ public class BaseSdkExceptionTest {
     }
 
     private RuntimeException throwNewSDKClientException(String actualMessage) {
-        BaseSdkException.project = new Project();
+        BaseSdkException.projectProperties = new ProjectProperties();
 
         throw new SdkClientException(actualMessage,
             new RuntimeException());

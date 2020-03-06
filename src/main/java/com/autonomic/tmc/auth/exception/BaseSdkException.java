@@ -30,7 +30,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 @Slf4j
 public class BaseSdkException extends RuntimeException {
 
-    static Project project = new Project();
+    static ProjectProperties projectProperties = new ProjectProperties();
 
     private final ErrorSourceType errorSourceType;
 
@@ -46,18 +46,18 @@ public class BaseSdkException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return String.format("%s-%s-%s: %s", project.getName(), project.getVersion(), errorSourceType,
+        return String.format("%s-%s-%s: %s", projectProperties.getName(), projectProperties.getVersion(), errorSourceType,
                 super.getMessage());
     }
 
-    static class Project {
+    static class ProjectProperties {
 
         final static String UNKNOWN = "[ UNKNOWN ]";
         static String pom = "pom.xml";
 
         private Model properties;
 
-        public Project() {
+        public ProjectProperties() {
             try {
                 MavenXpp3Reader reader = new MavenXpp3Reader();
                 properties = reader.read(new FileReader(pom));
