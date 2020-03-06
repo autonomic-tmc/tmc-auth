@@ -6,7 +6,7 @@
 
   <artifactId>tmc-auth</artifactId>
   <groupId>com.autonomic.tmc.auth</groupId>
-  <version>2.2.0</version>
+  <version>LOCAL-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <!-- requires repo https://autonomic.bintray.com/au-tmc-oss -->
@@ -25,11 +25,14 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <tmc.integration.tests/>
+    <lombok.version>1.18.0</lombok.version>
+    <oauth2.version>6.23</oauth2.version>
+    <maven-model.version>3.6.3</maven-model.version>
+    <slf4j.version>1.7.30</slf4j.version>
     <junit.version>5.5.2</junit.version>
     <junit.platform.version>1.5.2</junit.platform.version>
+    <wiremock.version>2.26.0</wiremock.version>
     <mockito-core.version>2.23.0</mockito-core.version>
-    <hamcrest-core.version>2.1</hamcrest-core.version>
-    <assertj-core.version>3.11.1</assertj-core.version>
     <hamcrest-core.version>2.1</hamcrest-core.version>
     <assertj-core.version>3.11.1</assertj-core.version>
     <awaitility.version>4.0.2</awaitility.version>
@@ -40,32 +43,26 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.0</version>
+      <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>com.nimbusds</groupId>
       <artifactId>oauth2-oidc-sdk</artifactId>
-      <version>6.23</version>
+      <version>${oauth2.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model</artifactId>
-      <version>3.6.3</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-model</artifactId>
-      <version>3.6.3</version>
+      <version>${maven-model.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.30</version>
+      <version>${slf4j.version}</version>
     </dependency>
     <!-- - - - - - - - - - - - - - - - - -
     BEGIN TEST ONLY DEPENCENCIES
@@ -73,7 +70,7 @@
     <dependency>
       <groupId>com.github.tomakehurst</groupId>
       <artifactId>wiremock</artifactId>
-      <version>2.26.0</version>
+      <version>${wiremock.version}</version>
       <scope>test</scope>
     </dependency>
 
