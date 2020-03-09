@@ -106,11 +106,10 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
      * return a valid token.
      *
      * @return String representation of Bearer token.
-     * @throws SdkServiceException Thrown when an unexpected condition is
-     *                                              encountered while making the client credentials
-     *                                              grant POST
-     * @throws SdkClientException        Thrown when the credentials that were provided
-     *                                              are expressly rejected.
+     * @throws SdkServiceException Thrown when an unexpected condition is encountered while making
+     *                             the client credentials grant POST
+     * @throws SdkClientException  Thrown when the credentials that were provided are expressly
+     *                             rejected.
      */
     @Override
     public synchronized String get() {
