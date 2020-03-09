@@ -22,8 +22,8 @@ package com.autonomic.tmc.auth;
 /**
  * Provides a bearer token to be used for authentication with the TMC platform.
  *
- * <p>Reference: <a target="_blank" href="https://developer.autonomic.ai/services/general-reference/authentication/overview-of-authentication">TMC
- * Developer Portal - Authentication documentation</a></p>
+ * <p>Reference: <a target="_blank" href="https://developer.autonomic.ai/">TMC Developer
+ * Portal</a></p>
  */
 public interface TokenSupplier {
 
