@@ -86,11 +86,12 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
      *                     https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token
      */
     @Builder
-    public ClientCredentialsTokenSupplier(@NonNull String clientId,
-        @NonNull String clientSecret, String tokenUrl) {
+    public ClientCredentialsTokenSupplier(String clientId, String clientSecret, String tokenUrl) {
+        validateRequiredParams(clientId, clientSecret);
+
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        //TODO: Add validation for clientId and Secret
+
         this.tokenUrl = (tokenUrl != null) ? tokenUrl : DEFAULT_TOKEN_URL;
         try {
             this.tokenEndpoint = new URI(this.tokenUrl);
@@ -148,7 +149,8 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
 
     private void validateRequiredParams(String clientId, String clientSecret) {
         if (StringUtils.isBlank(clientId) || StringUtils.isBlank(clientSecret)) {
-            throw new SdkClientException("Both client id and client secret are required and cannot be blank", null);
+            throw new SdkClientException(
+                "Both client id and client secret are required and cannot be blank", null);
         }
     }
 
