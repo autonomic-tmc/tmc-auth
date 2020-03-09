@@ -24,6 +24,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -35,7 +36,6 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.BasicConfigurator;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -110,7 +110,7 @@ class ClientCredentialsTokenSupplierTest {
             .build();
 
         // an auth failure exception is thrown when token is requested
-        Assertions.assertThatThrownBy(tokenSupplier::get)
+        assertThatThrownBy(tokenSupplier::get)
             .isInstanceOf(SdkServiceException.class)
             .hasMessageContaining("Authorization failed for user [")
             .hasMessageContaining("at tokenUrl [")
@@ -139,7 +139,7 @@ class ClientCredentialsTokenSupplierTest {
             .build();
 
         // a communication exception is thrown when token is requested
-        Assertions.assertThatThrownBy(tokenSupplier::get)
+        assertThatThrownBy(tokenSupplier::get)
             .isInstanceOf(SdkServiceException.class)
             .hasMessageContaining("Unexpected response [")
             .hasMessageContaining("from tokenUrl [")

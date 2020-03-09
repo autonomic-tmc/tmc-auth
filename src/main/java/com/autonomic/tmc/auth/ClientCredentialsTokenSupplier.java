@@ -55,13 +55,13 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
     private static final String DEFAULT_TOKEN_URL = "https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token";
 
     // properties
-    final String clientId;
-    final String clientSecret;
-    final String tokenUrl;
-    final URI tokenEndpoint;
+    private final String clientId;
+    private final String clientSecret;
+    private final String tokenUrl;
+    private final URI tokenEndpoint;
 
     // state
-    Token token = null;
+    private Token token = null;
 
     /**
      * Public Constructor.
@@ -122,7 +122,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         return token.getValue();
     }
 
-    private synchronized void resetToken() {
+    private void resetToken() {
         // if not already reset
         if (token == null || token.isExpired()) {
             log.debug("No cached token. Retrieving a new token.");
@@ -177,15 +177,13 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
             response = request.toHTTPRequest().send();
         } catch (IOException e) {
             throw new SdkServiceException(String
-                .format("Unexpected issue communicating with tokenUrl [%s]", this.tokenUrl),
-                    e);
+                .format("Unexpected issue communicating with tokenUrl [%s]", this.tokenUrl), e);
         }
         try {
             return TokenResponse.parse(response);
         } catch (ParseException e) {
             throw new SdkClientException(String
-                .format("Unexpected issue parsing token response: [%s]", response.getContent()),
-                    e);
+                .format("Unexpected issue parsing token response: [%s]", response.getContent()), e);
         }
     }
 

@@ -45,7 +45,6 @@ public class ClientCredentialsIntegrationTest {
         //then we get a token
         Assertions.assertNotNull(token);
 
-        Token tokenObject = tokenSupplier.getExistingToken();
         //and the token is not expired
         Assertions.assertFalse(tokenSupplier.getExistingToken().isExpired());
     }
