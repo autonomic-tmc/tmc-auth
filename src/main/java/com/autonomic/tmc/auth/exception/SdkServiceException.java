@@ -1,8 +1,8 @@
 /*-
  * ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
- * tmc-auth
+ * TMC Auth SDK
  * ——————————————————————————————————————————————————————————————————————————————
- * Copyright (C) 2016 - 2019 Autonomic, LLC - All rights reserved
+ * Copyright (C) 2016 - 2020 Autonomic, LLC
  * ——————————————————————————————————————————————————————————————————————————————
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,16 +17,39 @@
  * under the License
  * ______________________________________________________________________________
  */
-package com.autonomic.tmc.auth;
+package com.autonomic.tmc.auth.exception;
 
-/**
- * Exception thrown when a response from the token provider has a status code of 400 or 401
- * indicating that the credentials provided have been expressly rejected.
- */
-public class AuthenticationFailedException extends RuntimeException {
+import static com.autonomic.tmc.auth.exception.ErrorSourceType.SERVICE;
 
-    public AuthenticationFailedException(String msg) {
-        super(msg);
+import com.nimbusds.oauth2.sdk.TokenErrorResponse;
+import java.util.Objects;
+
+public class SdkServiceException extends BaseSdkException {
+
+    private int httpStatusCode = 500;
+
+    public SdkServiceException(String clientMessage, Throwable cause) {
+        super(buildMessage(SERVICE, clientMessage), cause);
     }
 
+    public SdkServiceException(String clientMessage, TokenErrorResponse errorResponse) {
+        super(buildMessage(clientMessage, errorResponse));
+        if (Objects.nonNull(errorResponse)) {
+            httpStatusCode = errorResponse.getErrorObject().getHTTPStatusCode();
+        }
+    }
+
+    public int getHttpStatusCode() {
+        return httpStatusCode;
+    }
+
+    private static String buildMessage(String clientMessage, TokenErrorResponse errorResponse) {
+        StringBuilder sb = new StringBuilder(buildMessage(SERVICE, clientMessage));
+        if (Objects.nonNull(errorResponse)) {
+            sb.append(String.format("Error: code=%s and httpStatusCode=%s",
+                    errorResponse.getErrorObject().getCode(),
+                    errorResponse.getErrorObject().getHTTPStatusCode()));
+        }
+        return sb.toString();
+    }
 }

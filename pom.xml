@@ -5,6 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>tmc-auth</artifactId>
+  <groupId>com.autonomic.tmc.auth</groupId>
   <version>LOCAL-SNAPSHOT</version>
   <packaging>jar</packaging>
 
@@ -24,6 +25,17 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <tmc.integration.tests/>
+    <lombok.version>1.18.0</lombok.version>
+    <oauth2.version>6.23</oauth2.version>
+    <maven-model.version>3.6.3</maven-model.version>
+    <slf4j.version>1.7.30</slf4j.version>
+    <junit.version>5.5.2</junit.version>
+    <junit.platform.version>1.5.2</junit.platform.version>
+    <wiremock.version>2.26.0</wiremock.version>
+    <mockito-core.version>2.23.0</mockito-core.version>
+    <hamcrest-core.version>2.1</hamcrest-core.version>
+    <assertj-core.version>3.11.1</assertj-core.version>
+    <awaitility.version>4.0.2</awaitility.version>
   </properties>
 
   <dependencies>
@@ -31,37 +43,84 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.0</version>
+      <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>com.nimbusds</groupId>
       <artifactId>oauth2-oidc-sdk</artifactId>
-      <version>6.23</version>
+      <version>${oauth2.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+      <version>${maven-model.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
     <!-- - - - - - - - - - - - - - - - - -
     BEGIN TEST ONLY DEPENCENCIES
     - - - - - - - - - - - - - - - - - - -->
     <dependency>
       <groupId>com.github.tomakehurst</groupId>
       <artifactId>wiremock</artifactId>
-      <version>2.26.0</version>
+      <version>${wiremock.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.6.0</version>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-engine</artifactId>
+      <version>${junit.platform.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-launcher</artifactId>
+      <version>${junit.platform.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>${mockito-core.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito-core.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-core</artifactId>
+      <version>${hamcrest-core.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj-core.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.awaitility</groupId>
       <artifactId>awaitility</artifactId>
-      <version>4.0.2</version>
+      <version>${awaitility.version}</version>
       <scope>test</scope>
     </dependency>
 

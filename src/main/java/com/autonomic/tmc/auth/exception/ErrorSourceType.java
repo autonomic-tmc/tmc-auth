@@ -1,8 +1,8 @@
 /*-
  * ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
- * tmc-auth
+ * TMC Auth SDK
  * ——————————————————————————————————————————————————————————————————————————————
- * Copyright (C) 2016 - 2019 Autonomic, LLC - All rights reserved
+ * Copyright (C) 2016 - 2020 Autonomic, LLC
  * ——————————————————————————————————————————————————————————————————————————————
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,19 +17,10 @@
  * under the License
  * ______________________________________________________________________________
  */
-package com.autonomic.tmc.auth;
+package com.autonomic.tmc.auth.exception;
 
-/**
- * Runtime exception thrown when there is a communication issue while attempting auth. IOException or
- * UnknownHostException being thrown are examples of communication issues.
- */
-public class AuthenticationCommunicationException extends RuntimeException {
-
-    public AuthenticationCommunicationException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
-
-    public AuthenticationCommunicationException(String msg) {
-        super(msg);
-    }
+public enum ErrorSourceType {
+    SDK_CLIENT,
+    SERVICE,
+    UNKNOWN
 }

@@ -1,8 +1,8 @@
 /*-
  * ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
- * tmc-auth
+ * TMC Auth SDK
  * ——————————————————————————————————————————————————————————————————————————————
- * Copyright (C) 2016 - 2019 Autonomic, LLC - All rights reserved
+ * Copyright (C) 2016 - 2020 Autonomic, LLC
  * ——————————————————————————————————————————————————————————————————————————————
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,21 +17,11 @@
  * under the License
  * ______________________________________________________________________________
  */
-package com.autonomic.tmc.auth;
+package com.autonomic.tmc.auth.exception;
 
-/**
- * Provides a bearer token to be used for authentication with the TMC platform.
- *
- * <p>Reference: <a target="_blank" href="https://developer.autonomic.ai/">TMC Developer
- * Portal</a></p>
- */
-public interface TokenSupplier {
+public class SdkClientException extends BaseSdkException {
 
-    /**
-     * <p>Retrieves a bearer token from the TMC Authentication token provider.</p>
-     * <p>Implementations of this method must always return a valid token.</p>
-     *
-     * @return a String representation of the bearer token.
-     */
-    String get();
+    public SdkClientException(String clientMessage, Throwable cause) {
+        super(buildMessage(ErrorSourceType.SDK_CLIENT, clientMessage), cause);
+    }
 }
