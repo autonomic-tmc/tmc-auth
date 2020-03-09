@@ -116,10 +116,10 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
     public synchronized String get() {
         if (token != null && !token.isExpired()) {
             log.debug("Cached token found.");
-            return token.get();
+            return token.getValue();
         }
         resetToken();
-        return token.get();
+        return token.getValue();
     }
 
     private synchronized void resetToken() {
@@ -172,7 +172,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
     TokenResponse executeTokenRequest() {
         TokenRequest request = createTokenRequest();
 
-        HTTPResponse response = null;
+        HTTPResponse response;
         try {
             response = request.toHTTPRequest().send();
         } catch (IOException e) {

@@ -23,9 +23,9 @@ package com.autonomic.tmc.auth;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.function.Supplier;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 
 /**
@@ -44,8 +44,9 @@ import lombok.NonNull;
  *     </li>
  * </ul>
  */
+@Getter
 @EqualsAndHashCode
-public class Token implements Supplier<String> {
+public class Token {
 
     private Clock clock = java.time.Clock.systemDefaultZone();
 
@@ -87,8 +88,4 @@ public class Token implements Supplier<String> {
             .isAfter(expiration);
     }
 
-    @Override
-    public String get() {
-        return this.value;
-    }
 }
