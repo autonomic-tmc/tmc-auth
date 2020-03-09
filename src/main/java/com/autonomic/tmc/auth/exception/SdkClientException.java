@@ -19,14 +19,9 @@
  */
 package com.autonomic.tmc.auth.exception;
 
-import static com.autonomic.tmc.auth.exception.ErrorSourceType.SDK_CLIENT;
-
 public class SdkClientException extends BaseSdkException {
 
-    private final String clientMessage;
-
     public SdkClientException(String clientMessage, Throwable cause) {
-        super(SDK_CLIENT, clientMessage, cause);
-        this.clientMessage = clientMessage;
+        super(buildMessage(ErrorSourceType.SDK_CLIENT, clientMessage), cause);
     }
 }

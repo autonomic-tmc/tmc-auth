@@ -30,29 +30,31 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 @Slf4j
 public class BaseSdkException extends RuntimeException {
 
-    static ProjectProperties projectProperties = new ProjectProperties();
+    private static final String PROJECT_NAME;
+    private static final String PROJECT_VERSION;
 
-    private final ErrorSourceType errorSourceType;
+    static {
+        ProjectProperties projectProperties = new ProjectProperties();
+        PROJECT_NAME = projectProperties.getName();
+        PROJECT_VERSION = projectProperties.getVersion();
+    }
 
-    BaseSdkException(ErrorSourceType errorSourceType, String message) {
+    BaseSdkException(String message) {
         super(message);
-        this.errorSourceType = errorSourceType;
     }
 
-    BaseSdkException(ErrorSourceType errorSourceType, String message, Throwable cause) {
+    BaseSdkException(String message, Throwable cause) {
         super(message, cause);
-        this.errorSourceType = errorSourceType;
     }
 
-    @Override
-    public String getMessage() {
-        return String.format("%s-%s-%s: %s", projectProperties.getName(), projectProperties.getVersion(), errorSourceType,
-                super.getMessage());
+    static String buildMessage(ErrorSourceType errorSourceType, String clientMessage) {
+        return String
+            .format("%s-%s-%s: %s.", PROJECT_NAME, PROJECT_VERSION, errorSourceType, clientMessage);
     }
 
     static class ProjectProperties {
 
-        final static String UNKNOWN = "[ UNKNOWN ]";
+        private static final String UNKNOWN = "[ UNKNOWN ]";
         static String pom = "pom.xml";
 
         private Model properties;
@@ -73,6 +75,10 @@ public class BaseSdkException extends RuntimeException {
 
         String getVersion() {
             return Optional.ofNullable(properties.getVersion()).orElse(UNKNOWN);
+        }
+
+        void setProperties(Model properties) {
+            this.properties = properties;
         }
     }
 }

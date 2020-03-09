@@ -22,28 +22,34 @@ package com.autonomic.tmc.auth.exception;
 import static com.autonomic.tmc.auth.exception.ErrorSourceType.SERVICE;
 
 import com.nimbusds.oauth2.sdk.TokenErrorResponse;
-import java.util.Optional;
+import java.util.Objects;
 
 public class SdkServiceException extends BaseSdkException {
 
-    private Integer statusCode = 500;
-    private Throwable cause;
+    private int httpStatusCode = 500;
 
-    public SdkServiceException(String message, Throwable cause) {
-        super(SERVICE, message, cause);
-        this.cause = cause;
+    public SdkServiceException(String clientMessage, Throwable cause) {
+        super(buildMessage(SERVICE, clientMessage), cause);
     }
 
-    public SdkServiceException(String message, TokenErrorResponse errorResponse) {
-        super(SERVICE, message);
-        this.statusCode = errorResponse.toHTTPResponse().getStatusCode();
+    public SdkServiceException(String clientMessage, TokenErrorResponse errorResponse) {
+        super(buildMessage(clientMessage, errorResponse));
+        if (Objects.nonNull(errorResponse)) {
+            httpStatusCode = errorResponse.getErrorObject().getHTTPStatusCode();
+        }
     }
 
-    public int getStatusCode() {
-        return statusCode;
+    public int getHttpStatusCode() {
+        return httpStatusCode;
     }
 
-    public Optional<String> getErrorCause() {
-        return Optional.ofNullable(cause.getMessage());
+    private static String buildMessage(String clientMessage, TokenErrorResponse errorResponse) {
+        StringBuilder sb = new StringBuilder(buildMessage(SERVICE, clientMessage));
+        if (Objects.nonNull(errorResponse)) {
+            sb.append(String.format("Error: code=%s and httpStatusCode=%s",
+                    errorResponse.getErrorObject().getCode(),
+                    errorResponse.getErrorObject().getHTTPStatusCode()));
+        }
+        return sb.toString();
     }
 }

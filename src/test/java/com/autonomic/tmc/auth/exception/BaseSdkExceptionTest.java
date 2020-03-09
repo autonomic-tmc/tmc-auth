@@ -20,9 +20,11 @@
 package com.autonomic.tmc.auth.exception;
 
 import static com.autonomic.tmc.auth.exception.ErrorSourceType.SDK_CLIENT;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.autonomic.tmc.auth.exception.BaseSdkException.ProjectProperties;
+import org.apache.maven.model.Model;
 import org.junit.jupiter.api.Test;
 
 public class BaseSdkExceptionTest {
@@ -40,21 +42,17 @@ public class BaseSdkExceptionTest {
     }
 
     @Test
-    void givenAMissingPom_whenExceptionIsRaised_thenMessageContainsUnknown() {
-        String actualMessage = "A test exception message";
+    void projectProperties_returnsUnknown_when_POMFileNotFound() {
+        ProjectProperties projectProperties = new ProjectProperties();
 
-        ProjectProperties.pom = "rom.xml";
+        // pom not found
+        projectProperties.setProperties(new Model());
 
-        assertThatThrownBy(() -> throwNewSDKClientException(actualMessage))
-            .hasMessageContaining(actualMessage)
-            .hasMessageContaining("[ UNKNOWN ]")
-            .hasMessageContaining(SDK_CLIENT.toString());
+        assertThat(projectProperties.getName()).isEqualTo("[ UNKNOWN ]");
+        assertThat(projectProperties.getVersion()).isEqualTo("[ UNKNOWN ]");
     }
 
-    private RuntimeException throwNewSDKClientException(String actualMessage) {
-        BaseSdkException.projectProperties = new ProjectProperties();
-
-        throw new SdkClientException(actualMessage,
-            new RuntimeException());
+    private void throwNewSDKClientException(String actualMessage) {
+        throw new SdkClientException(actualMessage, new RuntimeException());
     }
 }

@@ -114,7 +114,7 @@ class ClientCredentialsTokenSupplierTest {
             .isInstanceOf(SdkServiceException.class)
             .hasMessageContaining("Authorization failed for user [")
             .hasMessageContaining("at tokenUrl [")
-            .hasFieldOrPropertyWithValue("statusCode", responseCode);
+            .hasFieldOrPropertyWithValue("httpStatusCode", responseCode);
 
     }
 
@@ -143,7 +143,7 @@ class ClientCredentialsTokenSupplierTest {
             .isInstanceOf(SdkServiceException.class)
             .hasMessageContaining("Unexpected response [")
             .hasMessageContaining("from tokenUrl [")
-            .hasFieldOrPropertyWithValue("statusCode", responseCode);
+            .hasFieldOrPropertyWithValue("httpStatusCode", responseCode);
 
     }
 
