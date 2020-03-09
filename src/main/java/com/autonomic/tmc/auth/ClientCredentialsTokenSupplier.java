@@ -39,8 +39,8 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import lombok.Builder;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * This class provides an OAuth 2.0 - Client Credentials Grant based implementation of {@link
@@ -107,9 +107,9 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
      *
      * @return String representation of Bearer token.
      * @throws SdkServiceException Thrown when an unexpected condition is encountered while making
-     *                             the client credentials grant POST
-     * @throws SdkClientException  Thrown when the credentials that were provided are expressly
-     *                             rejected.
+     * the client credentials grant POST
+     * @throws SdkClientException Thrown when the credentials that were provided are expressly
+     * rejected.
      */
     @Override
     public synchronized String get() {
@@ -144,6 +144,12 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         ClientAuthentication clientAuthentication = new ClientSecretPost(clientID, secret);
 
         return new TokenRequest(this.tokenEndpoint, clientAuthentication, clientGrant, null);
+    }
+
+    private void validateRequiredParams(String clientId, String clientSecret) {
+        if (StringUtils.isBlank(clientId) || StringUtils.isBlank(clientSecret)) {
+            throw new SdkClientException("Both client id and client secret are required and cannot be blank", null);
+        }
     }
 
     AccessToken processTokenResponse(TokenResponse response) {

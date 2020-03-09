@@ -72,7 +72,7 @@ class ClientCredentialsTokenSupplierTest {
 
     @Test
     void cannot_construct_without_clientId() {
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(SdkClientException.class, () -> {
             ClientCredentialsTokenSupplier.builder()
                 .clientId(null)
                 .clientSecret("a-secret")
@@ -82,7 +82,7 @@ class ClientCredentialsTokenSupplierTest {
 
     @Test
     void cannot_construct_without_clientSecret() {
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(SdkClientException.class, () -> {
             ClientCredentialsTokenSupplier.builder()
                 .clientId("a-client-id")
                 .clientSecret(null)
