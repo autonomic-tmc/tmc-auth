@@ -194,10 +194,13 @@ workflows:
   build_and_test:
     jobs:
       - scan_secrets
-      - examples-nightly
       - build:
           requires:
             - scan_secrets
+          context: tmc-oss-context
+      - examples-nightly:
+          requires:
+            - build
           context: tmc-oss-context
       - test:
           requires:
@@ -235,5 +238,9 @@ workflows:
               only:
                 - master
     jobs:
+      - build:
+          context: tmc-oss-context
       - examples-nightly:
+          requires:
+            - build
           context: tmc-oss-context
