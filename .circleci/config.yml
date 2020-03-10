@@ -66,8 +66,7 @@ jobs:
           name: maven compile and install
           command: |
             cd ~/repo
-            mvn dependency:go-offline compile -DprocessAllModules -Pintegration-tests
-            mvn install
+            mvn dependency:go-offline compile -DprocessAllModules install
       - run:
           name: gradle build
           command: |
