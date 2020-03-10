@@ -125,12 +125,12 @@ jobs:
             cd ~/repo/examples/maven-example
             export M2_HOME=$MAVEN_CONFIG
             export MAVEN_CONFIG=
-            ./run.sh
+            ./run.sh LOCAL-SNAPSHOT
       - run:
           name: Run Gradle Example
           command: |
             cd ~/repo/examples/gradle-example
-            ./run.sh
+            ./run.sh LOCAL-SNAPSHOT
 
   sonar:
     executor: sonar-image
