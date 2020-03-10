@@ -63,10 +63,10 @@ jobs:
           keys:
             - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
       - run:
-          name: maven compile and install
+          name: maven install
           command: |
             cd ~/repo
-            mvn dependency:go-offline compile -DprocessAllModules install
+            mvn install dependency:go-offline -DprocessAllModules -DskipTests
       - run:
           name: gradle build
           command: |
@@ -91,7 +91,7 @@ jobs:
       - attach_workspace:
           at: /root
 
-      - run: mvn -Pintegration-tests verify
+      - run: mvn verify -Pintegration-tests -o
 
       - run:
           name: Save test results
