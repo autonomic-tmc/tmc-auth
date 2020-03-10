@@ -62,14 +62,17 @@ jobs:
       - restore_cache:
           keys:
             - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
-      - run: |
-          cd ~/repo/examples/gradle-example
-          ./gradlew build
       - run:
+          name: maven compile and install
           command: |
             cd ~/repo
             mvn dependency:go-offline compile -DprocessAllModules -Pintegration-tests
-
+            mvn install
+      - run:
+          name: gradle build
+          command: |
+            cd ~/repo/examples/gradle-example
+            ./gradlew build
       - persist_to_workspace:
           root: /root
           paths:
