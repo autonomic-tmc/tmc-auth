@@ -18,6 +18,10 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <tmc.integration.tests/>
+    <tmc-auth.version>LOCAL-SNAPSHOT</tmc-auth.version>
+    <grpc-stub.version>1.25.0</grpc-stub.version>
+    <grpc-netty.version>1.25.0</grpc-netty.version>
+    <netty-tcnative.version>2.0.28.Final</netty-tcnative.version>
     <spring.boot.version>2.2.2.RELEASE</spring.boot.version>
   </properties>
 
@@ -33,27 +37,33 @@
     <dependency>
       <groupId>com.autonomic.tmc</groupId>
       <artifactId>tmc-auth</artifactId>
-      <version>2.0.3-alpha</version>
+      <version>${tmc-auth.version}</version>
     </dependency>
     <dependency>
       <groupId>io.grpc</groupId>
       <artifactId>grpc-stub</artifactId>
-      <version>1.25.0</version>
+      <version>${grpc-stub.version}</version>
     </dependency>
     <dependency>
       <groupId>io.grpc</groupId>
       <artifactId>grpc-netty</artifactId>
-      <version>1.25.0</version>
+      <version>${grpc-netty.version}</version>
     </dependency>
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-tcnative-boringssl-static</artifactId>
-      <version>2.0.28.Final</version>
+      <version>${netty-tcnative.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
       <version>${spring.boot.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-logging</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 

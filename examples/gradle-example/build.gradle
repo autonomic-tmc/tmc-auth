@@ -20,11 +20,13 @@ repositories {
 }
 
 dependencies {
-    implementation("com.autonomic.tmc:tmc-auth:2.0.3-alpha")
+    implementation("com.autonomic.tmc:tmc-auth:LOCAL-SNAPSHOT")
     implementation("io.grpc:grpc-stub:1.25.0")
     implementation("io.grpc:grpc-netty:1.25.0")
     implementation("io.netty:netty-tcnative-boringssl-static:2.0.28.Final")
-    implementation("org.springframework.boot:spring-boot-starter:2.2.1.RELEASE")
+    implementation("org.springframework.boot:spring-boot-starter:2.2.2.RELEASE") {
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+    }
 }
 
 // Define the main class for the application

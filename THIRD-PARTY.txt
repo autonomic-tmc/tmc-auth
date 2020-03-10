@@ -12,7 +12,7 @@ RESULTING FROM ANY USE OR DISTRIBUTION OF THIS LIST.
 
 In case of any license issues related to TMC Auth SDK, please contact support@autonomic.ai.
 
-Date Generated: 2020-03-09 20:00
+Date Generated: 2020-03-10 15:54
 
  (Apache License, Version 2.0) Jackson-annotations (com.fasterxml.jackson.core:jackson-annotations:2.10.2 - http://github.com/FasterXML/jackson)
  (Apache License, Version 2.0) Jackson-core (com.fasterxml.jackson.core:jackson-core:2.10.2 - https://github.com/FasterXML/jackson-core)
@@ -34,6 +34,7 @@ Date Generated: 2020-03-09 20:00
  (Apache License, Version 2.0) Apache Commons Logging (commons-logging:commons-logging:1.2 - http://commons.apache.org/proper/commons-logging/)
  (CDDL 1.1) JavaBeans Activation Framework (JAF) (javax.activation:activation:1.1 - http://java.sun.com/products/javabeans/jaf/index.jsp)
  (CDDL 1.1) Java Servlet API (javax.servlet:javax.servlet-api:3.1.0 - http://servlet-spec.java.net)
+ (CDDL 1.1) (GPL2 w/ CPE) jaxb-api (javax.xml.bind:jaxb-api:2.3.0 - https://github.com/javaee/jaxb-spec/jaxb-api)
  (Apache License, Version 2.0) Apache Log4j (log4j:log4j:1.2.17 - http://logging.apache.org/log4j/1.2/)
  (Apache License, Version 2.0) Byte Buddy (without dependencies) (net.bytebuddy:byte-buddy:1.9.0 - http://bytebuddy.net/byte-buddy)
  (Apache License, Version 2.0) Byte Buddy Java agent (net.bytebuddy:byte-buddy-agent:1.9.0 - http://bytebuddy.net/byte-buddy-agent)
