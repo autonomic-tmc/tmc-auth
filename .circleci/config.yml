@@ -137,7 +137,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v3-publish-dependencies-{{ checksum "pom.xml" }}
+            - v3-nightly-dependencies-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
       - run:
           name: Run Maven Example
           # M2_HOME so ./mvnw can leverage the cache
@@ -152,6 +152,11 @@ jobs:
           command: |
             cd ~/repo/examples/gradle-example
             ./run.sh
+      - save_cache:
+          paths:
+            - ~/.m2
+            - ~/.gradle
+          key: v3-nightly-dependencies-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
 
   sonar:
     executor: sonar-image
