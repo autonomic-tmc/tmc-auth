@@ -91,7 +91,7 @@ jobs:
       - attach_workspace:
           at: /root
 
-      - run: mvn verify -Pintegration-tests -o
+      - run: mvn verify -Pintegration-tests
 
       - run:
           name: Save test results
