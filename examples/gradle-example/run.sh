@@ -5,5 +5,5 @@ if [ $# -eq 0 ]
   then
     ./gradlew run
   else
-    ./gradlew run -PtmcAuthVersion=$1
+    ./gradlew run -Ptmc-auth.version=$1
 fi

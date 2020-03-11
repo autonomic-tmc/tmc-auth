@@ -20,7 +20,7 @@ repositories {
 }
 
 ext {
-    tmcAuthVersion = project.hasProperty('tmcAuthVersion') ? project.getProperty('tmcAuthVersion') : '3.0.0-alpha'
+    tmcAuthVersion = project.hasProperty('tmc-auth.version') ? project.getProperty('tmc-auth.version') : '3.0.0-alpha'
 }
 
 dependencies {
