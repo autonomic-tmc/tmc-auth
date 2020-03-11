@@ -62,14 +62,16 @@ jobs:
       - restore_cache:
           keys:
             - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
-      - run: |
-          cd ~/repo/examples/gradle-example
-          ./gradlew build
       - run:
+          name: maven install
           command: |
             cd ~/repo
-            mvn dependency:go-offline compile -DprocessAllModules -Pintegration-tests
-
+            mvn install dependency:go-offline -DprocessAllModules -DskipTests
+      - run:
+          name: gradle build
+          command: |
+            cd ~/repo/examples/gradle-example
+            ./gradlew build
       - persist_to_workspace:
           root: /root
           paths:
@@ -89,7 +91,7 @@ jobs:
       - attach_workspace:
           at: /root
 
-      - run: mvn -Pintegration-tests verify
+      - run: mvn verify -Pintegration-tests
 
       - run:
           name: Save test results
@@ -122,12 +124,39 @@ jobs:
             cd ~/repo/examples/maven-example
             export M2_HOME=$MAVEN_CONFIG
             export MAVEN_CONFIG=
+            ./run.sh LOCAL-SNAPSHOT
+      - run:
+          name: Run Gradle Example
+          command: |
+            cd ~/repo/examples/gradle-example
+            ./run.sh LOCAL-SNAPSHOT
+
+  examples-nightly:
+    executor: java-image
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v3-nightly-dependencies-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
+      - run:
+          name: Run Maven Example
+          # M2_HOME so ./mvnw can leverage the cache
+          # unset MAVEN_CONFIG so that ./mvnw will not error
+          command: |
+            cd ~/repo/examples/maven-example
+            export M2_HOME=$MAVEN_CONFIG
+            export MAVEN_CONFIG=
             ./run.sh
       - run:
           name: Run Gradle Example
           command: |
             cd ~/repo/examples/gradle-example
             ./run.sh
+      - save_cache:
+          paths:
+            - ~/.m2
+            - ~/.gradle
+          key: v3-nightly-dependencies-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
 
   sonar:
     executor: sonar-image
@@ -206,4 +235,8 @@ workflows:
                 - master
     jobs:
       - build:
+          context: tmc-oss-context
+      - examples-nightly:
+          requires:
+            - build
           context: tmc-oss-context

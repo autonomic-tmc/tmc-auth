@@ -1,4 +1,8 @@
 #!/bin/bash
 set -eo errexit
 
-./mvnw -s ./settings.xml spring-boot:run
+if [ $# -eq 0 ]; then
+  ./mvnw -s ./settings.xml spring-boot:run
+else
+  ./mvnw -s ./settings.xml spring-boot:run -Dtmc-auth.version="$1"
+fi
