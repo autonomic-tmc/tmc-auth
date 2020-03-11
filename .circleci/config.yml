@@ -198,10 +198,6 @@ workflows:
           requires:
             - scan_secrets
           context: tmc-oss-context
-      - examples-nightly:
-          requires:
-            - build
-          context: tmc-oss-context
       - test:
           requires:
             - build
