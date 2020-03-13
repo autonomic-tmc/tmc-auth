@@ -130,7 +130,59 @@
   </dependencies>
 
   <build>
+<!--    <pluginManagement>-->
+<!--      <plugins>-->
+<!--        <plugin>-->
+<!--          <groupId>org.apache.maven.plugins</groupId>-->
+<!--          <artifactId>maven-jar-plugin</artifactId>-->
+<!--          <version>3.2.0</version>-->
+<!--          <configuration>-->
+<!--            <archive>-->
+<!--              <manifest>-->
+<!--                <packageName>com.autonomic.tmc.auth</packageName>-->
+<!--                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>-->
+<!--              </manifest>-->
+<!--              <manifestEntries>-->
+<!--                <Implementation-Title>${project.artifactId}</Implementation-Title>-->
+<!--              </manifestEntries>-->
+<!--            </archive>-->
+<!--          </configuration>-->
+<!--        </plugin>-->
+<!--      </plugins>-->
+<!--    </pluginManagement>-->
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <phase>package</phase>-->
+<!--            <configuration>-->
+<!--              <archive>-->
+<!--                <manifest>-->
+<!--                  <packageName>com.autonomic.tmc.auth</packageName>-->
+<!--                  <addDefaultImplementationEntries>true</addDefaultImplementationEntries>-->
+<!--                </manifest>-->
+<!--&lt;!&ndash;                <manifestEntries>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;                  <Implementation-Title>${project.artifactId}</Implementation-Title>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                </manifestEntries>&ndash;&gt;-->
+<!--              </archive>-->
+<!--            </configuration>-->
+<!--          </execution>-->
+<!--        </executions>-->
+        <configuration>
+          <archive>
+            <manifest>
+              <packageName>com.autonomic.tmc.auth</packageName>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+            <manifestEntries>
+              <Implementation-Title>${project.artifactId}</Implementation-Title>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>

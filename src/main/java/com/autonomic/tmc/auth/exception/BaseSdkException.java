@@ -19,13 +19,13 @@
  */
 package com.autonomic.tmc.auth.exception;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 @Slf4j
 public class BaseSdkException extends RuntimeException {
@@ -55,30 +55,34 @@ public class BaseSdkException extends RuntimeException {
     static class ProjectProperties {
 
         private static final String UNKNOWN = "[ UNKNOWN ]";
-        static String pom = "pom.xml";
+        private static Manifest manifest;
 
-        private Model properties;
-
-        public ProjectProperties() {
-            try {
-                MavenXpp3Reader reader = new MavenXpp3Reader();
-                properties = reader.read(new FileReader(pom));
-            } catch (IOException | XmlPullParserException e) {
-                log.warn("Failed to read pom.xml while building BaseSdkException", e);
-                properties = new Model();
+        private Manifest getManifest() {
+            if (Objects.isNull(manifest)) {
+                try {
+                    String jarPath = BaseSdkException.class.getProtectionDomain()
+                        .getCodeSource().getLocation().toURI().getPath();
+                    JarFile jarFile = new JarFile(jarPath);
+                    manifest = jarFile.getManifest();
+                } catch (IOException | URISyntaxException ignored) {}
             }
+            return manifest;
+        }
+
+        private String getAttribute(String name) {
+            return Optional.ofNullable(getManifest())
+                .map(m -> m.getMainAttributes().getValue(name))
+                .orElse(null);
         }
 
         String getName() {
-            return Optional.ofNullable(properties.getArtifactId()).orElse(UNKNOWN);
+            return Optional.ofNullable(getAttribute("Implementation-Title"))
+                .orElse(UNKNOWN);
         }
 
         String getVersion() {
-            return Optional.ofNullable(properties.getVersion()).orElse(UNKNOWN);
-        }
-
-        void setProperties(Model properties) {
-            this.properties = properties;
+            return Optional.ofNullable(getAttribute("Implementation-Version"))
+                .orElse(UNKNOWN);
         }
     }
 }
