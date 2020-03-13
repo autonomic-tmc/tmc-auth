@@ -24,7 +24,7 @@ ext {
 }
 
 dependencies {
-    implementation("com.autonomic.tmc:tmc-auth:${tmcAuthVersion}")
+    implementation("com.autonomic.tmc:tmc-auth:LOCAL-SNAPSHOT")
     implementation("io.grpc:grpc-stub:1.25.0")
     implementation("io.grpc:grpc-netty:1.25.0")
     implementation("io.netty:netty-tcnative-boringssl-static:2.0.28.Final")
