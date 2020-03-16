@@ -26,18 +26,6 @@ import org.junit.jupiter.api.Test;
 
 public class BaseSdkExceptionTest {
 
-//    @Test
-//    void givenApom_whenExceptionIsRaised_thenMessageDoesNotContainUnknown() {
-//
-//        String actualMessage = "A test exception message";
-////        ProjectProperties.pom = "pom.xml";
-//
-//        assertThatThrownBy(() -> throwNewSDKClientException(actualMessage))
-//            .hasMessageContaining(actualMessage)
-//            .hasMessageContaining("tmc-auth")
-//            .hasMessageContaining(SDK_CLIENT.toString());
-//    }
-
     @Test
     void projectProperties_returnsUnknown_when_POMFileNotFound() {
         ProjectProperties projectProperties = new ProjectProperties();
