@@ -71,7 +71,7 @@ jobs:
           name: gradle build
           command: |
             cd ~/repo/examples/gradle-example
-            ./gradlew build
+            ./gradlew build -x test
       - persist_to_workspace:
           root: /root
           paths:
