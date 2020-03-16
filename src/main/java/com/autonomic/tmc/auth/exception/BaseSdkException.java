@@ -55,15 +55,16 @@ public class BaseSdkException extends RuntimeException {
     static class ProjectProperties {
 
         private static final String UNKNOWN = "[ UNKNOWN ]";
-        private static Manifest manifest;
+        private Manifest manifest;
 
         private Manifest getManifest() {
             if (Objects.isNull(manifest)) {
                 try {
                     String jarPath = BaseSdkException.class.getProtectionDomain()
                         .getCodeSource().getLocation().toURI().getPath();
-                    JarFile jarFile = new JarFile(jarPath);
-                    manifest = jarFile.getManifest();
+                    try (JarFile jarFile = new JarFile(jarPath)) {
+                        manifest = jarFile.getManifest();
+                    }
                 } catch (IOException | URISyntaxException ignored) {}
             }
             return manifest;
