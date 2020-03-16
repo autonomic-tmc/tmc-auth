@@ -21,16 +21,16 @@ repositories {
 
 ext {
     tmcAuthVersion = project.hasProperty('tmc-auth.version') ? project.getProperty('tmc-auth.version') : 'LOCAL-SNAPSHOT'
+//    tmcAuthVersion = project.hasProperty('tmc-auth.version') ? project.getProperty('tmc-auth.version') : '3.0.0-alpha'
 }
 
 dependencies {
     implementation("com.autonomic.tmc:tmc-auth:LOCAL-SNAPSHOT")
+//    implementation("com.autonomic.tmc:tmc-auth:${tmcAuthVersion}")
     implementation("io.grpc:grpc-stub:1.25.0")
     implementation("io.grpc:grpc-netty:1.25.0")
     implementation("io.netty:netty-tcnative-boringssl-static:2.0.28.Final")
-    implementation("org.springframework.boot:spring-boot-starter:2.2.2.RELEASE") {
-        exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
-    }
+    implementation("org.springframework.boot:spring-boot-starter:2.2.2.RELEASE")
     testImplementation("org.springframework.boot:spring-boot-starter-test:2.2.2.RELEASE") {
         exclude group: "org.junit.vintage"
         exclude group: "jakarta.activation"
@@ -38,7 +38,20 @@ dependencies {
     }
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.6.0")
     testImplementation("org.junit.platform:junit-platform-launcher:1.5.2")
+    testImplementation("ch.qos.logback:logback-classic:0.9.26")
 }
 
+sourceSets{
+    test.java {
+        srcDir("src/test/java")
+    }
+}
+
+tasks.test{
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
+}
 // Define the main class for the application
 mainClassName = 'com.autonomic.tmc.example.auth.GradleAuthExample'

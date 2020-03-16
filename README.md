@@ -27,7 +27,7 @@ See our [examples](examples) for more information on including this library in y
         .clientId("<your-client-id>")
         .clientSecret("<your-client-secret>")
         .tokenUrl("<your-token-url-if-not-using-default>")
-        .build());
+        .build();
 
     String token = supplier.get();
 ```

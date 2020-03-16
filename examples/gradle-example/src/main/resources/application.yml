@@ -9,3 +9,7 @@ tmc:
     tokenUrl: https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token
   some-service:
       serviceUrl: https://api.autonomic.ai
+
+logging:
+  level:
+    com.autonomic: WARN
