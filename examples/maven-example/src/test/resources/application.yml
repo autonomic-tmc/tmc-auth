@@ -4,12 +4,8 @@
 # export TMC_CLIENT_SECRET=<your-client-secret>
 tmc:
   auth:
-    clientId: ${TMC_CLIENT_ID} # SHOULD BE STORED IN YOUR ENVIRONMENT
-    clientSecret: ${TMC_CLIENT_SECRET} # SHOULD BE STORED IN YOUR ENVIRONMENT
+    clientId: NOTAREALCLIENTID
+    clientSecret: NOTAREALCLIENTSECRET
     tokenUrl: https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token
   some-service:
-      serviceUrl: https://api.autonomic.ai
-
-logging:
-  level:
-    com.autonomic: WARN
+    serviceUrl: https://api.autonomic.ai

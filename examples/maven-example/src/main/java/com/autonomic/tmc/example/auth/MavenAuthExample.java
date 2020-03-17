@@ -4,6 +4,9 @@ import static java.lang.String.format;
 
 import com.autonomic.tmc.auth.ClientCredentialsTokenSupplier;
 import com.autonomic.tmc.auth.TokenSupplier;
+import com.autonomic.tmc.auth.exception.SdkClientException;
+import com.autonomic.tmc.auth.exception.SdkServiceException;
+import com.google.common.annotations.VisibleForTesting;
 import io.grpc.Channel;
 import java.net.MalformedURLException;
 import java.util.logging.Level;
@@ -18,7 +21,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MavenAuthExample implements CommandLineRunner {
 
-    private static final Logger LOGGER = Logger.getLogger("MavenAuthExample");
+    @VisibleForTesting
+    static Logger LOGGER = Logger.getLogger("MavenAuthExample");
 
     @Value("${tmc.auth.clientId}")
     private String clientId;
@@ -73,9 +77,8 @@ public class MavenAuthExample implements CommandLineRunner {
             // stub. Check with the Autonomic service to learn what is the best stub to use for the
             // service.
 
-        } catch (MalformedURLException | IllegalArgumentException e) {
+        } catch (SdkClientException | SdkServiceException | MalformedURLException e) {
             LOGGER.log(Level.SEVERE, "Generic message, Something went wrong: ", e);
-            System.exit(-1);
         }
     }
 
