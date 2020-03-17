@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
 public class GradleAuthExample implements CommandLineRunner {
 
     @VisibleForTesting
-    Logger LOGGER = Logger.getLogger("GradleAuthExample");
+    static Logger LOGGER = Logger.getLogger("GradleAuthExample");
 
     @Value("${tmc.auth.clientId}")
     private String clientId;

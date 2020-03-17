@@ -27,9 +27,9 @@ class GradleAuthExampleTest {
 
     @Test
     void givenBadCredentials_whenAuthenticating_thenVerifyErrorMessageContainsSdkVersion() {
-        example.LOGGER = loggerStub;
+        GradleAuthExample.LOGGER = loggerStub;
         example.run("hi");
-        Mockito.verify(example.LOGGER).log(
+        Mockito.verify(GradleAuthExample.LOGGER).log(
             eq(Level.SEVERE),
             eq("Generic message, Something went wrong: "),
             errorMessages.capture());
