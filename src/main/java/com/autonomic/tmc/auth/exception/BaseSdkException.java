@@ -63,10 +63,14 @@ public class BaseSdkException extends RuntimeException {
                     String jarPath = BaseSdkException.class.getProtectionDomain()
                         .getCodeSource().getLocation().toURI().getPath();
                     try (JarFile jarFile = new JarFile(jarPath)) {
+                        // This branch is intentionally not unit tested. This cannot be tested
+                        // because the tests run before the library gets packaged. These lines have
+                        // been tested in the examples which are distributed separately form this
+                        // library.
                         manifest = jarFile.getManifest();
                     }
-                } catch (IOException | URISyntaxException ignored) {
-                    log.warn("Unable to find manifest", ignored);
+                } catch (IOException | URISyntaxException e) {
+                    log.warn("Unable to find manifest", e);
                 }
             }
             return manifest;
