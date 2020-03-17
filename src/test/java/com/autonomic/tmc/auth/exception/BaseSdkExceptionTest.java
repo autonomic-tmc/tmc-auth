@@ -30,14 +30,7 @@ public class BaseSdkExceptionTest {
     void projectProperties_returnsUnknown_when_POMFileNotFound() {
         ProjectProperties projectProperties = new ProjectProperties();
 
-        // pom not found
-//        projectProperties.setProperties(new Attributes());
-
         assertThat(projectProperties.getName()).isEqualTo("[ UNKNOWN ]");
         assertThat(projectProperties.getVersion()).isEqualTo("[ UNKNOWN ]");
-    }
-
-    private void throwNewSDKClientException(String actualMessage) {
-        throw new SdkClientException(actualMessage, new RuntimeException());
     }
 }
