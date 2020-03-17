@@ -91,7 +91,9 @@ jobs:
       - attach_workspace:
           at: /root
 
-      - run: mvn verify -Pintegration-tests
+      - run:
+          name: Run tmc-auth test suite
+          command: mvn verify -Pintegration-tests
 
       - run:
           name: Save test results
@@ -100,6 +102,20 @@ jobs:
             cp -fr target/surefire-reports ~/test-output
             cp -fr target/site/jacoco ~/test-output
           when: always
+
+      - run:
+          name: Run maven example test
+          command: |
+            cd ~/repo/examples/maven-example
+            export M2_HOME=$MAVEN_CONFIG
+            export MAVEN_CONFIG=
+            ./mvnw test
+
+      - run:
+          name: Run gradle example test
+          command: |
+            cd ~/repo/examples/gradle-example
+            ./gradlew test
 
       - store_test_results:
           path: ~/test-output
