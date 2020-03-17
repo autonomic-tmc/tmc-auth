@@ -27,9 +27,9 @@ class MavenAuthExampleTest {
 
     @Test
     void givenBadCredentials_whenAuthenticating_thenVerifyErrorMessageContainsSdkVersion() {
-        example.LOGGER = loggerStub;
+        MavenAuthExample.LOGGER = loggerStub;
         example.run("hi");
-        Mockito.verify(example.LOGGER).log(
+        Mockito.verify(MavenAuthExample.LOGGER).log(
             eq(Level.SEVERE),
             eq("Generic message, Something went wrong: "),
             errorMessages.capture());

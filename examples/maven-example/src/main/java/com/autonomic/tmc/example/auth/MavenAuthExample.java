@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
 public class MavenAuthExample implements CommandLineRunner {
 
     @VisibleForTesting
-    Logger LOGGER = Logger.getLogger("MavenAuthExample");
+    static Logger LOGGER = Logger.getLogger("MavenAuthExample");
 
     @Value("${tmc.auth.clientId}")
     private String clientId;
