@@ -73,17 +73,15 @@ public class BaseSdkException extends RuntimeException {
         private String getAttribute(String name) {
             return Optional.ofNullable(getManifest())
                 .map(m -> m.getMainAttributes().getValue(name))
-                .orElse(null);
+                .orElse(UNKNOWN);
         }
 
         String getName() {
-            return Optional.ofNullable(getAttribute("Implementation-Title"))
-                .orElse(UNKNOWN);
+            return getAttribute("Implementation-Title");
         }
 
         String getVersion() {
-            return Optional.ofNullable(getAttribute("Implementation-Version"))
-                .orElse(UNKNOWN);
+            return getAttribute("Implementation-Version");
         }
     }
 }
