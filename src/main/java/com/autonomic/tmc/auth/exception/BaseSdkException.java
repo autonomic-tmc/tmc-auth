@@ -65,7 +65,9 @@ public class BaseSdkException extends RuntimeException {
                     try (JarFile jarFile = new JarFile(jarPath)) {
                         manifest = jarFile.getManifest();
                     }
-                } catch (IOException | URISyntaxException ignored) {}
+                } catch (IOException | URISyntaxException ignored) {
+                    log.warn("Unable to find manifest");
+                }
             }
             return manifest;
         }
