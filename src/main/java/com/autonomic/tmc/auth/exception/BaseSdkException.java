@@ -65,7 +65,7 @@ public class BaseSdkException extends RuntimeException {
                     try (JarFile jarFile = new JarFile(jarPath)) {
                         // This branch is intentionally not unit tested. This cannot be tested
                         // because the tests run before the library gets packaged. These lines have
-                        // been tested in the examples which are distributed separately form this
+                        // been tested in the examples which are distributed separately from this
                         // library.
                         manifest = jarFile.getManifest();
                     }
