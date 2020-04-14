@@ -7,7 +7,7 @@
   <artifactId>tmc-auth</artifactId>
   <version>LOCAL-SNAPSHOT</version>
   <packaging>jar</packaging>
-
+  <url>https://github.com/autonomic-tmc/tmc-auth</url>
   <!-- requires repo https://autonomic.bintray.com/au-tmc-oss -->
   <parent>
     <groupId>com.autonomic.tmc</groupId>
