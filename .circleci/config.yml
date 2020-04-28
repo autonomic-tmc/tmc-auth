@@ -100,7 +100,7 @@ jobs:
             cd ~/repo/examples/maven-example
             export M2_HOME=$MAVEN_CONFIG
             export MAVEN_CONFIG=
-            ./mvnw test
+            mvn test
 
       - run:
           name: Run gradle example test
@@ -125,8 +125,8 @@ jobs:
           at: /root
       - run:
           name: Run Maven Example
-          # M2_HOME so ./mvnw can leverage the cache
-          # unset MAVEN_CONFIG so that ./mvnw will not error
+          # M2_HOME so mvn can leverage the cache
+          # unset MAVEN_CONFIG so that mvn will not error
           command: |
             cd ~/repo/examples/maven-example
             export M2_HOME=$MAVEN_CONFIG
@@ -147,8 +147,8 @@ jobs:
             - v3-nightly-dependencies-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
       - run:
           name: Run Maven Example
-          # M2_HOME so ./mvnw can leverage the cache
-          # unset MAVEN_CONFIG so that ./mvnw will not error
+          # M2_HOME so mvn can leverage the cache
+          # unset MAVEN_CONFIG so that mvn will not error
           command: |
             cd ~/repo/examples/maven-example
             export M2_HOME=$MAVEN_CONFIG

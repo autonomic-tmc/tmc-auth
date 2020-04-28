@@ -28,9 +28,9 @@ The following properties should be added to your environment or this example's [
 
 From the project directory, run the following:
 
-*Linux/Mac*: `./mvnw -s ./settings.xml spring-boot:run` or `./run.sh`
+*Linux/Mac*: `mvn -s ./settings.xml spring-boot:run` or `./run.sh`
 
-*Windows*: `mvnw -s .\settings.xml spring-boot:run` or `run.bat`
+*Windows*: `mvn -s .\settings.xml spring-boot:run` or `run.bat`
 
 ## More information on the Example Application
 
@@ -41,7 +41,7 @@ See [MavenAuthExample.java](src/main/java/com/autonomic/tmc/example/auth/MavenAu
 
 To access Autonomic's open source dependencies, you can add a Maven url to the repositories section of your `settings.xml` file. See the [settings.xml](settings.xml) file for an example.
 
-To use this settings file, it needs to either be placed in your `~/.m2` directory on Mac or `%userprofile%\.m2` on Windows. The settings file can also be invoked directly with the `-s` command line option (eg, `./mvnw -s these-settings.xml clean verify`).
+To use this settings file, it needs to either be placed in your `~/.m2` directory on Mac or `%userprofile%\.m2` on Windows. The settings file can also be invoked directly with the `-s` command line option (eg, `mvn -s these-settings.xml clean verify`).
 
 ### Including the tmc-auth Maven Dependency
 
@@ -69,9 +69,9 @@ A Maven wrapper is included in this project and references a project specific se
 
 By using the maven wrapper, you will be able to build the project without having to install Maven locally.
 
-Linux/Mac: `./mvnw -s ./settings.xml clean install`
+Linux/Mac: `mvn -s ./settings.xml clean install`
 
-Windows: `mvnw -s .\settings.xml clean install`
+Windows: `mvn -s .\settings.xml clean install`
 
 ## Helpful Information
 
