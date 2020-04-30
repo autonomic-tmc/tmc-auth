@@ -41,7 +41,7 @@ See [MavenAuthExample.java](src/main/java/com/autonomic/tmc/example/auth/MavenAu
 
 To access Autonomic's open source dependencies, you can add a Maven url to the repositories section of your `settings.xml` file. See the [settings.xml](settings.xml) file for an example.
 
-To use this settings file, it needs to either be placed in your `~/.m2` directory on Mac or `%userprofile%\.m2` on Windows. The settings file can also be invoked directly with the `-s` command line option (eg, `mvn -s these-settings.xml clean verify`).
+To use this settings file, it needs to either be placed in your `~/.m2` directory on Mac or `%userprofile%\.m2` on Windows. The settings file can also be invoked directly with the `-s` command line option (eg, `./mvnw -s these-settings.xml clean verify`).
 
 ### Including the tmc-auth Maven Dependency
 
