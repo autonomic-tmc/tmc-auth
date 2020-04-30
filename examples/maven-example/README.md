@@ -69,7 +69,7 @@ A Maven wrapper is included in this project and references a project specific se
 
 By using the maven wrapper, you will be able to build the project without having to install Maven locally.
 
-Linux/Mac: `mvn -s ./settings.xml clean install`
+Linux/Mac: `./mvnw -s ./settings.xml clean install`
 
 Windows: `mvn -s .\settings.xml clean install`
 
