@@ -71,7 +71,7 @@ By using the maven wrapper, you will be able to build the project without having
 
 Linux/Mac: `./mvnw -s ./settings.xml clean install`
 
-Windows: `mvn -s .\settings.xml clean install`
+Windows: `mvnw -s .\settings.xml clean install`
 
 ## Helpful Information
 
