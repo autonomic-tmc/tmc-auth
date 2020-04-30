@@ -51,7 +51,7 @@ The [ClientCredentialsTokenSupplier.get()](src/main/java/com/autonomic/tmc/auth/
 ## Building
 
 ```shell
-./mvnw clean install
+mvn clean install
 ```
 
 ## Running the Integration Tests
@@ -64,15 +64,15 @@ The [ClientCredentialsTokenSupplier.get()](src/main/java/com/autonomic/tmc/auth/
 For example:
 
 ```shell
-./mvnw -Pintegration-tests clean verify
+mvn -Pintegration-tests clean verify
 ```
 
-You can pass them as arguments to `mvnw` if you do not have them set on your path.
+You can pass them as arguments to `mvn` if you do not have them set on your path.
 
 For example:
 
 ```shell
-(export TMC_CLIENT_ID=your-client-id && export TMC_CLIENT_SECRET=your-client-secret && ./mvnw -Pintegration-tests clean verify)
+(export TMC_CLIENT_ID=your-client-id && export TMC_CLIENT_SECRET=your-client-secret && mvn -Pintegration-tests clean verify)
 ```
 
 ## 3rd Party Components
