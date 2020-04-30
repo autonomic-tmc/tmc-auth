@@ -30,7 +30,7 @@ From the project directory, run the following:
 
 *Linux/Mac*: `./mvnw -s ./settings.xml spring-boot:run` or `./run.sh`
 
-*Windows*: `mvn -s .\settings.xml spring-boot:run` or `run.bat`
+*Windows*: `mvnw -s .\settings.xml spring-boot:run` or `run.bat`
 
 ## More information on the Example Application
 
