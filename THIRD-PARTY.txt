@@ -12,7 +12,7 @@ RESULTING FROM ANY USE OR DISTRIBUTION OF THIS LIST.
 
 In case of any license issues related to TMC Auth SDK, please contact support@autonomic.ai.
 
-Date Generated: 2020-04-28 11:30
+Date Generated: 2020-06-29 21:36
 
  (Apache License, Version 2.0) Jackson-annotations (com.fasterxml.jackson.core:jackson-annotations:2.10.2 - http://github.com/FasterXML/jackson)
  (Apache License, Version 2.0) Jackson-core (com.fasterxml.jackson.core:jackson-core:2.10.2 - https://github.com/FasterXML/jackson-core)
@@ -24,8 +24,8 @@ Date Generated: 2020-04-28 11:30
  (Apache License, Version 2.0) WireMock (com.github.tomakehurst:wiremock:2.26.0 - http://wiremock.org)
  (Apache License, Version 2.0) Guava: Google Core Libraries for Java (com.google.guava:guava:20.0 - https://github.com/google/guava/guava)
  (Apache License, Version 2.0) project ':json-path' (com.jayway.jsonpath:json-path:2.4.0 - https://github.com/jayway/JsonPath)
- (Apache License, Version 2.0) Nimbus LangTag (com.nimbusds:lang-tag:1.4.4 - https://bitbucket.org/connect2id/nimbus-language-tags)
- (Apache License, Version 2.0) Nimbus JOSE+JWT (com.nimbusds:nimbus-jose-jwt:8.16 - https://bitbucket.org/connect2id/nimbus-jose-jwt)
+ (Apache License, Version 2.0) Nimbus LangTag (com.nimbusds:lang-tag:1.5 - https://bitbucket.org/connect2id/nimbus-language-tags)
+ (Apache License, Version 2.0) Nimbus JOSE+JWT (com.nimbusds:nimbus-jose-jwt:8.19 - https://bitbucket.org/connect2id/nimbus-jose-jwt)
  (Apache License, Version 2.0) OAuth 2.0 SDK with OpenID Connect extensions (com.nimbusds:oauth2-oidc-sdk:6.23 - https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions)
  (CDDL 1.1) JavaMail API (com.sun.mail:javax.mail:1.6.1 - http://javaee.github.io/javamail/javax.mail)
  (Apache License, Version 2.0) Apache Commons Codec (commons-codec:commons-codec:1.10 - http://commons.apache.org/proper/commons-codec/)
@@ -34,7 +34,6 @@ Date Generated: 2020-04-28 11:30
  (Apache License, Version 2.0) Apache Commons Logging (commons-logging:commons-logging:1.2 - http://commons.apache.org/proper/commons-logging/)
  (CDDL 1.1) JavaBeans Activation Framework (JAF) (javax.activation:activation:1.1 - http://java.sun.com/products/javabeans/jaf/index.jsp)
  (CDDL 1.1) Java Servlet API (javax.servlet:javax.servlet-api:3.1.0 - http://servlet-spec.java.net)
- (CDDL 1.1) (GPL2 w/ CPE) jaxb-api (javax.xml.bind:jaxb-api:2.3.0 - https://github.com/javaee/jaxb-spec/jaxb-api)
  (Apache License, Version 2.0) Apache Log4j (log4j:log4j:1.2.17 - http://logging.apache.org/log4j/1.2/)
  (Apache License, Version 2.0) Byte Buddy (without dependencies) (net.bytebuddy:byte-buddy:1.9.0 - http://bytebuddy.net/byte-buddy)
  (Apache License, Version 2.0) Byte Buddy Java agent (net.bytebuddy:byte-buddy-agent:1.9.0 - http://bytebuddy.net/byte-buddy-agent)

@@ -30,7 +30,7 @@ public class GradleAuthExample implements CommandLineRunner {
     @Value("${tmc.auth.clientSecret}")
     private String clientSecret;
 
-    @Value("${tmc.auth.tokenUrl:https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token}")
+    @Value("${tmc.auth.tokenUrl:https://accounts.autonomic.ai/v1/auth/oidc/token}")
     private String tokenUrl;
 
     @Value("${tmc.some-service.serviceUrl:https://api.autonomic.ai}")
@@ -105,7 +105,7 @@ public class GradleAuthExample implements CommandLineRunner {
 
     /**
      * This is an example of how to retrieve a token from a non-production environment. When not
-     * explicitly set, the default value of tokenUrl is 'https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token'.
+     * explicitly set, the default value of tokenUrl is 'https://accounts.autonomic.ai/v1/auth/oidc/token'.
      *
      * @param tokenUrl - String representation of a token URL
      * @return TokenSupplier
