@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.autonomic.tmc:tmc-auth:2.0.3-alpha")
+    implementation("com.autonomic.tmc:tmc-auth:3.0.4-alpha")
 }
 
 application {
