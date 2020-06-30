@@ -6,7 +6,7 @@ tmc:
   auth:
     clientId: NOTAREALCLIENTID
     clientSecret: NOTAREALCLIENTSECRET
-    tokenUrl: https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token
+    tokenUrl: https://accounts.autonomic.ai/v1/auth/oidc/token
   some-service:
     serviceUrl: https://api.autonomic.ai
 

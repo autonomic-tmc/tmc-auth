@@ -38,7 +38,7 @@ See our [examples](examples) for more information on including this library in y
 |---------------|-------------------------------------------------|-----------|-----------------------|
 | clientId | This is your TMC Client identifier provided to you by Au. | Required | none |
 | clientSecret | This is your TMC Client secret provided to you by Au. | Required | none |
-| tokenUrl | The authentication url | Optional | https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token|
+| tokenUrl | The authentication url | Optional | https://accounts.autonomic.ai/v1/auth/oidc/token|
 
 ## Troubleshooting
 

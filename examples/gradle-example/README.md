@@ -51,7 +51,7 @@ By default, this example assumes you want to connect to Autonomic's production e
 
 Property|Description|Required/Optional|Default Value|
 |------|------|-----------------------|------|
-|tmc.auth.tokenUrl|The authentication url.|Optional|https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token|
+|tmc.auth.tokenUrl|The authentication url.|Optional|https://accounts.autonomic.ai/v1/auth/oidc/token|
 
 ### Optional: Configuration for a Secure gRPC Channel
 

@@ -52,7 +52,7 @@ import org.codehaus.plexus.util.StringUtils;
 @Slf4j
 public class ClientCredentialsTokenSupplier implements TokenSupplier {
 
-    private static final String DEFAULT_TOKEN_URL = "https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token";
+    private static final String DEFAULT_TOKEN_URL = "https://accounts.autonomic.ai/v1/auth/oidc/token";
 
     // properties
     private final String clientId;
@@ -83,7 +83,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
      * @param clientSecret The client_secret param of the client credentials request
      * @param tokenUrl     The URL against which the client credentials request will POST. A null
      *                     value will result in the default value being used. Default:
-     *                     https://accounts.autonomic.ai/auth/realms/iam/protocol/openid-connect/token
+     *                     https://accounts.autonomic.ai/v1/auth/oidc/token
      */
     @Builder
     public ClientCredentialsTokenSupplier(String clientId, String clientSecret, String tokenUrl) {
