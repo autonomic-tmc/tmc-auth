@@ -12,7 +12,7 @@
   <parent>
     <groupId>com.autonomic.tmc</groupId>
     <artifactId>tmc-oss-parent</artifactId>
-    <version>1.2.4-alpha</version>
+    <version>1.2.5-beta</version>
   </parent>
 
   <name>TMC Auth SDK</name>
