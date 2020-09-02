@@ -193,7 +193,7 @@ workflows:
       - dependency-track:
           filters:
             branches:
-              only: kt/js/dependency-track
+              only: master
           requires:
             - sonar
           context: tmc-oss-context
