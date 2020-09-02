@@ -283,7 +283,7 @@
               </execution>
             </executions>
             <configuration>
-              <dependencyTrackBaseUrl>http://localhost:8080</dependencyTrackBaseUrl>
+              <dependencyTrackBaseUrl>${env.DEP_TRACK_BASE_URL}</dependencyTrackBaseUrl>
               <apiKey>${env.DEP_TRACK_API_KEY}</apiKey>
             </configuration>
           </plugin>
