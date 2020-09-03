@@ -86,3 +86,4 @@ If you decide to fork `tmc-auth` or build it locally, you will be interested in 
 * [JaCoCo](https://www.eclemma.org/jacoco/) for code coverage
 * [Sonar](https://www.sonarqube.org/) for static code analysis
 * [RevAPI](https://revapi.org/) to validate that we are not introducing breaking API changes
+* [DependencyTrack](https://dependencytrack.org/) to analyze dependencies
