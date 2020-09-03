@@ -86,3 +86,25 @@ If you decide to fork `tmc-auth` or build it locally, you will be interested in 
 * [JaCoCo](https://www.eclemma.org/jacoco/) for code coverage
 * [Sonar](https://www.sonarqube.org/) for static code analysis
 * [RevAPI](https://revapi.org/) to validate that we are not introducing breaking API changes
+* [DependencyTrack](https://dependencytrack.org/) to analyze dependencies
+
+### Running DependencyTrack Locally
+
+We have a Maven profile `dependency-track` defined in `tmc-oss-root-pom` that executes two plugins. Our CircleCI pipeline is configured to run this profile only on `master` branch and for release builds.
+
+- `cyclonedx-maven-plugin` analyzes `pom.xml` and creates a CycloneDX BOM document.
+-  `dependency-track-maven-plugin` uploads CycloneDX BOM document to a Dependency Track server.
+  -  Our CircleCI pipeline uploads it to Au's DependencyTrack server.
+
+If you want to run this profile on your local code without uploading to Au server, you can run a DependencyTrack server locally using Docker by following [these instructions](https://docs.dependencytrack.org/getting-started/deploy-docker/).
+
+> **IMPORTANT:** Before running these Docker commands, make sure to allocate at least 8GB memory using Docker Dashboard on Mac.
+
+Assuming that your local DependencyTrack server is running on port 8080, navigate to Administration -> Access Management -> Teams and look for team name `Automation`. It will have an API key that should be set to an environment variable as shown below:
+
+```bash
+export DEP_TRACK_URL=http://localhost:8080
+export DEP_TRACK_API_TOKEN=<api-key-for-local-server>
+```
+
+After these environment variables are set, you can run `mvn clean verify -Pdependency-track`. Once the build is successful, you can see the project at `http://localhost:8080`.
