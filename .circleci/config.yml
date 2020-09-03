@@ -152,12 +152,20 @@ jobs:
     executor: java-image
     steps:
       - checkout
-
       - restore_cache:
           keys:
             - v3-publish-dependencies-{{ checksum "pom.xml" }}
       - run: mvn versions:set -DnewVersion=${CIRCLE_TAG}
       - run: mvn deploy -Prun-revapi,public
+
+  dependency-track:
+    executor: java-image
+    steps:
+      - attach_workspace:
+          at: /root
+      - run:
+          name: Upload to Dependency Track
+          command: mvn validate -Pdependency-track
 
 workflows:
   version: 2.1
@@ -179,6 +187,14 @@ workflows:
       - sonar:
           requires:
             - test
+      - dependency-track:
+          filters:
+            branches:
+              only: master
+          requires:
+            - sonar
+          context: tmc-oss-context
+
   release:
     jobs:
       #Run Publish on GitHub release
@@ -188,3 +204,11 @@ workflows:
               only: /.*/
             branches:
               ignore: /.*/
+      #Run dependency track on GitHub release
+      - dependency-track:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+          context: tmc-oss-context
