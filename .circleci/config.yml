@@ -165,7 +165,7 @@ jobs:
           at: /root
       - run:
           name: Upload to Dependency Track
-          command: mvn verify -Pdependency-track
+          command: mvn validate -Pdependency-track
 
 workflows:
   version: 2.1
