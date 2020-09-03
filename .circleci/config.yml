@@ -152,7 +152,6 @@ jobs:
     executor: java-image
     steps:
       - checkout
-
       - restore_cache:
           keys:
             - v3-publish-dependencies-{{ checksum "pom.xml" }}
@@ -162,13 +161,11 @@ jobs:
   dependency-track:
     executor: java-image
     steps:
-      - checkout
-
-      - restore_cache:
-          keys:
-            - v3-publish-dependencies-{{ checksum "pom.xml" }}
-      - run: mvn verify -Pdependency-track
-
+      - attach_workspace:
+          at: /root
+      - run:
+          name: Upload to Dependency Track
+          command: mvn verify -Pdependency-track
 
 workflows:
   version: 2.1
@@ -193,7 +190,7 @@ workflows:
       - dependency-track:
           filters:
             branches:
-              only: master
+              only: kt/js/dependency-track
           requires:
             - sonar
           context: tmc-oss-context
