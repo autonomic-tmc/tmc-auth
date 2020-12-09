@@ -1,5 +1,9 @@
 # Authenticating with the TMC
 
+```
+❗tmc-auth distribution has moved! Find us on CloudSmith.
+```
+
 ## tmc-auth SDK
 
 Using the tmc-auth SDK with credentials provided by Autonomic, you can obtain a time-limited access token to be used with other services available on the platform.
