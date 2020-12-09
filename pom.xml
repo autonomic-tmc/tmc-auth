@@ -9,7 +9,7 @@
   <version>LOCAL-SNAPSHOT</version>
   <packaging>jar</packaging>
   <url>https://github.com/autonomic-tmc/tmc-auth</url>
-  <!-- requires repo https://autonomic.bintray.com/au-tmc-oss -->
+  <!-- requires repo https://dl.cloudsmith.io/public/autonomic/au-tmc-oss/maven/ -->
   <parent>
     <groupId>com.autonomic.tmc</groupId>
     <artifactId>tmc-oss-parent</artifactId>
