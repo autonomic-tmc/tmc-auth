@@ -1,8 +1,18 @@
 # Authenticating with the TMC
 
-```
-❗tmc-auth distribution has moved! Find us on CloudSmith.
-```
+---
+|📣 ANNOUNCEMENT: Autonomic's artifacts are moving from Bintray to [Cloudsmith](https://cloudsmith.com/) 📣|
+|---|
+
+If you are using `tmc-auth 3.0.5-beta` or earlier, you will need to replace:
+  -  Your Bintray URL `https://autonomic.bintray.com/au-tmc-oss`
+ -  With a Cloudsmith URL `https://dl.cloudsmith.io/public/autonomic/au-tmc-oss/maven/`
+
+If you are using Maven, these URLs can be found in your `settings.xml`,  or `pom.xml`.
+
+If you are using Gradle, these URLs can be found in your `init.gradle`, `build.gradle`,  or `build.gradle.kts`.
+
+---
 
 ## tmc-auth SDK
 

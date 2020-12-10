@@ -29,16 +29,9 @@
 
   <repositories>
     <repository>
-      <id>autonomic-au-tmc-oss</id>
+      <id>au-oss-repo</id>
+      <name>Autonomic TMC Open Source Repository</name>
       <url>https://dl.cloudsmith.io/public/autonomic/au-tmc-oss/maven/</url>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>always</updatePolicy>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>always</updatePolicy>
-      </snapshots>
     </repository>
   </repositories>
 
