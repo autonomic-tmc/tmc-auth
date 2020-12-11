@@ -1,7 +1,7 @@
 # Authenticating with the TMC
 
 ---
-|📣 ANNOUNCEMENT: Autonomic's artifacts are moving from Bintray to [Cloudsmith](https://cloudsmith.com/) 📣|
+|📣 ANNOUNCEMENT: Autonomic's artifacts have moved from Bintray to [Cloudsmith](https://cloudsmith.com/) 📣|
 |---|
 
 If you are using `tmc-auth 3.0.5-beta` or earlier, you will need to replace:
