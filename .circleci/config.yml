@@ -10,27 +10,27 @@ executors:
     environment:
       JAVA_TOOL_OPTIONS: -Xmx1024m
     docker:
-      - image: autonomic-docker-public-images.bintray.io/tmc/java
+      - image: docker.cloudsmith.io/autonomic/public-images/java
         auth:
-          username: ${BT_PUBLIC_USERNAME}
-          password: ${BT_PUBLIC_API_TOKEN}
+          username: ${CS_PUBLIC_USERNAME}
+          password: ${CS_PUBLIC_API_TOKEN}
   sonar-image:
     working_directory: ~/repo
     environment:
       LANGUAGE: JAVA
       JAVA_TOOL_OPTIONS: -Xmx1024m
     docker:
-      - image: autonomic-docker-private-images.bintray.io/tmc/sonar
+      - image: docker.cloudsmith.io/autonomic/private-images/sonar
         auth:
-          username: ${BT_PRIVATE_USERNAME}
-          password: ${BT_PRIVATE_API_TOKEN}
+          username: ${CS_PRIVATE_USERNAME}
+          password: ${CS_PRIVATE_API_TOKEN}
   gitleaks-image:
     working_directory: ~/repo
     docker:
-      - image: autonomic-docker-private-images.bintray.io/tmc/gitleaks
+      - image: docker.cloudsmith.io/autonomic/private-images/gitleaks
         auth:
-          username: ${BT_PRIVATE_USERNAME}
-          password: ${BT_PRIVATE_API_TOKEN}
+          username: ${CS_PRIVATE_USERNAME}
+          password: ${CS_PRIVATE_API_TOKEN}
 
 jobs:
   scan_secrets:
