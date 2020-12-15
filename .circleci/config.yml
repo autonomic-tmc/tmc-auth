@@ -171,7 +171,8 @@ workflows:
   version: 2.1
   build_and_test:
     jobs:
-      - scan_secrets
+      - scan_secrets:
+          context: tmc-cloudsmith-context
       - build:
           requires:
             - scan_secrets
