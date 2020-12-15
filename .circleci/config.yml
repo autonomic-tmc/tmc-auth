@@ -175,15 +175,15 @@ workflows:
       - build:
           requires:
             - scan_secrets
-          context: tmc-oss-context
+          context: tmc-cloudsmith-context
       - test:
           requires:
             - build
-          context: tmc-oss-context
+          context: tmc-cloudsmith-context
       - examples:
           requires:
             - build
-          context: tmc-oss-context
+          context: tmc-cloudsmith-context
       - sonar:
           requires:
             - test
@@ -193,7 +193,7 @@ workflows:
               only: master
           requires:
             - sonar
-          context: tmc-oss-context
+          context: tmc-cloudsmith-context
 
   release:
     jobs:
@@ -211,4 +211,4 @@ workflows:
               only: /.*/
             branches:
               ignore: /.*/
-          context: tmc-oss-context
+          context: tmc-cloudsmith-context
