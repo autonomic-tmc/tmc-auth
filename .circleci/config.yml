@@ -180,21 +180,28 @@ workflows:
       - test:
           requires:
             - build
-          context: tmc-cloudsmith-context
+          context:
+          - tmc-oss-context
+          - tmc-cloudsmith-context
       - examples:
           requires:
             - build
-          context: tmc-cloudsmith-context
+          context:
+            - tmc-oss-context
+            - tmc-cloudsmith-context
       - sonar:
           requires:
             - test
+          context: tmc-cloudsmith-context
       - dependency-track:
           filters:
             branches:
               only: master
           requires:
             - sonar
-          context: tmc-cloudsmith-context
+          context:
+            - tmc-oss-context
+            - tmc-cloudsmith-context
 
   release:
     jobs:
@@ -212,4 +219,3 @@ workflows:
               only: /.*/
             branches:
               ignore: /.*/
-          context: tmc-cloudsmith-context
