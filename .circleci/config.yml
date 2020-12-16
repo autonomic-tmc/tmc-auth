@@ -10,27 +10,27 @@ executors:
     environment:
       JAVA_TOOL_OPTIONS: -Xmx1024m
     docker:
-      - image: autonomic-docker-public-images.bintray.io/tmc/java
+      - image: docker.cloudsmith.io/autonomic/public-images/java
         auth:
-          username: ${BT_PUBLIC_USERNAME}
-          password: ${BT_PUBLIC_API_TOKEN}
+          username: ${CS_PUBLIC_USERNAME}
+          password: ${CS_PUBLIC_API_TOKEN}
   sonar-image:
     working_directory: ~/repo
     environment:
       LANGUAGE: JAVA
       JAVA_TOOL_OPTIONS: -Xmx1024m
     docker:
-      - image: autonomic-docker-private-images.bintray.io/tmc/sonar
+      - image: docker.cloudsmith.io/autonomic/private-images/sonar
         auth:
-          username: ${BT_PRIVATE_USERNAME}
-          password: ${BT_PRIVATE_API_TOKEN}
+          username: ${CS_PRIVATE_USERNAME}
+          password: ${CS_PRIVATE_API_TOKEN}
   gitleaks-image:
     working_directory: ~/repo
     docker:
-      - image: autonomic-docker-private-images.bintray.io/tmc/gitleaks
+      - image: docker.cloudsmith.io/autonomic/private-images/gitleaks
         auth:
-          username: ${BT_PRIVATE_USERNAME}
-          password: ${BT_PRIVATE_API_TOKEN}
+          username: ${CS_PRIVATE_USERNAME}
+          password: ${CS_PRIVATE_API_TOKEN}
 
 jobs:
   scan_secrets:
@@ -145,7 +145,7 @@ jobs:
           at: /root
       - run:
           name: Analyze on SonarCloud
-          command: ../sonar.sh
+          command: /root/sonar.sh
 
   #publish artifact to OSS repo
   publish-public:
@@ -171,29 +171,39 @@ workflows:
   version: 2.1
   build_and_test:
     jobs:
-      - scan_secrets
+      - scan_secrets:
+          context: tmc-cloudsmith-context
       - build:
           requires:
             - scan_secrets
-          context: tmc-oss-context
+          context: tmc-cloudsmith-context
       - test:
           requires:
             - build
-          context: tmc-oss-context
+          context:
+          - tmc-oss-context
+          - tmc-cloudsmith-context
       - examples:
           requires:
             - build
-          context: tmc-oss-context
+          context:
+            - tmc-oss-context
+            - tmc-cloudsmith-context
       - sonar:
           requires:
             - test
+          context:
+            - tmc-oss-context
+            - tmc-cloudsmith-context
       - dependency-track:
           filters:
             branches:
               only: master
           requires:
             - sonar
-          context: tmc-oss-context
+          context:
+            - tmc-oss-context
+            - tmc-cloudsmith-context
 
   release:
     jobs:
@@ -211,4 +221,3 @@ workflows:
               only: /.*/
             branches:
               ignore: /.*/
-          context: tmc-oss-context
