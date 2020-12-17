@@ -209,6 +209,7 @@ workflows:
     jobs:
       #Run Publish on GitHub release
       - publish-public:
+          context: tmc-cloudsmith-context
           filters:
             tags:
               only: /.*/
@@ -216,6 +217,9 @@ workflows:
               ignore: /.*/
       #Run dependency track on GitHub release
       - dependency-track:
+          context:
+            - tmc-oss-context
+            - tmc-cloudsmith-context
           filters:
             tags:
               only: /.*/
