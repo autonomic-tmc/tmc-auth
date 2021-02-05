@@ -15,7 +15,7 @@ repositories {
     mavenLocal()
     jcenter()
     maven {
-        url "https://autonomic.bintray.com/au-tmc-oss"
+        url = uri("https://dl.cloudsmith.io/public/autonomic/au-tmc-oss/maven/")
     }
 }
 

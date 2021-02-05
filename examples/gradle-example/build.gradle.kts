@@ -11,7 +11,7 @@ plugins {
 
 repositories {
     maven {
-        url = uri("https://autonomic.bintray.com/au-tmc-oss")
+        url = uri("https://dl.cloudsmith.io/public/autonomic/au-tmc-oss/maven/")
     }
 }
 
