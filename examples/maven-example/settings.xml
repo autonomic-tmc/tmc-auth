@@ -11,15 +11,15 @@
       <repositories>
         <repository>
           <id>tmc</id>
-          <name>bintray</name>
-          <url>https://autonomic.bintray.com/au-tmc-oss</url>
+          <name>cloudsmith</name>
+          <url>https://dl.cloudsmith.io/public/autonomic/au-tmc-oss/maven/</url>
         </repository>
       </repositories>
       <pluginRepositories>
         <pluginRepository>
           <id>tmc</id>
-          <name>bintray-plugins</name>
-          <url>https://autonomic.bintray.com/au-tmc-oss</url>
+          <name>cloudsmith-plugins</name>
+          <url>https://dl.cloudsmith.io/public/autonomic/au-tmc-oss/maven/</url>
         </pluginRepository>
       </pluginRepositories>
       <id>tmc</id>

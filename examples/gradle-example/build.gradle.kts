@@ -11,12 +11,12 @@ plugins {
 
 repositories {
     maven {
-        url = uri("https://autonomic.bintray.com/au-tmc-oss")
+        url = uri("https://dl.cloudsmith.io/public/autonomic/au-tmc-oss/maven/")
     }
 }
 
 dependencies {
-    implementation("com.autonomic.tmc:tmc-auth:2.0.3-alpha")
+    implementation("com.autonomic.tmc:tmc-auth:2.0.4-alpha")
 }
 
 application {

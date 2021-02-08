@@ -8,11 +8,10 @@
   <version>LOCAL-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <!-- requires repo https://autonomic.bintray.com/au-tmc-oss -->
   <parent>
     <groupId>com.autonomic.tmc</groupId>
     <artifactId>tmc-oss-parent</artifactId>
-    <version>1.2.3-alpha</version>
+    <version>1.3.1-beta</version>
   </parent>
 
   <name>TMC Auth SDK</name>
@@ -44,6 +43,12 @@
     <!-- - - - - - - - - - - - - - - - - -
     BEGIN TEST ONLY DEPENCENCIES
     - - - - - - - - - - - - - - - - - - -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.7.30</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>com.github.tomakehurst</groupId>
       <artifactId>wiremock</artifactId>

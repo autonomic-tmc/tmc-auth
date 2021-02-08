@@ -10,36 +10,27 @@ executors:
     environment:
       JAVA_TOOL_OPTIONS: -Xmx1024m
     docker:
-      - image: autonomic-docker-public-images.bintray.io/tmc/java
+      - image: docker.cloudsmith.io/autonomic/public-images/java
         auth:
-          username: ${BT_PUBLIC_USERNAME}
-          password: ${BT_PUBLIC_API_TOKEN}
-  private-java-image:
-    working_directory: ~/repo
-    environment:
-      JAVA_TOOL_OPTIONS: -Xmx1024m
-    docker:
-      - image: autonomic-docker-private-images.bintray.io/tmc/java
-        auth:
-          username: ${BT_PRIVATE_USERNAME}
-          password: ${BT_PRIVATE_API_TOKEN}
+          username: ${CS_PUBLIC_USERNAME}
+          password: ${CS_PUBLIC_API_TOKEN}
   sonar-image:
     working_directory: ~/repo
     environment:
       LANGUAGE: JAVA
       JAVA_TOOL_OPTIONS: -Xmx1024m
     docker:
-      - image: autonomic-docker-private-images.bintray.io/tmc/sonar
+      - image: docker.cloudsmith.io/autonomic/private-images/sonar
         auth:
-          username: ${BT_PRIVATE_USERNAME}
-          password: ${BT_PRIVATE_API_TOKEN}
+          username: ${CS_PRIVATE_USERNAME}
+          password: ${CS_PRIVATE_API_TOKEN}
   gitleaks-image:
     working_directory: ~/repo
     docker:
-      - image: autonomic-docker-private-images.bintray.io/tmc/gitleaks
+      - image: docker.cloudsmith.io/autonomic/private-images/gitleaks
         auth:
-          username: ${BT_PRIVATE_USERNAME}
-          password: ${BT_PRIVATE_API_TOKEN}
+          username: ${CS_PRIVATE_USERNAME}
+          password: ${CS_PRIVATE_API_TOKEN}
 
 jobs:
   scan_secrets:
@@ -62,14 +53,16 @@ jobs:
       - restore_cache:
           keys:
             - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
-      - run: |
-          cd ~/repo/examples/gradle-example
-          ./gradlew build
       - run:
+          name: maven install
           command: |
             cd ~/repo
-            mvn dependency:go-offline compile -DprocessAllModules -Pintegration-tests
-
+            mvn install dependency:go-offline -DprocessAllModules -DskipTests
+      - run:
+          name: gradle build
+          command: |
+            cd ~/repo/examples/gradle-example
+            ./gradlew build -x test
       - persist_to_workspace:
           root: /root
           paths:
@@ -89,7 +82,9 @@ jobs:
       - attach_workspace:
           at: /root
 
-      - run: mvn -Pintegration-tests verify
+      - run:
+          name: Run tmc-auth test suite
+          command: mvn verify -Pintegration-tests
 
       - run:
           name: Save test results
@@ -98,6 +93,20 @@ jobs:
             cp -fr target/surefire-reports ~/test-output
             cp -fr target/site/jacoco ~/test-output
           when: always
+
+      - run:
+          name: Run maven example test
+          command: |
+            cd ~/repo/examples/maven-example
+            export M2_HOME=$MAVEN_CONFIG
+            export MAVEN_CONFIG=
+            mvn test
+
+      - run:
+          name: Run gradle example test
+          command: |
+            cd ~/repo/examples/gradle-example
+            ./gradlew test
 
       - store_test_results:
           path: ~/test-output
@@ -116,18 +125,18 @@ jobs:
           at: /root
       - run:
           name: Run Maven Example
-          # M2_HOME so ./mvnw can leverage the cache
-          # unset MAVEN_CONFIG so that ./mvnw will not error
+          # M2_HOME so mvn can leverage the cache
+          # unset MAVEN_CONFIG so that mvn will not error
           command: |
             cd ~/repo/examples/maven-example
             export M2_HOME=$MAVEN_CONFIG
             export MAVEN_CONFIG=
-            ./run.sh
+            ./run.sh LOCAL-SNAPSHOT
       - run:
           name: Run Gradle Example
           command: |
             cd ~/repo/examples/gradle-example
-            ./run.sh
+            ./run.sh LOCAL-SNAPSHOT
 
   sonar:
     executor: sonar-image
@@ -136,74 +145,83 @@ jobs:
           at: /root
       - run:
           name: Analyze on SonarCloud
-          command: ../sonar.sh
+          command: /root/sonar.sh
 
   #publish artifact to OSS repo
   publish-public:
     executor: java-image
     steps:
       - checkout
-
       - restore_cache:
           keys:
             - v3-publish-dependencies-{{ checksum "pom.xml" }}
       - run: mvn versions:set -DnewVersion=${CIRCLE_TAG}
       - run: mvn deploy -Prun-revapi,public
-  publish-private:
-    executor: private-java-image
-    steps:
-      - checkout
 
-      - restore_cache:
-          keys:
-            - v3-publish-dependencies-{{ checksum "pom.xml" }}
-      - run: mvn versions:set -DnewVersion=${CIRCLE_TAG}
-      - run: mvn deploy -Prun-revapi,private
+  dependency-track:
+    executor: java-image
+    steps:
+      - attach_workspace:
+          at: /root
+      - run:
+          name: Upload to Dependency Track
+          command: mvn validate -Pdependency-track
 
 workflows:
   version: 2.1
   build_and_test:
     jobs:
-      - scan_secrets
+      - scan_secrets:
+          context: tmc-cloudsmith-context
       - build:
           requires:
             - scan_secrets
-          context: tmc-oss-context
+          context: tmc-cloudsmith-context
       - test:
           requires:
             - build
-          context: tmc-oss-context
+          context:
+          - tmc-oss-context
+          - tmc-cloudsmith-context
       - examples:
           requires:
             - build
-          context: tmc-oss-context
+          context:
+            - tmc-oss-context
+            - tmc-cloudsmith-context
       - sonar:
           requires:
             - test
+          context:
+            - tmc-oss-context
+            - tmc-cloudsmith-context
+      - dependency-track:
+          filters:
+            branches:
+              only: releases/2.x
+          requires:
+            - sonar
+          context:
+            - tmc-oss-context
+            - tmc-cloudsmith-context
+
   release:
     jobs:
       #Run Publish on GitHub release
       - publish-public:
+          context: tmc-cloudsmith-context
           filters:
             tags:
               only: /.*/
             branches:
               ignore: /.*/
-      - publish-private:
+      #Run dependency track on GitHub release
+      - dependency-track:
+          context:
+            - tmc-oss-context
+            - tmc-cloudsmith-context
           filters:
             tags:
               only: /.*/
             branches:
               ignore: /.*/
-  nightly:
-    triggers:
-      - schedule:
-          # At 12:00 AM, Nightly UTC
-          cron: "0 0 * * *"
-          filters:
-            branches:
-              only:
-                - master
-    jobs:
-      - build:
-          context: tmc-oss-context
