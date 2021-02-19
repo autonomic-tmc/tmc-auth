@@ -1,19 +1,5 @@
 # Authenticating with the TMC
 
----
-|📣 ANNOUNCEMENT: Autonomic's artifacts have moved from Bintray to [Cloudsmith](https://cloudsmith.com/) 📣|
-|---|
-
-If you are using `tmc-auth 3.0.5-beta` or earlier, you will need to replace:
-  -  The Bintray URL `https://autonomic.bintray.com/au-tmc-oss`
- -  With a Cloudsmith URL `https://dl.cloudsmith.io/public/autonomic/au-tmc-oss/maven/`
-
-If you are using Maven, these URLs can be found in your `settings.xml`,  or `pom.xml`.
-
-If you are using Gradle, these URLs can be found in your `init.gradle`, `build.gradle`,  or `build.gradle.kts`.
-
----
-
 ## tmc-auth SDK
 
 Using the tmc-auth SDK with credentials provided by Autonomic, you can obtain a time-limited access token to be used with other services available on the platform.
@@ -33,6 +19,8 @@ See our [examples](examples) for more information on including this library in y
 
 - [Maven - pom.xml](./examples/maven-example/pom.xml)
 - [Gradle - build.gradle](./examples/gradle-example/build.gradle)
+
+> Are you using a different build tool other than Maven or Gradle? Or, are you interested in just browsing what is available in our repository? Or, do you just need to download `tmc-auth`'s required jar files directly? You can find everything you need in our [Cloudsmith](https://cloudsmith.io/~autonomic/repos/au-tmc-oss/groups/) repository.
 
 ## Usage
 
