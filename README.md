@@ -20,7 +20,7 @@ See our [examples](examples) for more information on including this library in y
 - [Maven - pom.xml](./examples/maven-example/pom.xml)
 - [Gradle - build.gradle](./examples/gradle-example/build.gradle)
 
-> Are you using a different build tool other than Maven or Gradle? Or, are you interested in just browsing what is available in our repository? Or, do you just need to download `tmc-auth`'s required jar files directly? You can find everything you need in our [Cloudsmith](https://cloudsmith.io/~autonomic/repos/au-tmc-oss/groups/) repository.
+> Are you using a different build tool other than Maven or Gradle? Are you interested in just browsing what is available in our repository? Do you want to download the jar files required for `tmc-auth` directly? You can find everything you need in our [Cloudsmith](https://cloudsmith.io/~autonomic/repos/au-tmc-oss/groups/) repository.
 
 ## Usage
 
