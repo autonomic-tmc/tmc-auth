@@ -21,46 +21,109 @@ package com.autonomic.tmc.auth.exception;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.autonomic.tmc.auth.exception.BaseSdkException.ProjectProperties;
+import java.util.jar.Manifest;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 @Slf4j
 class BaseSdkExceptionTest {
 
-    @Mock
+    private Manifest mockManifest;
+
     private ProjectProperties mockProperties;
+
+    @BeforeEach
+    void setup() {
+        mockManifest = mock(Manifest.class);
+        mockProperties = mock(ProjectProperties.class);
+        ProjectProperties.singletonInstance=null;
+    }
+
 
     @Test
     void projectProperties_returnsUnknown_when_POMFileNotFound() {
-        ProjectProperties projectProperties = new ProjectProperties();
+        ProjectProperties projectProperties = ProjectProperties.get();
 
-        assertThat(projectProperties.getName()).isEqualTo("[ UNKNOWN ]");
-        assertThat(projectProperties.getVersion()).isEqualTo("[ UNKNOWN ]");
+        assertThat(projectProperties.getName()).isEqualTo("[ AUTONOMIC ]");
+        assertThat(projectProperties.getVersion()).isEqualTo("[ SDK ]");
+    }
+
+    @Test
+    void initializeManifest_throwsRuntimeException_doesNotCauseExceptionInitializer() {
+        ProjectProperties.get().manifest = mockManifest;
+        when(mockManifest.getMainAttributes()).thenThrow(new RuntimeException("End of the world"));
+
+        try {
+            new BaseSdkException("test");
+        } catch (Throwable e) {
+            fail("exceptions must not be thrown");
+        }
+        final String actualMessage2 = BaseSdkException
+            .buildMessage(ErrorSourceType.SERVICE, "unit test");
+        assertThat(actualMessage2).contains("AUTONOMIC");
+        assertThat(actualMessage2).contains("SDK");
+    }
+
+    @Test
+    void initializeManifest_returnsNull_NoNullPointerException_returnsDefault() {
+        ProjectProperties.get().manifest = mockManifest;
+        when(mockManifest.getMainAttributes()).thenReturn(null);
+
+        try {
+            new BaseSdkException("test");
+        } catch (Throwable e) {
+            fail("exceptions must not be thrown");
+        }
+        final String actualMessage2 = BaseSdkException
+            .buildMessage(ErrorSourceType.SERVICE, "unit test");
+        assertThat(actualMessage2).contains("AUTONOMIC");
+        assertThat(actualMessage2).contains("SDK");
     }
 
     @Test
     void initializeProjectProperties_throwsRuntimeException_doesNotCauseExceptionInitializer() {
-        when(mockProperties.getName()).thenThrow(new RuntimeException("End of the world"));
-
-//        final String actualMessage = BaseSdkException.buildMessage(ErrorSourceType.SERVICE, "unit test");
-//        assertThat(actualMessage).contains("AUTONOMIC");
-//        assertThat(actualMessage).contains("SDK");
+        ProjectProperties.singletonInstance = mockProperties;
+        when(mockProperties.getName()).thenReturn(null);
 
         try {
-            BaseSdkException.initializeProjectProperties(mockProperties);
+            BaseSdkException actual = new BaseSdkException("test");
         } catch (Throwable e) {
             fail("exceptions must not be thrown");
         }
-        final String actualMessage2 = BaseSdkException.buildMessage(ErrorSourceType.SERVICE, "unit test");
-        assertThat(actualMessage2).contains("AUTONOMIC");
-        assertThat(actualMessage2).contains("SDK");
+    }
+
+    @Test
+    void BinitializeProjectProperties_throwsRuntimeException_doesNotCauseExceptionInitializer() {
+        ProjectProperties.singletonInstance = mockProperties;
+        when(mockProperties.getName()).thenReturn(null);
+        when(mockProperties.getVersion()).thenReturn(null);
+
+        assertThat(BaseSdkException.buildMessage(ErrorSourceType.SDK_CLIENT, "test"))
+            .doesNotContain("null");
+    }
+
+    @Test
+    void CinitializeProjectProperties_throwsRuntimeException_doesNotCauseExceptionInitializer() {
+        ProjectProperties.singletonInstance = mockProperties;
+        when(mockProperties.getName()).thenReturn("null");
+        when(mockProperties.getVersion()).thenReturn("null");
+
+        assertThat(BaseSdkException.buildMessage(ErrorSourceType.SDK_CLIENT, "test"))
+            .contains("null");
+    }
+
+    @Test
+    void AinitializeProjectProperties_throwsRuntimeException_doesNotCauseExceptionInitializer() {
+        ProjectProperties.singletonInstance = mockProperties;
+        when(mockProperties.getName()).thenThrow(new RuntimeException("Bada Boom!"));
+
+        BaseSdkException actual = new SdkClientException("test", new RuntimeException("Boom!"));
+        assertThat(actual.getMessage()).contains("[ AUTONOMIC! ]");
     }
 
     @Test
