@@ -41,11 +41,11 @@ public class BaseSdkException extends RuntimeException {
     static String buildMessage(ErrorSourceType errorSourceType, String clientMessage) {
         try {
             final ProjectProperties properties = ProjectProperties.get();
-            String name = ofNullable(properties.getName()).orElseGet(() -> "[ AUTONOMIC ]");
-            String version = ofNullable(properties.getVersion()).orElseGet(() -> "[ SDK ]");
+            final String name = ofNullable(properties.getName()).orElseGet(() -> "[ AUTONOMIC ]");
+            final String version = ofNullable(properties.getVersion()).orElseGet(() -> "[ SDK ]");
             return String.format("%s-%s-%s: %s.", name, version, errorSourceType, clientMessage);
         } catch (Throwable e) {
-            return "[ AUTONOMIC! ]-[ SDK ]-" + errorSourceType.toString() + clientMessage;
+            return "[ AUTONOMIC! ]-[ SDK! ]-" + errorSourceType.toString() + clientMessage;
         }
     }
 
