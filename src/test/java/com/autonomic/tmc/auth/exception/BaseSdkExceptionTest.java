@@ -20,11 +20,22 @@
 package com.autonomic.tmc.auth.exception;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.when;
 
 import com.autonomic.tmc.auth.exception.BaseSdkException.ProjectProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-public class BaseSdkExceptionTest {
+@ExtendWith(MockitoExtension.class)
+@Slf4j
+class BaseSdkExceptionTest {
+
+    @Mock
+    private ProjectProperties mockProperties;
 
     @Test
     void projectProperties_returnsUnknown_when_POMFileNotFound() {
@@ -33,4 +44,33 @@ public class BaseSdkExceptionTest {
         assertThat(projectProperties.getName()).isEqualTo("[ UNKNOWN ]");
         assertThat(projectProperties.getVersion()).isEqualTo("[ UNKNOWN ]");
     }
+
+    @Test
+    void initializeProjectProperties_throwsRuntimeException_doesNotCauseExceptionInitializer() {
+        when(mockProperties.getName()).thenThrow(new RuntimeException("End of the world"));
+
+//        final String actualMessage = BaseSdkException.buildMessage(ErrorSourceType.SERVICE, "unit test");
+//        assertThat(actualMessage).contains("AUTONOMIC");
+//        assertThat(actualMessage).contains("SDK");
+
+        try {
+            BaseSdkException.initializeProjectProperties(mockProperties);
+        } catch (Throwable e) {
+            fail("exceptions must not be thrown");
+        }
+        final String actualMessage2 = BaseSdkException.buildMessage(ErrorSourceType.SERVICE, "unit test");
+        assertThat(actualMessage2).contains("AUTONOMIC");
+        assertThat(actualMessage2).contains("SDK");
+    }
+
+    @Test
+    void initializeProjectProperties_withNull_thenNoExceptionThrown() {
+        try {
+            new BaseSdkException("something");
+        } catch (Throwable e) {
+            fail("exceptions must not be thrown");
+        }
+    }
+
+
 }

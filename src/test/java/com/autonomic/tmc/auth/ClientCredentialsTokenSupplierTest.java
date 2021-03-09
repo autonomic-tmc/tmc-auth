@@ -24,6 +24,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,6 +34,7 @@ import com.autonomic.tmc.auth.exception.SdkClientException;
 import com.autonomic.tmc.auth.exception.SdkServiceException;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.BasicConfigurator;
@@ -57,6 +59,62 @@ class ClientCredentialsTokenSupplierTest {
     @AfterEach
     void tearDown() {
         authServer.stop();
+    }
+
+    @Test
+    void findings() {
+        // TODO: Ensure that no Exceptions can escape
+
+        // What happens if tokenUrl is:
+        // null
+        // empty string [commented logic]
+        // valid - incorrect url - [done]
+        // malformd - [done]
+        // RFC 2396 - "http:\\google.com -[done]
+        // invalid - correct url
+        // not asserting inner-exceptions
+//        assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> {
+//            ClientCredentialsTokenSupplier.builder()
+//                .clientSecret("a-secret")
+//                .clientId("a-client-id")
+//                .tokenUrl("")
+//                .build();
+//
+//        }).withCause(new RuntimeException("test"));
+        assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> {
+            ClientCredentialsTokenSupplier.builder()
+                .clientSecret("a-secret")
+                .clientId("a-client-id")
+                .tokenUrl("http:\\google.com")
+                .build();
+
+        }).withCauseInstanceOf(URISyntaxException.class);
+
+        assertThatExceptionOfType(SdkServiceException.class).isThrownBy(() -> {
+            ClientCredentialsTokenSupplier.builder()
+                .clientSecret("a-secret")
+                .clientId("a-client-id")
+                .tokenUrl("http://google.com")
+                .build().get();
+
+        }).withMessageContaining("405");
+        assertThatExceptionOfType(SdkServiceException.class).isThrownBy(() -> {
+            ClientCredentialsTokenSupplier.builder()
+                .clientSecret("a-secret")
+                .clientId("a-client-id")
+                .tokenUrl("")
+                .build().get();
+
+        });
+    }
+
+    @Test
+    void test21() {
+        ClientCredentialsTokenSupplier.builder()
+            .clientSecret("a-secret")
+            .clientId("a-client-id")
+            .tokenUrl("")
+            .build().get();
     }
 
     @Test

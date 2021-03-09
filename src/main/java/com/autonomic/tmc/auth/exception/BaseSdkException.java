@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import lombok.extern.slf4j.Slf4j;
@@ -32,11 +33,23 @@ public class BaseSdkException extends RuntimeException {
 
     private static final String PROJECT_NAME;
     private static final String PROJECT_VERSION;
+    private static ProjectProperties PROPERTIES;
 
     static {
-        ProjectProperties projectProperties = new ProjectProperties();
-        PROJECT_NAME = projectProperties.getName();
-        PROJECT_VERSION = projectProperties.getVersion();
+        initializeProjectProperties(null);
+    }
+
+    static void initializeProjectProperties(ProjectProperties properties) {
+        if (PROPERTIES == null) {
+            PROPERTIES = Optional.ofNullable(properties).orElseGet(ProjectProperties::new);
+        }
+        try {
+            ProjectProperties projectProperties = Optional.ofNullable(properties).orElseGet(ProjectProperties::new);
+            PROJECT_NAME = projectProperties.getName();
+            PROJECT_VERSION = projectProperties.getVersion();
+        } catch (Exception e) {
+            log.warn("Unable to acquire project properties", e);
+        }
     }
 
     BaseSdkException(String message) {
@@ -54,7 +67,6 @@ public class BaseSdkException extends RuntimeException {
 
     static class ProjectProperties {
 
-        private static final String UNKNOWN = "[ UNKNOWN ]";
         private Manifest manifest;
 
         private Manifest getManifest() {
@@ -70,24 +82,24 @@ public class BaseSdkException extends RuntimeException {
                         manifest = jarFile.getManifest();
                     }
                 } catch (IOException | URISyntaxException e) {
-                    log.warn("Unable to find manifest", e);
+                    log.debug("Unable to find manifest", e);
                 }
             }
             return manifest;
         }
 
-        private String getAttribute(String name) {
+        private String getAttribute(String name, String defaultValue) {
             return Optional.ofNullable(getManifest())
                 .map(m -> m.getMainAttributes().getValue(name))
-                .orElse(UNKNOWN);
+                .orElse(defaultValue);
         }
 
         String getName() {
-            return getAttribute("Implementation-Title");
+            return getAttribute("Implementation-Title", "[ AUTONOMIC ]");
         }
 
         String getVersion() {
-            return getAttribute("Implementation-Version");
+            return getAttribute("Implementation-Version", "[ SDK ]");
         }
     }
 }

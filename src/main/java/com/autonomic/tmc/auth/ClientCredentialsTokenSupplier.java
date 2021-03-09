@@ -38,9 +38,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.codehaus.plexus.util.StringUtils;
+import sun.invoke.empty.Empty;
 
 /**
  * This class provides an OAuth 2.0 - Client Credentials Grant based implementation of {@link
@@ -95,25 +98,26 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         this.tokenUrl = (tokenUrl != null) ? tokenUrl : DEFAULT_TOKEN_URL;
         try {
             this.tokenEndpoint = new URI(this.tokenUrl);
-        } catch (URISyntaxException e) {
+//            if (this.tokenUrl.trim().isEmpty()) {
+//                throw new RuntimeException("test");
+//            }
+        } catch (RuntimeException | URISyntaxException e) {
             throw new SdkClientException(
                 String.format("tokenUrl [%s] is not a valid URL", tokenUrl), e);
         }
     }
 
     /**
-     * This method responds with a valid String representation of the Bearer token.  If a token
-     * becomes expired, a new valid token will be requested automatically. This method will always
-     * return a valid token.
+     * This method responds with a valid String representation of the Bearer token.  If a token becomes expired, a new valid token will be
+     * requested automatically. This method will always return a valid token.
      *
      * @return String representation of Bearer token.
-     * @throws SdkServiceException Thrown when an unexpected condition is encountered while making
-     * the client credentials grant POST
-     * @throws SdkClientException Thrown when the credentials that were provided are expressly
-     * rejected.
+     * @throws SdkServiceException Thrown when an unexpected condition is encountered while making the client credentials grant POST
+     * @throws SdkClientException Thrown when the credentials that were provided are expressly rejected.
      */
     @Override
     public synchronized String get() {
+        // TODO: Wrap with try catch and trap all exceptions
         if (token != null && !token.isExpired()) {
             log.debug("Cached token found.");
             return token.getValue();
@@ -182,13 +186,13 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         HTTPResponse response;
         try {
             response = request.toHTTPRequest().send();
-        } catch (IOException e) {
+        } catch (RuntimeException | IOException e) {
             throw new SdkServiceException(String
                 .format("Unexpected issue communicating with tokenUrl [%s]", this.tokenUrl), e);
         }
         try {
             return TokenResponse.parse(response);
-        } catch (ParseException e) {
+        } catch (RuntimeException | ParseException e) {
             throw new SdkClientException(String
                 .format("Unexpected issue parsing token response: [%s]", response.getContent()), e);
         }
