@@ -66,8 +66,6 @@ class ClientCredentialsTokenSupplierTest {
         // TODO: Ensure that no Exceptions can escape
 
         // What happens if tokenUrl is:
-        // null
-        // empty string [commented logic]
         // valid - incorrect url - [done]
         // malformd - [done]
         // RFC 2396 - "http:\\google.com -[done]
@@ -81,6 +79,10 @@ class ClientCredentialsTokenSupplierTest {
 //                .build();
 //
 //        }).withCause(new RuntimeException("test"));
+        }
+
+    @Test
+    void seeminglyValidUrl_hasInvalidCharacters_wrapsAndPropogatesException() {
         assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> {
             ClientCredentialsTokenSupplier.builder()
                 .clientSecret("a-secret")
@@ -89,7 +91,10 @@ class ClientCredentialsTokenSupplierTest {
                 .build();
 
         }).withCauseInstanceOf(URISyntaxException.class);
+    }
 
+    @Test
+    void actuallyValidUrl_hasInvalidCharacters_wrapsAndPropogatesException() {
         assertThatExceptionOfType(SdkServiceException.class).isThrownBy(() -> {
             ClientCredentialsTokenSupplier.builder()
                 .clientSecret("a-secret")
@@ -98,23 +103,30 @@ class ClientCredentialsTokenSupplierTest {
                 .build().get();
 
         }).withMessageContaining("405");
-        assertThatExceptionOfType(SdkServiceException.class).isThrownBy(() -> {
+    }
+
+    @Test
+    void emptyUrl_hasInvalidCharacters_wrapsAndPropogatesException() {
+        assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> {
             ClientCredentialsTokenSupplier.builder()
                 .clientSecret("a-secret")
                 .clientId("a-client-id")
-                .tokenUrl("")
+                .tokenUrl("    ")
                 .build().get();
 
         });
     }
 
     @Test
-    void test21() {
-        ClientCredentialsTokenSupplier.builder()
-            .clientSecret("a-secret")
-            .clientId("a-client-id")
-            .tokenUrl("")
-            .build().get();
+    void nullUrl_hasInvalidCharacters_wrapsAndPropogatesServiceException() {
+        assertThatExceptionOfType(SdkServiceException.class).isThrownBy(() -> {
+            ClientCredentialsTokenSupplier.builder()
+                .clientSecret("a-secret")
+                .clientId("a-client-id")
+                .tokenUrl(null)
+                .build().get();
+
+        });
     }
 
     @Test

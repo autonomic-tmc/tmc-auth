@@ -28,6 +28,7 @@ import static org.mockito.Mockito.when;
 import com.autonomic.tmc.auth.exception.BaseSdkException.ProjectProperties;
 import com.nimbusds.oauth2.sdk.TokenErrorResponse;
 import java.util.jar.Manifest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,6 +42,10 @@ class BaseSdkExceptionTest {
     void setup() {
         mockManifest = mock(Manifest.class);
         mockProperties = mock(ProjectProperties.class);
+    }
+
+    @AfterEach
+    void tearDown() {
         ProjectProperties.singletonInstance=null;
     }
 

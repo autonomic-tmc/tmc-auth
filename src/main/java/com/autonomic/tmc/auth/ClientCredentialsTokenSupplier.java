@@ -24,7 +24,6 @@ import com.autonomic.tmc.auth.exception.SdkServiceException;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 import com.nimbusds.oauth2.sdk.AuthorizationGrant;
 import com.nimbusds.oauth2.sdk.ClientCredentialsGrant;
-import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.TokenRequest;
 import com.nimbusds.oauth2.sdk.TokenResponse;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
@@ -33,17 +32,13 @@ import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
-import java.util.Optional;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.codehaus.plexus.util.StringUtils;
-import sun.invoke.empty.Empty;
 
 /**
  * This class provides an OAuth 2.0 - Client Credentials Grant based implementation of {@link
@@ -98,9 +93,6 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         this.tokenUrl = (tokenUrl != null) ? tokenUrl : DEFAULT_TOKEN_URL;
         try {
             this.tokenEndpoint = new URI(this.tokenUrl);
-//            if (this.tokenUrl.trim().isEmpty()) {
-//                throw new RuntimeException("test");
-//            }
         } catch (RuntimeException | URISyntaxException e) {
             throw new SdkClientException(
                 String.format("tokenUrl [%s] is not a valid URL", tokenUrl), e);
@@ -117,7 +109,6 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
      */
     @Override
     public synchronized String get() {
-        // TODO: Wrap with try catch and trap all exceptions
         if (token != null && !token.isExpired()) {
             log.debug("Cached token found.");
             return token.getValue();
@@ -186,13 +177,13 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         HTTPResponse response;
         try {
             response = request.toHTTPRequest().send();
-        } catch (RuntimeException | IOException e) {
+        } catch (Throwable e) {
             throw new SdkServiceException(String
                 .format("Unexpected issue communicating with tokenUrl [%s]", this.tokenUrl), e);
         }
         try {
             return TokenResponse.parse(response);
-        } catch (RuntimeException | ParseException e) {
+        } catch (Throwable e) {
             throw new SdkClientException(String
                 .format("Unexpected issue parsing token response: [%s]", response.getContent()), e);
         }
