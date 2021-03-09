@@ -67,9 +67,6 @@ class ClientCredentialsTokenSupplierTest {
 
         // What happens if tokenUrl is:
         // valid - incorrect url - [done]
-        // malformd - [done]
-        // RFC 2396 - "http:\\google.com -[done]
-        // invalid - correct url
         // not asserting inner-exceptions
 //        assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> {
 //            ClientCredentialsTokenSupplier.builder()
@@ -114,7 +111,7 @@ class ClientCredentialsTokenSupplierTest {
                 .tokenUrl("    ")
                 .build().get();
 
-        });
+        }).withMessageContaining("tokenUrl must not be empty");
     }
 
     @Test

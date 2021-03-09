@@ -91,6 +91,9 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         this.clientSecret = clientSecret;
 
         this.tokenUrl = (tokenUrl != null) ? tokenUrl : DEFAULT_TOKEN_URL;
+        if (this.tokenUrl.trim().isEmpty()) {
+            throw new SdkClientException("tokenUrl must not be empty");
+        }
         try {
             this.tokenEndpoint = new URI(this.tokenUrl);
         } catch (RuntimeException | URISyntaxException e) {
