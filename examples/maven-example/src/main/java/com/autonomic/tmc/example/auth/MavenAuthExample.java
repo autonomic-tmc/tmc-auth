@@ -51,16 +51,24 @@ public class MavenAuthExample implements CommandLineRunner {
 
     private void run() {
         try {
-            TokenSupplier tokenSupplier;
+            TokenSupplier tokenSupplier = null;
 
             //#Example 1: REST Authentication token for Production
-            tokenSupplier = createTokenSupplier(clientId, clientSecret);
-            printToken(tokenSupplier, "with default URL");
+            try {
+                tokenSupplier = createTokenSupplier(clientId, clientSecret);
+                printToken(tokenSupplier, "with default URL");
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
 
             //Example 2: REST Authentication token when you want to tell the tokenSupplier what
             // environment to connect to
-            tokenSupplier = createTokenSupplierWithTokenUrl(clientId, clientSecret, tokenUrl);
-            printToken(tokenSupplier, "with provided URL");
+            try {
+                tokenSupplier = createTokenSupplierWithTokenUrl(clientId, clientSecret, tokenUrl);
+                printToken(tokenSupplier, "with provided URL");
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
 
             //Example 3: An authenticated gRPC channel that can be used when creating a client stub
             AuthenticatedChannelBuilder channelBuilder = new AuthenticatedChannelBuilder(
