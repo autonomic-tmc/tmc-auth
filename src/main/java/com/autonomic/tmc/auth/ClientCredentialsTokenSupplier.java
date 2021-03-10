@@ -21,6 +21,7 @@ package com.autonomic.tmc.auth;
 
 import static org.codehaus.plexus.util.StringUtils.isNotBlank;
 
+import com.autonomic.tmc.auth.exception.BaseSdkException;
 import com.autonomic.tmc.auth.exception.SdkClientException;
 import com.autonomic.tmc.auth.exception.SdkServiceException;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
@@ -41,6 +42,7 @@ import java.time.temporal.ChronoUnit;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -64,6 +66,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
     private final URI tokenEndpoint;
 
     // state
+    @Setter(AccessLevel.PACKAGE) // Visible for testing
     private Token token = null;
 
     /**
@@ -115,12 +118,18 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
      */
     @Override
     public synchronized String get() {
-        if (token != null && !token.isExpired()) {
-            log.debug("Cached token found.");
+        try {
+            if (token != null && !token.isExpired()) {
+                log.debug("Cached token found.");
+                return token.getValue();
+            }
+            resetToken();
             return token.getValue();
+        } catch (BaseSdkException e) {
+            throw e;
+        } catch (RuntimeException e) {
+            throw new SdkClientException("Undocumented exception occurred", e);
         }
-        resetToken();
-        return token.getValue();
     }
 
     private void resetToken() {
