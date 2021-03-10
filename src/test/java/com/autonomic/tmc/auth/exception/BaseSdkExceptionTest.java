@@ -150,7 +150,7 @@ class BaseSdkExceptionTest {
         when(mockProperties.getName()).thenThrow(new RuntimeException("Bada"));
 
         BaseSdkException actual = new SdkClientException("test", new RuntimeException("Boom!"));
-        assertThat(actual.getMessage()).contains("[ AUTONOMIC! ]");
+        assertThat(actual.getMessage()).contains("[ AUTONOMIC ]~");
     }
 
     @Test
@@ -160,7 +160,7 @@ class BaseSdkExceptionTest {
         when(mockProperties.getVersion()).thenThrow(new RuntimeException("Bada"));
 
         BaseSdkException actual = new SdkClientException("test", new RuntimeException("Boom!"));
-        assertThat(actual.getMessage()).contains("[ SDK! ]");
+        assertThat(actual.getMessage()).contains("[ SDK ]~");
     }
 
     @Test

@@ -24,6 +24,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
@@ -40,12 +41,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.BasicConfigurator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 @Slf4j
 class ClientCredentialsTokenSupplierTest {
+
+    private static final String DEFAULT_TOKEN_URL = "https://accounts.autonomic.ai/v1/auth/oidc/token";
 
     private WireMockServer authServer;
 
@@ -62,36 +66,7 @@ class ClientCredentialsTokenSupplierTest {
     }
 
     @Test
-    void findings() {
-        // TODO: Ensure that no Exceptions can escape
-
-        // What happens if tokenUrl is:
-        // valid - incorrect url - [done]
-        // not asserting inner-exceptions
-//        assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> {
-//            ClientCredentialsTokenSupplier.builder()
-//                .clientSecret("a-secret")
-//                .clientId("a-client-id")
-//                .tokenUrl("")
-//                .build();
-//
-//        }).withCause(new RuntimeException("test"));
-        }
-
-    @Test
-    void seeminglyValidUrl_hasInvalidCharacters_wrapsAndPropogatesException() {
-        assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> {
-            ClientCredentialsTokenSupplier.builder()
-                .clientSecret("a-secret")
-                .clientId("a-client-id")
-                .tokenUrl("http:\\google.com")
-                .build();
-
-        }).withCauseInstanceOf(URISyntaxException.class);
-    }
-
-    @Test
-    void actuallyValidUrl_hasInvalidCharacters_wrapsAndPropogatesException() {
+    void actuallyValidUrl_hasInvalidCharacters_wrapsAndPropagatesException() {
         assertThatExceptionOfType(SdkServiceException.class).isThrownBy(() -> {
             ClientCredentialsTokenSupplier.builder()
                 .clientSecret("a-secret")
@@ -102,59 +77,71 @@ class ClientCredentialsTokenSupplierTest {
         }).withMessageContaining("405");
     }
 
-    @Test
-    void emptyUrl_hasInvalidCharacters_wrapsAndPropogatesException() {
-        assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> {
-            ClientCredentialsTokenSupplier.builder()
+    @Nested
+    class ConstructorOnly {
+        @Test
+        void rfc2396_tokenUrlSyntax_throwsSdkClientException() {
+            assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> {
+                ClientCredentialsTokenSupplier.builder()
+                    .clientSecret("a-secret")
+                    .clientId("a-client-id")
+                    .tokenUrl("http:\\google.com") // backslashes instead of forward slashes
+                    .build();
+            }).withCauseInstanceOf(URISyntaxException.class);
+        }
+
+        @Test
+        void blankTokenUrl_isConvertedTo_defaultTokenUrl() {
+            final ClientCredentialsTokenSupplier actualClientTokenSupplier = ClientCredentialsTokenSupplier.builder()
                 .clientSecret("a-secret")
                 .clientId("a-client-id")
-                .tokenUrl("    ")
-                .build().get();
+                .tokenUrl("   ")
+                .build();
 
-        }).withMessageContaining("tokenUrl must not be empty");
-    }
+            assertThat(actualClientTokenSupplier.getTokenUrl()).isEqualTo(DEFAULT_TOKEN_URL);
+        }
 
-    @Test
-    void nullUrl_hasInvalidCharacters_wrapsAndPropogatesServiceException() {
-        assertThatExceptionOfType(SdkServiceException.class).isThrownBy(() -> {
-            ClientCredentialsTokenSupplier.builder()
+        @Test
+        void nullTokenUrl_isConvertedTo_defaultTokenUrl() {
+            final ClientCredentialsTokenSupplier actualClientTokenSupplier = ClientCredentialsTokenSupplier.builder()
                 .clientSecret("a-secret")
                 .clientId("a-client-id")
                 .tokenUrl(null)
-                .build().get();
+                .build();
 
-        });
-    }
+            assertThat(actualClientTokenSupplier.getTokenUrl()).isEqualTo(DEFAULT_TOKEN_URL);
+        }
 
-    @Test
-    void malformed_token_url_throws_exception() {
-        assertThrows(SdkClientException.class, () -> {
-            ClientCredentialsTokenSupplier.builder()
+        @Test
+        void malFormedTokenUrl_throwsSdkClientException() {
+            assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> ClientCredentialsTokenSupplier.builder()
                 .clientSecret("a-secret")
                 .clientId("a-client-id")
                 .tokenUrl("\\\\")
-                .build();
-        });
-    }
+                .build())
+                .withCauseInstanceOf(URISyntaxException.class)
+                .withMessageContaining("is not a valid URL");
+        }
 
-    @Test
-    void cannot_construct_without_clientId() {
-        assertThrows(SdkClientException.class, () -> {
-            ClientCredentialsTokenSupplier.builder()
+        @Test
+        void cannot_construct_without_clientId() {
+            assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> ClientCredentialsTokenSupplier.builder()
                 .clientId(null)
                 .clientSecret("a-secret")
-                .build();
-        });
-    }
+                .build())
+                .withMessageContaining("Both client id and client secret are required and cannot be blank")
+                .withNoCause();
+        }
 
-    @Test
-    void cannot_construct_without_clientSecret() {
-        assertThrows(SdkClientException.class, () -> {
-            ClientCredentialsTokenSupplier.builder()
+        @Test
+        void cannot_construct_without_clientSecret() {
+            assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> ClientCredentialsTokenSupplier.builder()
                 .clientId("a-client-id")
                 .clientSecret(null)
-                .build();
-        });
+                .build())
+                .withMessageContaining("Both client id and client secret are required and cannot be blank")
+                .withNoCause();
+        }
     }
 
     @ParameterizedTest

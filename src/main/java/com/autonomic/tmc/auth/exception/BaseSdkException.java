@@ -28,6 +28,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BaseSdkException extends RuntimeException {
 
+    private static final String DEFAULT_NAME = "[ AUTONOMIC ]";
+    private static final String DEFAULT_VERSION = "[ SDK ]";
+
     BaseSdkException(String message) {
         super(message);
         log.warn(message);
@@ -41,11 +44,11 @@ public class BaseSdkException extends RuntimeException {
     static String buildMessage(ErrorSourceType errorSourceType, String clientMessage) {
         try {
             final ProjectProperties properties = ProjectProperties.get();
-            final String name = ofNullable(properties.getName()).orElseGet(() -> "[ AUTONOMIC ]");
-            final String version = ofNullable(properties.getVersion()).orElseGet(() -> "[ SDK ]");
+            final String name = ofNullable(properties.getName()).orElse(DEFAULT_NAME);
+            final String version = ofNullable(properties.getVersion()).orElse(DEFAULT_VERSION);
             return String.format("%s-%s-%s: %s.", name, version, errorSourceType, clientMessage);
         } catch (Throwable e) {
-            return "[ AUTONOMIC! ]-[ SDK! ]-" + errorSourceType.toString() + clientMessage;
+            return DEFAULT_NAME + "~" + DEFAULT_VERSION + "~" + errorSourceType.toString() + clientMessage;
         }
     }
 
@@ -55,7 +58,7 @@ public class BaseSdkException extends RuntimeException {
 
         Manifest manifest;
 
-        ProjectProperties() {
+        private ProjectProperties() {
             setManifest();
         }
 
@@ -93,11 +96,11 @@ public class BaseSdkException extends RuntimeException {
         }
 
         String getName() {
-            return getAttribute("Implementation-Title", "[ AUTONOMIC ]");
+            return getAttribute("Implementation-Title", DEFAULT_NAME);
         }
 
         String getVersion() {
-            return getAttribute("Implementation-Version", "[ SDK ]");
+            return getAttribute("Implementation-Version", DEFAULT_VERSION);
         }
     }
 }

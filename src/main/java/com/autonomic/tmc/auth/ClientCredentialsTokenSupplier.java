@@ -19,6 +19,8 @@
  */
 package com.autonomic.tmc.auth;
 
+import static org.codehaus.plexus.util.StringUtils.isNotBlank;
+
 import com.autonomic.tmc.auth.exception.SdkClientException;
 import com.autonomic.tmc.auth.exception.SdkServiceException;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
@@ -36,7 +38,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -55,6 +59,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
     // properties
     private final String clientId;
     private final String clientSecret;
+    @Getter(AccessLevel.PACKAGE) // Visible for testing
     private final String tokenUrl;
     private final URI tokenEndpoint;
 
@@ -80,8 +85,8 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
      * @param clientId     The client_id param of the client credentials request
      * @param clientSecret The client_secret param of the client credentials request
      * @param tokenUrl     The URL against which the client credentials request will POST. A null
-     *                     value will result in the default value being used. Default:
-     *                     https://accounts.autonomic.ai/v1/auth/oidc/token
+     *                      or blank value will result in the default value being used.
+     *                      Default: https://accounts.autonomic.ai/v1/auth/oidc/token
      */
     @Builder
     public ClientCredentialsTokenSupplier(String clientId, String clientSecret, String tokenUrl) {
@@ -90,10 +95,8 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
 
-        this.tokenUrl = (tokenUrl != null) ? tokenUrl : DEFAULT_TOKEN_URL;
-        if (this.tokenUrl.trim().isEmpty()) {
-            throw new SdkClientException("tokenUrl must not be empty");
-        }
+        this.tokenUrl = isNotBlank(tokenUrl) ? tokenUrl : DEFAULT_TOKEN_URL;
+
         try {
             this.tokenEndpoint = new URI(this.tokenUrl);
         } catch (RuntimeException | URISyntaxException e) {
