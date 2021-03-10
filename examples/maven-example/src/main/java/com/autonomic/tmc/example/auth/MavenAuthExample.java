@@ -23,10 +23,10 @@ public class MavenAuthExample implements CommandLineRunner {
     @VisibleForTesting
     static Logger LOGGER = Logger.getLogger("MavenAuthExample");
 
-    @Value("${tmc.auth.clientId}")
+    @Value("${tmc.auth.clientId: }")
     private String clientId;
 
-    @Value("${tmc.auth.clientSecret}")
+    @Value("${tmc.auth.clientSecret: }")
     private String clientSecret;
 
     @Value("${tmc.auth.tokenUrl:https://accounts.autonomic.ai/v1/auth/oidc/token}")
