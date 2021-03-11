@@ -24,14 +24,26 @@ See our [examples](examples) for more information on including this library in y
 
 ## Usage
 
+### Create a TokenSupplier
 ```java
-    TokenSupplier supplier = ClientCredentialsTokenSupplier.builder()
-        .clientId("<your-client-id>")
-        .clientSecret("<your-client-secret>")
-        .tokenUrl("<your-token-url-if-not-using-default>")
-        .build();
-
-    String token = supplier.get();
+TokenSupplier tokenSupplier = null;
+try {
+  tokenSupplier = ClientCredentialsTokenSupplier.builder()
+    .clientId("<your-client-id>")
+    .clientSecret("<your-client-secret>")
+    .tokenUrl("<your-token-url-if-not-using-default>")
+    .build();
+} catch (BaseSdkException e) {
+  //Decide what action you would like to take.  For example, you might want to retry creating a token.
+}
+```
+### Get a Token
+```Java
+try {
+  String bearerToken = tokenSupplier.get();
+} catch (BaseSdkException e) {
+  //Decide what action you would like to take.  For example, you might want to retry getting a token.
+}
 ```
 
 ## Configuration Options
