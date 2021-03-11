@@ -154,15 +154,18 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v3-publish-dependencies-{{ checksum "pom.xml" }}
+            - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
       - run: mvn versions:set -DnewVersion=${CIRCLE_TAG}
       - run: mvn deploy -Prun-revapi,public
 
   dependency-track:
     executor: java-image
     steps:
-      - attach_workspace:
-          at: /root
+      - checkout
+      - restore_cache:
+          keys:
+            - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
+      - run: mvn versions:set -DnewVersion=${CIRCLE_TAG}
       - run:
           name: Upload to Dependency Track
           command: mvn validate -Pdependency-track
