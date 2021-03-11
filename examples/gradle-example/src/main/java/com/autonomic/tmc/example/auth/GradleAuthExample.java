@@ -56,7 +56,8 @@ public class GradleAuthExample implements CommandLineRunner {
             tokenSupplier = createTokenSupplier(clientId, clientSecret);
             printToken(tokenSupplier, "with default URL");
         } catch (BaseSdkException e) {
-            LOGGER.log(Level.SEVERE, "Generic message, Something went wrong: ", e);
+            LOGGER.log(Level.SEVERE,
+                "Example 1: REST Authentication token for Production failed: ", e);
         }
 
         //Example 2: REST Authentication token when you want to tell the tokenSupplier what
@@ -65,7 +66,8 @@ public class GradleAuthExample implements CommandLineRunner {
             tokenSupplier = createTokenSupplierWithTokenUrl(clientId, clientSecret, tokenUrl);
             printToken(tokenSupplier, "with provided URL");
         } catch (BaseSdkException e) {
-            LOGGER.log(Level.SEVERE, "Generic message, Something went wrong: ", e);
+            LOGGER.log(Level.SEVERE,
+                "Example 2: REST Authentication token for your environment failed: ", e);
         }
 
         //Example 3: An authenticated gRPC channel that can be used when creating a client stub
@@ -78,7 +80,8 @@ public class GradleAuthExample implements CommandLineRunner {
             String msg = format("Authenticated Channel: %s", authenticatedGRPCChannel);
             LOGGER.info(msg);
         } catch (BaseSdkException | MalformedURLException e) {
-            LOGGER.log(Level.SEVERE, "Generic message, Something went wrong: ", e);
+            LOGGER.log(Level.SEVERE,
+                "Example 3: A gRPC authenticated token failed: ", e);
         }
 
         // ExampleStub exampleStub = ExampleGrpc.newStub(authenticatedGRPCChannel);

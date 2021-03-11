@@ -32,9 +32,9 @@ class MavenAuthExampleTest {
         // Act
         example.run("hi");
         // Assert
-        Mockito.verify(MavenAuthExample.LOGGER, Mockito.times(2)).log(
+        Mockito.verify(MavenAuthExample.LOGGER, Mockito.times(1)).log(
             eq(Level.SEVERE),
-            eq("Generic message, Something went wrong: "),
+            eq("Example 1: REST Authentication token for Production failed: "),
             errorMessages.capture());
         String actualError = errorMessages.getAllValues().get(0).getMessage();
 

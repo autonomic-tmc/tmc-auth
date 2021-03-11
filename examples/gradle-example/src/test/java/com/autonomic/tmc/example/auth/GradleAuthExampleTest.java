@@ -29,9 +29,9 @@ class GradleAuthExampleTest {
     void givenBadCredentials_whenAuthenticating_thenVerifyErrorMessageContainsSdkVersion() {
         GradleAuthExample.LOGGER = loggerStub;
         example.run("hi");
-        Mockito.verify(GradleAuthExample.LOGGER, Mockito.times(2)).log(
+        Mockito.verify(GradleAuthExample.LOGGER, Mockito.times(1)).log(
             eq(Level.SEVERE),
-            eq("Generic message, Something went wrong: "),
+            eq("Example 1: REST Authentication token for Production failed: "),
             errorMessages.capture());
         String actualError = errorMessages.getAllValues().get(0).getMessage();
 
