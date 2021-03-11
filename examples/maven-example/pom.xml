@@ -18,7 +18,7 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <tmc.integration.tests/>
-    <tmc-auth.version>3.0.5-beta</tmc-auth.version>
+    <tmc-auth.version>3.1.0-beta</tmc-auth.version>
     <grpc-stub.version>1.25.0</grpc-stub.version>
     <grpc-netty.version>1.25.0</grpc-netty.version>
     <netty-tcnative.version>2.0.28.Final</netty-tcnative.version>
