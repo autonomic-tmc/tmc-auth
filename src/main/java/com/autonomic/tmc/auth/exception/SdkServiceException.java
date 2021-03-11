@@ -20,7 +20,9 @@
 package com.autonomic.tmc.auth.exception;
 
 import static com.autonomic.tmc.auth.exception.ErrorSourceType.SERVICE;
+import static java.util.Optional.ofNullable;
 
+import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.TokenErrorResponse;
 import java.util.Objects;
 
@@ -35,7 +37,9 @@ public class SdkServiceException extends BaseSdkException {
     public SdkServiceException(String clientMessage, TokenErrorResponse errorResponse) {
         super(buildMessage(clientMessage, errorResponse));
         if (Objects.nonNull(errorResponse)) {
-            httpStatusCode = errorResponse.getErrorObject().getHTTPStatusCode();
+            final ErrorObject error = ofNullable(errorResponse.getErrorObject())
+                .orElseGet(() -> new ErrorObject("0"));
+            httpStatusCode = error.getHTTPStatusCode();
         }
     }
 
@@ -46,9 +50,11 @@ public class SdkServiceException extends BaseSdkException {
     private static String buildMessage(String clientMessage, TokenErrorResponse errorResponse) {
         StringBuilder sb = new StringBuilder(buildMessage(SERVICE, clientMessage));
         if (Objects.nonNull(errorResponse)) {
+            final ErrorObject error = ofNullable(errorResponse.getErrorObject())
+                .orElseGet(() -> new ErrorObject("0"));
             sb.append(String.format("Error: code=%s and httpStatusCode=%s",
-                    errorResponse.getErrorObject().getCode(),
-                    errorResponse.getErrorObject().getHTTPStatusCode()));
+                ofNullable(error.getCode()).orElseGet(()->"0"),
+                error.getHTTPStatusCode()));
         }
         return sb.toString();
     }

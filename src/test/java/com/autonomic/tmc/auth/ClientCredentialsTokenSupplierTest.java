@@ -24,26 +24,38 @@ import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.params.provider.Arguments.of;
+import static org.mockito.Mockito.when;
 
 import com.autonomic.tmc.auth.exception.SdkClientException;
 import com.autonomic.tmc.auth.exception.SdkServiceException;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.BasicConfigurator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mockito;
 
 @Slf4j
 class ClientCredentialsTokenSupplierTest {
+
+    private static final String DEFAULT_TOKEN_URL = "https://accounts.autonomic.ai/v1/auth/oidc/token";
 
     private WireMockServer authServer;
 
@@ -59,35 +71,112 @@ class ClientCredentialsTokenSupplierTest {
         authServer.stop();
     }
 
+    @ParameterizedTest(name = "Given Cause: {1}")
+    @MethodSource("exceptionsToTest")
+    void anyExceptionThrown_alwaysRethrowsAsSdkException(String expectedMessage, Throwable cause,
+        Class expectedExceptionOfType) {
+        startAuthStub();
+
+        assertThatExceptionOfType(expectedExceptionOfType).isThrownBy(() -> {
+            ClientCredentialsTokenSupplier supplier = buildSupplierForStub();
+
+            Token token = Mockito.mock(Token.class);
+            supplier.setToken(token);
+            when(token.getValue()).thenThrow(cause);
+            // Act
+            supplier.get();
+        }).withMessageContaining(expectedMessage)
+            .withCauseInstanceOf(RuntimeException.class);
+    }
+
+    private static Stream<Arguments> exceptionsToTest() {
+        RuntimeException cause = new RuntimeException("Bada!");
+        final String expectedMessage = "Boom!";
+        return Stream.of(
+            of(expectedMessage, new SdkClientException(expectedMessage, cause), SdkClientException.class),
+            of(expectedMessage, new SdkServiceException(expectedMessage, cause), SdkServiceException.class),
+            of("Undocumented exception occurred", new RuntimeException(expectedMessage), SdkClientException.class)
+        );
+    }
+
     @Test
-    void malformed_token_url_throws_exception() {
-        assertThrows(SdkClientException.class, () -> {
+    void actuallyValidUrl_hasInvalidCharacters_wrapsAndPropagatesException() {
+        assertThatExceptionOfType(SdkServiceException.class).isThrownBy(() -> {
             ClientCredentialsTokenSupplier.builder()
+                .clientSecret("a-secret")
+                .clientId("a-client-id")
+                .tokenUrl("http://google.com")
+                .build().get();
+
+        }).withMessageContaining("405");
+    }
+
+    @Nested
+    class ConstructorOnly {
+
+        @Test
+        void rfc2396_tokenUrlSyntax_throwsSdkClientException() {
+            assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> {
+                ClientCredentialsTokenSupplier.builder()
+                    .clientSecret("a-secret")
+                    .clientId("a-client-id")
+                    .tokenUrl("http:\\google.com") // backslashes instead of forward slashes
+                    .build();
+            }).withCauseInstanceOf(URISyntaxException.class);
+        }
+
+        @Test
+        void blankTokenUrl_isConvertedTo_defaultTokenUrl() {
+            final ClientCredentialsTokenSupplier actualClientTokenSupplier = ClientCredentialsTokenSupplier.builder()
+                .clientSecret("a-secret")
+                .clientId("a-client-id")
+                .tokenUrl("   ")
+                .build();
+
+            assertThat(actualClientTokenSupplier.getTokenUrl()).isEqualTo(DEFAULT_TOKEN_URL);
+        }
+
+        @Test
+        void nullTokenUrl_isConvertedTo_defaultTokenUrl() {
+            final ClientCredentialsTokenSupplier actualClientTokenSupplier = ClientCredentialsTokenSupplier.builder()
+                .clientSecret("a-secret")
+                .clientId("a-client-id")
+                .tokenUrl(null)
+                .build();
+
+            assertThat(actualClientTokenSupplier.getTokenUrl()).isEqualTo(DEFAULT_TOKEN_URL);
+        }
+
+        @Test
+        void malFormedTokenUrl_throwsSdkClientException() {
+            assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> ClientCredentialsTokenSupplier.builder()
                 .clientSecret("a-secret")
                 .clientId("a-client-id")
                 .tokenUrl("\\\\")
-                .build();
-        });
-    }
+                .build())
+                .withCauseInstanceOf(URISyntaxException.class)
+                .withMessageContaining("is not a valid URL");
+        }
 
-    @Test
-    void cannot_construct_without_clientId() {
-        assertThrows(SdkClientException.class, () -> {
-            ClientCredentialsTokenSupplier.builder()
+        @Test
+        void cannot_construct_without_clientId() {
+            assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> ClientCredentialsTokenSupplier.builder()
                 .clientId(null)
                 .clientSecret("a-secret")
-                .build();
-        });
-    }
+                .build())
+                .withMessageContaining("Both client id and client secret are required and cannot be blank")
+                .withNoCause();
+        }
 
-    @Test
-    void cannot_construct_without_clientSecret() {
-        assertThrows(SdkClientException.class, () -> {
-            ClientCredentialsTokenSupplier.builder()
+        @Test
+        void cannot_construct_without_clientSecret() {
+            assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> ClientCredentialsTokenSupplier.builder()
                 .clientId("a-client-id")
                 .clientSecret(null)
-                .build();
-        });
+                .build())
+                .withMessageContaining("Both client id and client secret are required and cannot be blank")
+                .withNoCause();
+        }
     }
 
     @ParameterizedTest
@@ -102,12 +191,7 @@ class ClientCredentialsTokenSupplierTest {
         );
 
         // and a token supplier
-        ClientCredentialsTokenSupplier tokenSupplier = ClientCredentialsTokenSupplier
-            .builder()
-            .clientId("a-client-id")
-            .clientSecret("a-client-secret")
-            .tokenUrl("http://localhost:" + authServer.port() + "/relative-token-url")
-            .build();
+        ClientCredentialsTokenSupplier tokenSupplier = buildSupplierForStub();
 
         // an auth failure exception is thrown when token is requested
         assertThatThrownBy(tokenSupplier::get)
@@ -115,7 +199,6 @@ class ClientCredentialsTokenSupplierTest {
             .hasMessageContaining("Authorization failed for user [")
             .hasMessageContaining("at tokenUrl [")
             .hasFieldOrPropertyWithValue("httpStatusCode", responseCode);
-
     }
 
     @ParameterizedTest
@@ -131,12 +214,7 @@ class ClientCredentialsTokenSupplierTest {
         );
 
         // and a token supplier
-        ClientCredentialsTokenSupplier tokenSupplier = ClientCredentialsTokenSupplier
-            .builder()
-            .clientId("a-client-id")
-            .clientSecret("a-client-secret")
-            .tokenUrl("http://localhost:" + authServer.port() + "/relative-token-url")
-            .build();
+        ClientCredentialsTokenSupplier tokenSupplier = buildSupplierForStub();
 
         // a communication exception is thrown when token is requested
         assertThatThrownBy(tokenSupplier::get)
@@ -144,7 +222,6 @@ class ClientCredentialsTokenSupplierTest {
             .hasMessageContaining("Unexpected response [")
             .hasMessageContaining("from tokenUrl [")
             .hasFieldOrPropertyWithValue("httpStatusCode", responseCode);
-
     }
 
     @Test
@@ -160,30 +237,16 @@ class ClientCredentialsTokenSupplierTest {
 
         // an exception is thrown when token is requested
         assertThrows(SdkServiceException.class, tokenSupplier::get);
-
     }
 
     @Test
-    void does_not_request_new_token_until_token_expires() throws Exception {
+    void does_not_request_new_token_until_token_expires() {
 
         // given a valid response with token that expires in 1 second
-        authServer.stubFor(
-            post("/relative-token-url")
-                .willReturn(
-                    aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withStatus(200)
-                        .withBody(sampleOauthResponse())
-                )
-        );
+        startAuthStub();
 
         // and a client
-        ClientCredentialsTokenSupplier tokenSupplier = ClientCredentialsTokenSupplier
-            .builder()
-            .clientId("a-client-id")
-            .clientSecret("a-client-secret")
-            .tokenUrl("http://localhost:" + authServer.port() + "/relative-token-url")
-            .build();
+        ClientCredentialsTokenSupplier tokenSupplier = buildSupplierForStub();
 
         //when an auth token is retrieved 3 times
         tokenSupplier.get();
@@ -202,11 +265,10 @@ class ClientCredentialsTokenSupplierTest {
 
         //then a second call was made
         authServer.verify(2, postRequestedFor(urlEqualTo("/relative-token-url")));
-
     }
 
     @Test
-    void sends_the_correct_request_and_maps_response() throws Exception {
+    void sends_the_correct_request_and_maps_response() {
 
         //given a 200 response when params match
         authServer.stubFor(
@@ -222,12 +284,7 @@ class ClientCredentialsTokenSupplierTest {
         );
 
         //and a client
-        ClientCredentialsTokenSupplier tokenSupplier = ClientCredentialsTokenSupplier
-            .builder()
-            .clientId("a-client-id")
-            .clientSecret("a-client-secret")
-            .tokenUrl("http://localhost:" + authServer.port() + "/relative-token-url")
-            .build();
+        ClientCredentialsTokenSupplier tokenSupplier = buildSupplierForStub();
 
         //when an auth token is retrieved
         String token = tokenSupplier.get();
@@ -241,4 +298,23 @@ class ClientCredentialsTokenSupplierTest {
         return "{\"access_token\":\"mock-auth-token\",\"expires_in\":\"11\",\"token_type\":\"bearer\"}";
     }
 
+    private void startAuthStub() {
+        authServer.stubFor(
+            post("/relative-token-url")
+                .willReturn(
+                    aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withStatus(200)
+                        .withBody(sampleOauthResponse())
+                )
+        );
+    }
+
+    private ClientCredentialsTokenSupplier buildSupplierForStub() {
+        return ClientCredentialsTokenSupplier.builder()
+            .clientId("a-client-id")
+            .clientSecret("a-client-secret")
+            .tokenUrl("http://localhost:" + authServer.port() + "/relative-token-url")
+            .build();
+    }
 }

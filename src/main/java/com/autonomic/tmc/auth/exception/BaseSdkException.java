@@ -19,10 +19,8 @@
  */
 package com.autonomic.tmc.auth.exception;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Objects;
-import java.util.Optional;
+import static java.util.Optional.ofNullable;
+
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import lombok.extern.slf4j.Slf4j;
@@ -30,64 +28,79 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BaseSdkException extends RuntimeException {
 
-    private static final String PROJECT_NAME;
-    private static final String PROJECT_VERSION;
-
-    static {
-        ProjectProperties projectProperties = new ProjectProperties();
-        PROJECT_NAME = projectProperties.getName();
-        PROJECT_VERSION = projectProperties.getVersion();
-    }
+    private static final String DEFAULT_NAME = "[ AUTONOMIC ]";
+    private static final String DEFAULT_VERSION = "[ SDK ]";
 
     BaseSdkException(String message) {
         super(message);
+        log.warn(message);
     }
 
     BaseSdkException(String message, Throwable cause) {
         super(message, cause);
+        log.warn(message, cause);
     }
 
     static String buildMessage(ErrorSourceType errorSourceType, String clientMessage) {
-        return String
-            .format("%s-%s-%s: %s.", PROJECT_NAME, PROJECT_VERSION, errorSourceType, clientMessage);
+        try {
+            final ProjectProperties properties = ProjectProperties.get();
+            final String name = ofNullable(properties.getName()).orElse(DEFAULT_NAME);
+            final String version = ofNullable(properties.getVersion()).orElse(DEFAULT_VERSION);
+            return String.format("%s-%s-%s: %s.", name, version, errorSourceType, clientMessage);
+        } catch (Throwable e) {
+            return DEFAULT_NAME + "~" + DEFAULT_VERSION + "~" + errorSourceType.toString() + clientMessage;
+        }
     }
 
     static class ProjectProperties {
 
-        private static final String UNKNOWN = "[ UNKNOWN ]";
-        private Manifest manifest;
+        static ProjectProperties singletonInstance = null;
 
-        private Manifest getManifest() {
-            if (Objects.isNull(manifest)) {
-                try {
-                    String jarPath = BaseSdkException.class.getProtectionDomain()
-                        .getCodeSource().getLocation().toURI().getPath();
-                    try (JarFile jarFile = new JarFile(jarPath)) {
-                        // This branch is intentionally not unit tested. This cannot be tested
-                        // because the tests run before the library gets packaged. These lines have
-                        // been tested in the examples which are distributed separately from this
-                        // library.
-                        manifest = jarFile.getManifest();
-                    }
-                } catch (IOException | URISyntaxException e) {
-                    log.warn("Unable to find manifest", e);
-                }
-            }
-            return manifest;
+        Manifest manifest;
+
+        private ProjectProperties() {
+            setManifest();
         }
 
-        private String getAttribute(String name) {
-            return Optional.ofNullable(getManifest())
-                .map(m -> m.getMainAttributes().getValue(name))
-                .orElse(UNKNOWN);
+        public static ProjectProperties get() {
+            if (singletonInstance == null) {
+                singletonInstance = new ProjectProperties();
+            }
+            return singletonInstance;
+        }
+
+        private void setManifest() {
+            try {
+                String jarPath = BaseSdkException.class.getProtectionDomain()
+                    .getCodeSource().getLocation().toURI().getPath();
+                try (JarFile jarFile = new JarFile(jarPath)) {
+                    // This branch is intentionally not unit tested. This cannot be tested
+                    // because the tests run before the library gets packaged. These lines have
+                    // been tested in the examples which are distributed separately from this
+                    // library.
+                    manifest = jarFile.getManifest();
+                }
+            } catch (Throwable e) {
+                log.debug("Unable to find manifest", e);
+            }
+        }
+
+        private String getAttribute(String name, String defaultValue) {
+            try {
+                return ofNullable(manifest)
+                    .map(m -> m.getMainAttributes().getValue(name))
+                    .orElse(defaultValue);
+            } catch (Throwable e) {
+                return defaultValue;
+            }
         }
 
         String getName() {
-            return getAttribute("Implementation-Title");
+            return getAttribute("Implementation-Title", DEFAULT_NAME);
         }
 
         String getVersion() {
-            return getAttribute("Implementation-Version");
+            return getAttribute("Implementation-Version", DEFAULT_VERSION);
         }
     }
 }

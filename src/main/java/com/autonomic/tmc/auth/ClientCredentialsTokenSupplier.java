@@ -19,12 +19,14 @@
  */
 package com.autonomic.tmc.auth;
 
+import static org.codehaus.plexus.util.StringUtils.isNotBlank;
+
+import com.autonomic.tmc.auth.exception.BaseSdkException;
 import com.autonomic.tmc.auth.exception.SdkClientException;
 import com.autonomic.tmc.auth.exception.SdkServiceException;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 import com.nimbusds.oauth2.sdk.AuthorizationGrant;
 import com.nimbusds.oauth2.sdk.ClientCredentialsGrant;
-import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.TokenRequest;
 import com.nimbusds.oauth2.sdk.TokenResponse;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
@@ -33,12 +35,14 @@ import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -57,10 +61,12 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
     // properties
     private final String clientId;
     private final String clientSecret;
+    @Getter(AccessLevel.PACKAGE) // Visible for testing
     private final String tokenUrl;
     private final URI tokenEndpoint;
 
     // state
+    @Setter(AccessLevel.PACKAGE) // Visible for testing
     private Token token = null;
 
     /**
@@ -82,8 +88,8 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
      * @param clientId     The client_id param of the client credentials request
      * @param clientSecret The client_secret param of the client credentials request
      * @param tokenUrl     The URL against which the client credentials request will POST. A null
-     *                     value will result in the default value being used. Default:
-     *                     https://accounts.autonomic.ai/v1/auth/oidc/token
+     *                      or blank value will result in the default value being used.
+     *                      Default: https://accounts.autonomic.ai/v1/auth/oidc/token
      */
     @Builder
     public ClientCredentialsTokenSupplier(String clientId, String clientSecret, String tokenUrl) {
@@ -92,34 +98,38 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
 
-        this.tokenUrl = (tokenUrl != null) ? tokenUrl : DEFAULT_TOKEN_URL;
+        this.tokenUrl = isNotBlank(tokenUrl) ? tokenUrl : DEFAULT_TOKEN_URL;
+
         try {
             this.tokenEndpoint = new URI(this.tokenUrl);
-        } catch (URISyntaxException e) {
+        } catch (RuntimeException | URISyntaxException e) {
             throw new SdkClientException(
                 String.format("tokenUrl [%s] is not a valid URL", tokenUrl), e);
         }
     }
 
     /**
-     * This method responds with a valid String representation of the Bearer token.  If a token
-     * becomes expired, a new valid token will be requested automatically. This method will always
-     * return a valid token.
+     * This method responds with a valid String representation of the Bearer token.  If a token becomes expired, a new valid token will be
+     * requested automatically. This method will always return a valid token.
      *
      * @return String representation of Bearer token.
-     * @throws SdkServiceException Thrown when an unexpected condition is encountered while making
-     * the client credentials grant POST
-     * @throws SdkClientException Thrown when the credentials that were provided are expressly
-     * rejected.
+     * @throws SdkServiceException Thrown when an unexpected condition is encountered while making the client credentials grant POST
+     * @throws SdkClientException Thrown when the credentials that were provided are expressly rejected.
      */
     @Override
     public synchronized String get() {
-        if (token != null && !token.isExpired()) {
-            log.debug("Cached token found.");
+        try {
+            if (token != null && !token.isExpired()) {
+                log.debug("Cached token found.");
+                return token.getValue();
+            }
+            resetToken();
             return token.getValue();
+        } catch (BaseSdkException e) {
+            throw e;
+        } catch (RuntimeException e) {
+            throw new SdkClientException("Undocumented exception occurred", e);
         }
-        resetToken();
-        return token.getValue();
     }
 
     private void resetToken() {
@@ -182,13 +192,13 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         HTTPResponse response;
         try {
             response = request.toHTTPRequest().send();
-        } catch (IOException e) {
+        } catch (Throwable e) {
             throw new SdkServiceException(String
                 .format("Unexpected issue communicating with tokenUrl [%s]", this.tokenUrl), e);
         }
         try {
             return TokenResponse.parse(response);
-        } catch (ParseException e) {
+        } catch (Throwable e) {
             throw new SdkClientException(String
                 .format("Unexpected issue parsing token response: [%s]", response.getContent()), e);
         }

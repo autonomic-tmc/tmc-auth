@@ -4,8 +4,7 @@ import static java.lang.String.format;
 
 import com.autonomic.tmc.auth.ClientCredentialsTokenSupplier;
 import com.autonomic.tmc.auth.TokenSupplier;
-import com.autonomic.tmc.auth.exception.SdkClientException;
-import com.autonomic.tmc.auth.exception.SdkServiceException;
+import com.autonomic.tmc.auth.exception.BaseSdkException;
 import com.google.common.annotations.VisibleForTesting;
 import io.grpc.Channel;
 import java.net.MalformedURLException;
@@ -24,10 +23,10 @@ public class GradleAuthExample implements CommandLineRunner {
     @VisibleForTesting
     static Logger LOGGER = Logger.getLogger("GradleAuthExample");
 
-    @Value("${tmc.auth.clientId}")
+    @Value("${tmc.auth.clientId: }")
     private String clientId;
 
-    @Value("${tmc.auth.clientSecret}")
+    @Value("${tmc.auth.clientSecret: }")
     private String clientSecret;
 
     @Value("${tmc.auth.tokenUrl:https://accounts.autonomic.ai/v1/auth/oidc/token}")
@@ -50,19 +49,29 @@ public class GradleAuthExample implements CommandLineRunner {
     }
 
     private void run() {
-        try {
-            TokenSupplier tokenSupplier;
+        TokenSupplier tokenSupplier = null;
 
-            //#Example 1: REST Authentication token for Production
+        //#Example 1: REST Authentication token for Production
+        try {
             tokenSupplier = createTokenSupplier(clientId, clientSecret);
             printToken(tokenSupplier, "with default URL");
+        } catch (BaseSdkException e) {
+            LOGGER.log(Level.SEVERE,
+                "Example 1: REST Authentication token for Production failed: ", e);
+        }
 
-            //Example 2: REST Authentication token when you want to tell the tokenSupplier what
-            // environment to connect to
+        //Example 2: REST Authentication token when you want to tell the tokenSupplier what
+        // environment to connect to
+        try {
             tokenSupplier = createTokenSupplierWithTokenUrl(clientId, clientSecret, tokenUrl);
             printToken(tokenSupplier, "with provided URL");
+        } catch (BaseSdkException e) {
+            LOGGER.log(Level.SEVERE,
+                "Example 2: REST Authentication token for your environment failed: ", e);
+        }
 
-            //Example 3: An authenticated gRPC channel that can be used when creating a client stub
+        //Example 3: An authenticated gRPC channel that can be used when creating a client stub
+        try {
             AuthenticatedChannelBuilder channelBuilder = new AuthenticatedChannelBuilder(
                 tokenSupplier);
 
@@ -70,16 +79,16 @@ public class GradleAuthExample implements CommandLineRunner {
 
             String msg = format("Authenticated Channel: %s", authenticatedGRPCChannel);
             LOGGER.info(msg);
-
-            // ExampleStub exampleStub = ExampleGrpc.newStub(authenticatedGRPCChannel);
-            //
-            // Note: `newStub` could also be a blocking stub, and async call stub, and a future
-            // stub. Check with the Autonomic service to learn what is the best stub to use for the
-            // service.
-
-        } catch (SdkClientException | SdkServiceException | MalformedURLException e) {
-            LOGGER.log(Level.SEVERE, "Generic message, Something went wrong: ", e);
+        } catch (BaseSdkException | MalformedURLException e) {
+            LOGGER.log(Level.SEVERE,
+                "Example 3: A gRPC authenticated token failed: ", e);
         }
+
+        // ExampleStub exampleStub = ExampleGrpc.newStub(authenticatedGRPCChannel);
+        //
+        // Note: `newStub` could also be a blocking stub, and async call stub, and a future
+        // stub. Check with the Autonomic service to learn what is the best stub to use for the
+        // service.
     }
 
     private void printToken(TokenSupplier tokenSupplier, String partialMsg) {

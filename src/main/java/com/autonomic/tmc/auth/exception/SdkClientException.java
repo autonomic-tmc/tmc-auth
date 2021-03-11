@@ -24,4 +24,8 @@ public class SdkClientException extends BaseSdkException {
     public SdkClientException(String clientMessage, Throwable cause) {
         super(buildMessage(ErrorSourceType.SDK_CLIENT, clientMessage), cause);
     }
+
+    public SdkClientException(String clientMessage) {
+        super(buildMessage(ErrorSourceType.SDK_CLIENT, clientMessage));
+    }
 }

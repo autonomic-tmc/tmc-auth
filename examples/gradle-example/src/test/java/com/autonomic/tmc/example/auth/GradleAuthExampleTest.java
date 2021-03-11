@@ -1,6 +1,6 @@
 package com.autonomic.tmc.example.auth;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 
 import java.util.logging.Level;
@@ -29,15 +29,16 @@ class GradleAuthExampleTest {
     void givenBadCredentials_whenAuthenticating_thenVerifyErrorMessageContainsSdkVersion() {
         GradleAuthExample.LOGGER = loggerStub;
         example.run("hi");
-        Mockito.verify(GradleAuthExample.LOGGER).log(
+        Mockito.verify(GradleAuthExample.LOGGER, Mockito.times(1)).log(
             eq(Level.SEVERE),
-            eq("Generic message, Something went wrong: "),
+            eq("Example 1: REST Authentication token for Production failed: "),
             errorMessages.capture());
         String actualError = errorMessages.getAllValues().get(0).getMessage();
 
-        assertTrue(actualError.contains("tmc-auth"));
-        assertTrue(actualError.contains("-SERVICE"));
-        assertTrue(actualError.contains("Authorization failed for user [NOTAREALCLIENTID]"));
+        assertThat(actualError)
+            .contains("tmc-auth")
+            .contains("-SERVICE")
+            .contains("Authorization failed for user [NOTAREALCLIENTID]");
     }
 
     private static class LoggerStub extends Logger {

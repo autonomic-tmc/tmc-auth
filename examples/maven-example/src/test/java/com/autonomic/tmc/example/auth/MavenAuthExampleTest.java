@@ -1,6 +1,6 @@
 package com.autonomic.tmc.example.auth;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 
 import java.util.logging.Level;
@@ -27,17 +27,21 @@ class MavenAuthExampleTest {
 
     @Test
     void givenBadCredentials_whenAuthenticating_thenVerifyErrorMessageContainsSdkVersion() {
+        // Arrange
         MavenAuthExample.LOGGER = loggerStub;
+        // Act
         example.run("hi");
-        Mockito.verify(MavenAuthExample.LOGGER).log(
+        // Assert
+        Mockito.verify(MavenAuthExample.LOGGER, Mockito.times(1)).log(
             eq(Level.SEVERE),
-            eq("Generic message, Something went wrong: "),
+            eq("Example 1: REST Authentication token for Production failed: "),
             errorMessages.capture());
         String actualError = errorMessages.getAllValues().get(0).getMessage();
 
-        assertTrue(actualError.contains("tmc-auth"));
-        assertTrue(actualError.contains("-SERVICE"));
-        assertTrue(actualError.contains("Authorization failed for user [NOTAREALCLIENTID]"));
+        assertThat(actualError)
+            .contains("tmc-auth")
+            .contains("-SERVICE")
+            .contains("Authorization failed for user [NOTAREALCLIENTID]");
     }
 
     private static class LoggerStub extends Logger {
