@@ -12,7 +12,7 @@ RESULTING FROM ANY USE OR DISTRIBUTION OF THIS LIST.
 
 In case of any license issues related to TMC Auth SDK, please contact support@autonomic.ai.
 
-Date Generated: 2021-03-11 15:17
+Date Generated: 2021-04-21 19:00
 
  (Apache License, Version 2.0) Jackson-annotations (com.fasterxml.jackson.core:jackson-annotations:2.10.2 - http://github.com/FasterXML/jackson)
  (Apache License, Version 2.0) Jackson-core (com.fasterxml.jackson.core:jackson-core:2.10.2 - https://github.com/FasterXML/jackson-core)
@@ -25,7 +25,7 @@ Date Generated: 2021-03-11 15:17
  (Apache License, Version 2.0) Guava: Google Core Libraries for Java (com.google.guava:guava:20.0 - https://github.com/google/guava/guava)
  (Apache License, Version 2.0) project ':json-path' (com.jayway.jsonpath:json-path:2.4.0 - https://github.com/jayway/JsonPath)
  (Apache License, Version 2.0) Nimbus LangTag (com.nimbusds:lang-tag:1.5 - https://bitbucket.org/connect2id/nimbus-language-tags)
- (Apache License, Version 2.0) Nimbus JOSE+JWT (com.nimbusds:nimbus-jose-jwt:9.7 - https://bitbucket.org/connect2id/nimbus-jose-jwt)
+ (Apache License, Version 2.0) Nimbus JOSE+JWT (com.nimbusds:nimbus-jose-jwt:9.8.1 - https://bitbucket.org/connect2id/nimbus-jose-jwt)
  (Apache License, Version 2.0) OAuth 2.0 SDK with OpenID Connect extensions (com.nimbusds:oauth2-oidc-sdk:6.23 - https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions)
  (CDDL 1.1) JavaMail API (com.sun.mail:javax.mail:1.6.1 - http://javaee.github.io/javamail/javax.mail)
  (Apache License, Version 2.0) Apache Commons Codec (commons-codec:commons-codec:1.10 - http://commons.apache.org/proper/commons-codec/)
@@ -34,8 +34,6 @@ Date Generated: 2021-03-11 15:17
  (Apache License, Version 2.0) Apache Commons Logging (commons-logging:commons-logging:1.2 - http://commons.apache.org/proper/commons-logging/)
  (CDDL 1.1) JavaBeans Activation Framework (JAF) (javax.activation:activation:1.1 - http://java.sun.com/products/javabeans/jaf/index.jsp)
  (CDDL 1.1) Java Servlet API (javax.servlet:javax.servlet-api:3.1.0 - http://servlet-spec.java.net)
- (CDDL 1.1) (GPL2 w/ CPE) jaxb-api (javax.xml.bind:jaxb-api:2.3.0 - https://github.com/javaee/jaxb-spec/jaxb-api)
- (Apache License, Version 2.0) Apache Log4j (log4j:log4j:1.2.17 - http://logging.apache.org/log4j/1.2/)
  (Apache License, Version 2.0) Byte Buddy (without dependencies) (net.bytebuddy:byte-buddy:1.9.0 - http://bytebuddy.net/byte-buddy)
  (Apache License, Version 2.0) Byte Buddy Java agent (net.bytebuddy:byte-buddy-agent:1.9.0 - http://bytebuddy.net/byte-buddy-agent)
  (Apache License, Version 2.0) ASM based accessors helper used by json-smart (net.minidev:accessors-smart:1.2 - http://www.minidev.net/)
@@ -76,7 +74,6 @@ Date Generated: 2021-03-11 15:17
  (BSD 3-Clause) asm (org.ow2.asm:asm:7.0 - http://asm.ow2.org/)
  (MIT-License) Project Lombok (org.projectlombok:lombok:1.18.0 - https://projectlombok.org)
  (MIT-License) SLF4J API Module (org.slf4j:slf4j-api:1.7.30 - http://www.slf4j.org)
- (MIT-License) SLF4J LOG4J-12 Binding (org.slf4j:slf4j-log4j12:1.7.30 - http://www.slf4j.org)
  (Apache License, Version 2.0) org.xmlunit:xmlunit-core (org.xmlunit:xmlunit-core:2.6.2 - https://www.xmlunit.org/)
  (BSD 3-Clause) org.xmlunit:xmlunit-legacy (org.xmlunit:xmlunit-legacy:2.6.2 - https://www.xmlunit.org/)
  (Apache License, Version 2.0) org.xmlunit:xmlunit-placeholders (org.xmlunit:xmlunit-placeholders:2.6.2 - https://www.xmlunit.org/xmlunit-placeholders/)

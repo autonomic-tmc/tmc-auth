@@ -41,7 +41,6 @@ import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.log4j.BasicConfigurator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -61,7 +60,6 @@ class ClientCredentialsTokenSupplierTest {
 
     @BeforeEach
     void setUp() {
-        BasicConfigurator.configure();
         authServer = new WireMockServer(WireMockConfiguration.options().dynamicPort());
         authServer.start();
     }
