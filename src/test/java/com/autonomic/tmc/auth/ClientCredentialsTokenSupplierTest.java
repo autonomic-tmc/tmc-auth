@@ -71,8 +71,8 @@ class ClientCredentialsTokenSupplierTest {
 
     @ParameterizedTest(name = "Given Cause: {1}")
     @MethodSource("exceptionsToTest")
-    void anyExceptionThrown_alwaysRethrowsAsSdkException(String expectedMessage, Throwable cause,
-        Class expectedExceptionOfType) {
+    <T extends Throwable> void anyExceptionThrown_alwaysRethrowsAsSdkException(String expectedMessage, Throwable cause,
+        Class<T> expectedExceptionOfType) {
         startAuthStub();
 
         assertThatExceptionOfType(expectedExceptionOfType).isThrownBy(() -> {
