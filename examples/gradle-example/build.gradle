@@ -20,7 +20,8 @@ repositories {
 }
 
 ext {
-    tmcAuthVersion = project.hasProperty('tmc-auth.version') ? project.getProperty('tmc-auth.version') : '3.1.0-beta'
+    tmcAuthVersion = project.hasProperty('tmc-auth.version') ? project.getProperty('tmc-auth' +
+            '.version') : '3.1.1-beta'
 }
 
 dependencies {
@@ -28,9 +29,7 @@ dependencies {
     implementation("io.grpc:grpc-stub:1.25.0")
     implementation("io.grpc:grpc-netty:1.25.0")
     implementation("io.netty:netty-tcnative-boringssl-static:2.0.28.Final")
-    implementation("org.springframework.boot:spring-boot-starter:2.2.2.RELEASE"){
-        exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
-    }
+    implementation("org.springframework.boot:spring-boot-starter:2.2.2.RELEASE")
     testImplementation("org.springframework.boot:spring-boot-starter-test:2.2.2.RELEASE") {
         exclude group: "org.junit.vintage"
         exclude group: "jakarta.activation"
