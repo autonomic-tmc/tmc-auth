@@ -33,8 +33,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.of;
 import static org.mockito.Mockito.when;
 
-import com.autonomic.tmc.auth.exception.SdkClientException;
-import com.autonomic.tmc.auth.exception.SdkServiceException;
+import com.autonomic.tmc.exception.SdkClientException;
+import com.autonomic.tmc.exception.SdkServiceException;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import java.net.URISyntaxException;
@@ -43,6 +43,7 @@ import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -91,8 +92,8 @@ class ClientCredentialsTokenSupplierTest {
         RuntimeException cause = new RuntimeException("Bada!");
         final String expectedMessage = "Boom!";
         return Stream.of(
-            of(expectedMessage, new SdkClientException(expectedMessage, cause), SdkClientException.class),
-            of(expectedMessage, new SdkServiceException(expectedMessage, cause), SdkServiceException.class),
+            of(expectedMessage, new SdkClientException(expectedMessage, cause, ClientCredentialsTokenSupplier.class), SdkClientException.class),
+            of(expectedMessage, new SdkServiceException(expectedMessage, cause, ClientCredentialsTokenSupplier.class), SdkServiceException.class),
             of("Undocumented exception occurred", new RuntimeException(expectedMessage), SdkClientException.class)
         );
     }
@@ -194,9 +195,10 @@ class ClientCredentialsTokenSupplierTest {
         // an auth failure exception is thrown when token is requested
         assertThatThrownBy(tokenSupplier::get)
             .isInstanceOf(SdkServiceException.class)
-            .hasMessageContaining("Authorization failed for user [")
-            .hasMessageContaining("at tokenUrl [")
-            .hasFieldOrPropertyWithValue("httpStatusCode", responseCode);
+            .hasMessageContaining("Authorization failed ")
+            .hasMessageContaining("with code [" + responseCode + "]")
+            .hasMessageContaining("for user [a-client-id]")
+            .hasMessageContaining("at tokenUrl [" + tokenSupplier.getTokenUrl() + "]");
     }
 
     @ParameterizedTest
@@ -217,9 +219,8 @@ class ClientCredentialsTokenSupplierTest {
         // a communication exception is thrown when token is requested
         assertThatThrownBy(tokenSupplier::get)
             .isInstanceOf(SdkServiceException.class)
-            .hasMessageContaining("Unexpected response [")
-            .hasMessageContaining("from tokenUrl [")
-            .hasFieldOrPropertyWithValue("httpStatusCode", responseCode);
+            .hasMessageContaining("Unexpected response [" + responseCode + "]")
+            .hasMessageContaining("from tokenUrl [" + tokenSupplier.getTokenUrl() + "]");
     }
 
     @Test

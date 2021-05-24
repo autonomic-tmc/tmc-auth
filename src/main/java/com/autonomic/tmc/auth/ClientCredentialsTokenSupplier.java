@@ -21,9 +21,9 @@ package com.autonomic.tmc.auth;
 
 import static org.codehaus.plexus.util.StringUtils.isNotBlank;
 
-import com.autonomic.tmc.auth.exception.BaseSdkException;
-import com.autonomic.tmc.auth.exception.SdkClientException;
-import com.autonomic.tmc.auth.exception.SdkServiceException;
+import com.autonomic.tmc.exception.BaseSdkException;
+import com.autonomic.tmc.exception.SdkClientException;
+import com.autonomic.tmc.exception.SdkServiceException;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 import com.nimbusds.oauth2.sdk.AuthorizationGrant;
 import com.nimbusds.oauth2.sdk.ClientCredentialsGrant;
@@ -104,7 +104,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
             this.tokenEndpoint = new URI(this.tokenUrl);
         } catch (RuntimeException | URISyntaxException e) {
             throw new SdkClientException(
-                String.format("tokenUrl [%s] is not a valid URL", tokenUrl), e);
+                String.format("tokenUrl [%s] is not a valid URL", tokenUrl), e, this.getClass());
         }
     }
 
@@ -128,7 +128,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         } catch (BaseSdkException e) {
             throw e;
         } catch (RuntimeException e) {
-            throw new SdkClientException("Undocumented exception occurred", e);
+            throw new SdkClientException("Undocumented exception occurred", e, this.getClass());
         }
     }
 
@@ -172,13 +172,13 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
             int responseCode = httpResponse.getStatusCode();
             if (responseCode == 401 || responseCode == 400) {
                 throw new SdkServiceException(String
-                    .format("Authorization failed for user [%s] at tokenUrl [%s]",
-                        this.clientId, this.tokenUrl), response.toErrorResponse());
+                    .format("Authorization failed with code [%s] for user [%s] at tokenUrl [%s]",
+                        responseCode, this.clientId, this.tokenUrl), this.getClass());
             }
 
             throw new SdkServiceException(String
                 .format("Unexpected response [%s] from tokenUrl [%s]: %s", responseCode,
-                    this.tokenUrl, httpResponse.getContent()), response.toErrorResponse());
+                    this.tokenUrl, httpResponse.getContent()), this.getClass());
         }
 
         AccessTokenResponse successResponse = response.toSuccessResponse();
@@ -194,13 +194,13 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
             response = request.toHTTPRequest().send();
         } catch (Throwable e) {
             throw new SdkServiceException(String
-                .format("Unexpected issue communicating with tokenUrl [%s]", this.tokenUrl), e);
+                .format("Unexpected issue communicating with tokenUrl [%s]", this.tokenUrl), e, this.getClass());
         }
         try {
             return TokenResponse.parse(response);
         } catch (Throwable e) {
             throw new SdkClientException(String
-                .format("Unexpected issue parsing token response: [%s]", response.getContent()), e);
+                .format("Unexpected issue parsing token response: [%s]", response.getContent()), e, this.getClass());
         }
     }
 

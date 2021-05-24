@@ -180,6 +180,10 @@ workflows:
           requires:
             - scan_secrets
           context: tmc-cloudsmith-context
+          filters:
+            branches:
+              # do not build spike branches, intended for experimental code
+              ignore: /.*spike.*/
       - test:
           requires:
             - build
