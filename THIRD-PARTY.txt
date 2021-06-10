@@ -12,7 +12,7 @@ RESULTING FROM ANY USE OR DISTRIBUTION OF THIS LIST.
 
 In case of any license issues related to TMC Auth SDK, please contact support@autonomic.ai.
 
-Date Generated: 2021-04-22 20:18
+Date Generated: 2021-06-10 18:31
 
  (Apache License, Version 2.0) Jackson-annotations (com.fasterxml.jackson.core:jackson-annotations:2.10.2 - http://github.com/FasterXML/jackson)
  (Apache License, Version 2.0) Jackson-core (com.fasterxml.jackson.core:jackson-core:2.10.2 - https://github.com/FasterXML/jackson-core)
@@ -25,7 +25,7 @@ Date Generated: 2021-04-22 20:18
  (Apache License, Version 2.0) Guava: Google Core Libraries for Java (com.google.guava:guava:20.0 - https://github.com/google/guava/guava)
  (Apache License, Version 2.0) project ':json-path' (com.jayway.jsonpath:json-path:2.4.0 - https://github.com/jayway/JsonPath)
  (Apache License, Version 2.0) Nimbus LangTag (com.nimbusds:lang-tag:1.5 - https://bitbucket.org/connect2id/nimbus-language-tags)
- (Apache License, Version 2.0) Nimbus JOSE+JWT (com.nimbusds:nimbus-jose-jwt:9.8.1 - https://bitbucket.org/connect2id/nimbus-jose-jwt)
+ (Apache License, Version 2.0) Nimbus JOSE+JWT (com.nimbusds:nimbus-jose-jwt:9.10 - https://bitbucket.org/connect2id/nimbus-jose-jwt)
  (Apache License, Version 2.0) OAuth 2.0 SDK with OpenID Connect extensions (com.nimbusds:oauth2-oidc-sdk:6.23 - https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions)
  (CDDL 1.1) JavaMail API (com.sun.mail:javax.mail:1.6.1 - http://javaee.github.io/javamail/javax.mail)
  (Apache License, Version 2.0) Apache Commons Codec (commons-codec:commons-codec:1.10 - http://commons.apache.org/proper/commons-codec/)

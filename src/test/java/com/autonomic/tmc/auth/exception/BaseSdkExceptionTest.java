@@ -25,7 +25,6 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.autonomic.tmc.auth.exception.BaseSdkException.ProjectProperties;
 import com.nimbusds.oauth2.sdk.TokenErrorResponse;
 import java.util.jar.Manifest;
 import org.junit.jupiter.api.AfterEach;
@@ -176,6 +175,4 @@ class BaseSdkExceptionTest {
             fail("exceptions must not be thrown");
         }
     }
-
-
 }

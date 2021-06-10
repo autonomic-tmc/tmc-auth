@@ -21,6 +21,7 @@ package com.autonomic.tmc.auth;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -33,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.of;
 import static org.mockito.Mockito.when;
 
+import com.autonomic.tmc.auth.exception.ProjectProperties;
 import com.autonomic.tmc.auth.exception.SdkClientException;
 import com.autonomic.tmc.auth.exception.SdkServiceException;
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -263,6 +265,17 @@ class ClientCredentialsTokenSupplierTest {
 
         //then a second call was made
         authServer.verify(2, postRequestedFor(urlEqualTo("/relative-token-url")));
+    }
+
+    @Test
+    void sends_a_user_agent_to_server() {
+        startAuthStub();
+        ClientCredentialsTokenSupplier tokenSupplier = buildSupplierForStub();
+
+        tokenSupplier.get();
+
+        authServer.verify(1, postRequestedFor(urlEqualTo("/relative-token-url")).withHeader("User-Agent", equalTo(
+            ProjectProperties.get().getFormattedUserAgent())));
     }
 
     @Test
