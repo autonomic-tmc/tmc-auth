@@ -22,6 +22,7 @@ package com.autonomic.tmc.auth;
 import static org.codehaus.plexus.util.StringUtils.isNotBlank;
 
 import com.autonomic.tmc.auth.exception.BaseSdkException;
+import com.autonomic.tmc.auth.exception.ProjectProperties;
 import com.autonomic.tmc.auth.exception.SdkClientException;
 import com.autonomic.tmc.auth.exception.SdkServiceException;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
@@ -32,6 +33,7 @@ import com.nimbusds.oauth2.sdk.TokenResponse;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretPost;
 import com.nimbusds.oauth2.sdk.auth.Secret;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
@@ -87,9 +89,9 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
      *
      * @param clientId     The client_id param of the client credentials request
      * @param clientSecret The client_secret param of the client credentials request
-     * @param tokenUrl     The URL against which the client credentials request will POST. A null
-     *                      or blank value will result in the default value being used.
-     *                      Default: https://accounts.autonomic.ai/v1/auth/oidc/token
+     * @param tokenUrl     The URL against which the client credentials request will POST. A null or
+     *                     blank value will result in the default value being used. Default:
+     *                     https://accounts.autonomic.ai/v1/auth/oidc/token
      */
     @Builder
     public ClientCredentialsTokenSupplier(String clientId, String clientSecret, String tokenUrl) {
@@ -109,12 +111,15 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
     }
 
     /**
-     * This method responds with a valid String representation of the Bearer token.  If a token becomes expired, a new valid token will be
-     * requested automatically. This method will always return a valid token.
+     * This method responds with a valid String representation of the Bearer token.  If a token
+     * becomes expired, a new valid token will be requested automatically. This method will always
+     * return a valid token.
      *
      * @return String representation of Bearer token.
-     * @throws SdkServiceException Thrown when an unexpected condition is encountered while making the client credentials grant POST
-     * @throws SdkClientException Thrown when the credentials that were provided are expressly rejected.
+     * @throws SdkServiceException Thrown when an unexpected condition is encountered while making
+     *                             the client credentials grant POST
+     * @throws SdkClientException  Thrown when the credentials that were provided are expressly
+     *                             rejected.
      */
     @Override
     public synchronized String get() {
@@ -187,11 +192,14 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
     }
 
     TokenResponse executeTokenRequest() {
-        TokenRequest request = createTokenRequest();
+        HTTPRequest httpRequest = createTokenRequest().toHTTPRequest();
+        httpRequest
+            .setHeader("User-Agent",
+                ProjectProperties.get().getFormattedUserAgent());
 
         HTTPResponse response;
         try {
-            response = request.toHTTPRequest().send();
+            response = httpRequest.send();
         } catch (Throwable e) {
             throw new SdkServiceException(String
                 .format("Unexpected issue communicating with tokenUrl [%s]", this.tokenUrl), e);

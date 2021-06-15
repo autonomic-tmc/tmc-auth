@@ -2,7 +2,7 @@
  * ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
  * TMC Auth SDK
  * ——————————————————————————————————————————————————————————————————————————————
- * Copyright (C) 2016 - 2020 Autonomic, LLC
+ * Copyright (C) 2016 - 2021 Autonomic, LLC
  * ——————————————————————————————————————————————————————————————————————————————
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,33 +19,14 @@
  */
 package com.autonomic.tmc.auth.exception;
 
-import static com.autonomic.tmc.auth.exception.ProjectProperties.DEFAULT_NAME;
-import static com.autonomic.tmc.auth.exception.ProjectProperties.DEFAULT_VERSION;
-import static java.util.Optional.ofNullable;
+import static org.junit.jupiter.api.Assertions.*;
 
-import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
 
-@Slf4j
-public class BaseSdkException extends RuntimeException {
+class ProjectPropertiesTest {
 
-    BaseSdkException(String message) {
-        super(message);
-        log.warn(message);
-    }
-
-    BaseSdkException(String message, Throwable cause) {
-        super(message, cause);
-        log.warn(message, cause);
-    }
-
-    static String buildMessage(ErrorSourceType errorSourceType, String clientMessage) {
-        try {
-            final ProjectProperties properties = ProjectProperties.get();
-            final String name = ofNullable(properties.getName()).orElse(DEFAULT_NAME);
-            final String version = ofNullable(properties.getVersion()).orElse(DEFAULT_VERSION);
-            return String.format("%s-%s-%s: %s.", name, version, errorSourceType, clientMessage);
-        } catch (Throwable e) {
-            return DEFAULT_NAME + "~" + DEFAULT_VERSION + "~" + errorSourceType.toString() + clientMessage;
-        }
+    @Test
+    void getFormattedUserAgent_returns_expected_string() {
+        assertEquals("tmc-auth/unknown", ProjectProperties.get().getFormattedUserAgent());
     }
 }
