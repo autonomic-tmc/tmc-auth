@@ -98,6 +98,6 @@ This project has binary dependencies on other open source projects.  These compo
 If you decide to fork `tmc-auth` or build it locally, you will be interested in learning more about the tools we use to ensure we are developing high-quality code. The tools we use are:
 
 * [JaCoCo](https://www.eclemma.org/jacoco/) for code coverage
-* [Sonar](https://www.sonarqube.org/) for static code analysis
+* [SonarCloud](https://sonarcloud.io/) for static code analysis
 * [RevAPI](https://revapi.org/) to validate that we are not introducing breaking API changes
 * [DependencyTrack](https://dependencytrack.org/) to analyze dependencies
