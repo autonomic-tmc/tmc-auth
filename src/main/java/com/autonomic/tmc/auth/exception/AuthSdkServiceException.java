@@ -19,23 +19,24 @@
  */
 package com.autonomic.tmc.auth.exception;
 
-import static com.autonomic.tmc.auth.exception.ErrorSourceType.SERVICE;
 import static java.util.Optional.ofNullable;
 
+import com.autonomic.tmc.exception.SdkClientException;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.TokenErrorResponse;
 import java.util.Objects;
 
-public class SdkServiceException extends BaseSdkException {
+@SuppressWarnings("squid:S110")
+public class AuthSdkServiceException extends com.autonomic.tmc.exception.SdkServiceException {
 
     private int httpStatusCode = 500;
 
-    public SdkServiceException(String clientMessage, Throwable cause) {
-        super(buildMessage(SERVICE, clientMessage), cause);
+    public AuthSdkServiceException(String clientMessage, Throwable cause) {
+        super(clientMessage, cause, AuthSdkServiceException.class);
     }
 
-    public SdkServiceException(String clientMessage, TokenErrorResponse errorResponse) {
-        super(buildMessage(clientMessage, errorResponse));
+    public AuthSdkServiceException(String clientMessage, TokenErrorResponse errorResponse) {
+        super(buildMessage(clientMessage, errorResponse), SdkClientException.class);
         if (Objects.nonNull(errorResponse)) {
             final ErrorObject error = ofNullable(errorResponse.getErrorObject())
                 .orElseGet(() -> new ErrorObject("0"));
@@ -48,7 +49,7 @@ public class SdkServiceException extends BaseSdkException {
     }
 
     private static String buildMessage(String clientMessage, TokenErrorResponse errorResponse) {
-        StringBuilder sb = new StringBuilder(buildMessage(SERVICE, clientMessage));
+        StringBuilder sb = new StringBuilder(clientMessage);
         if (Objects.nonNull(errorResponse)) {
             final ErrorObject error = ofNullable(errorResponse.getErrorObject())
                 .orElseGet(() -> new ErrorObject("0"));

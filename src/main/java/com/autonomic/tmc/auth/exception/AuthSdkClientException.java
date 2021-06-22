@@ -19,8 +19,14 @@
  */
 package com.autonomic.tmc.auth.exception;
 
-public enum ErrorSourceType {
-    SDK_CLIENT,
-    SERVICE,
-    UNKNOWN
+@SuppressWarnings("squid:S110")
+public class AuthSdkClientException extends com.autonomic.tmc.exception.SdkClientException {
+
+    public AuthSdkClientException(String clientMessage, Throwable cause) {
+        super(clientMessage, cause, AuthSdkClientException.class);
+    }
+
+    public AuthSdkClientException(String clientMessage) {
+        super(clientMessage, AuthSdkClientException.class);
+    }
 }

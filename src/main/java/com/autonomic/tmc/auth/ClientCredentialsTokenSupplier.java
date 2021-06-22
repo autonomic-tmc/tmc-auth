@@ -21,10 +21,10 @@ package com.autonomic.tmc.auth;
 
 import static org.codehaus.plexus.util.StringUtils.isNotBlank;
 
-import com.autonomic.tmc.auth.exception.BaseSdkException;
-import com.autonomic.tmc.auth.exception.ProjectProperties;
-import com.autonomic.tmc.auth.exception.SdkClientException;
-import com.autonomic.tmc.auth.exception.SdkServiceException;
+import com.autonomic.tmc.auth.exception.AuthSdkClientException;
+import com.autonomic.tmc.auth.exception.AuthSdkServiceException;
+import com.autonomic.tmc.exception.BaseSdkException;
+import com.autonomic.tmc.exception.ProjectProperties;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 import com.nimbusds.oauth2.sdk.AuthorizationGrant;
 import com.nimbusds.oauth2.sdk.ClientCredentialsGrant;
@@ -105,7 +105,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         try {
             this.tokenEndpoint = new URI(this.tokenUrl);
         } catch (RuntimeException | URISyntaxException e) {
-            throw new SdkClientException(
+            throw new AuthSdkClientException(
                 String.format("tokenUrl [%s] is not a valid URL", tokenUrl), e);
         }
     }
@@ -116,9 +116,9 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
      * return a valid token.
      *
      * @return String representation of Bearer token.
-     * @throws SdkServiceException Thrown when an unexpected condition is encountered while making
+     * @throws AuthSdkServiceException Thrown when an unexpected condition is encountered while making
      *                             the client credentials grant POST
-     * @throws SdkClientException  Thrown when the credentials that were provided are expressly
+     * @throws AuthSdkClientException  Thrown when the credentials that were provided are expressly
      *                             rejected.
      */
     @Override
@@ -133,7 +133,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         } catch (BaseSdkException e) {
             throw e;
         } catch (RuntimeException e) {
-            throw new SdkClientException("Undocumented exception occurred", e);
+            throw new AuthSdkClientException("Undocumented exception occurred", e);
         }
     }
 
@@ -164,7 +164,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
 
     private void validateRequiredParams(String clientId, String clientSecret) {
         if (StringUtils.isBlank(clientId) || StringUtils.isBlank(clientSecret)) {
-            throw new SdkClientException(
+            throw new AuthSdkClientException(
                 "Both client id and client secret are required and cannot be blank", null);
         }
     }
@@ -176,12 +176,12 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
 
             int responseCode = httpResponse.getStatusCode();
             if (responseCode == 401 || responseCode == 400) {
-                throw new SdkServiceException(String
+                throw new AuthSdkServiceException(String
                     .format("Authorization failed for user [%s] at tokenUrl [%s]",
                         this.clientId, this.tokenUrl), response.toErrorResponse());
             }
 
-            throw new SdkServiceException(String
+            throw new AuthSdkServiceException(String
                 .format("Unexpected response [%s] from tokenUrl [%s]: %s", responseCode,
                     this.tokenUrl, httpResponse.getContent()), response.toErrorResponse());
         }
@@ -195,19 +195,19 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         HTTPRequest httpRequest = createTokenRequest().toHTTPRequest();
         httpRequest
             .setHeader("User-Agent",
-                ProjectProperties.get().getFormattedUserAgent());
+                ProjectProperties.get(this.getClass()).getFormattedUserAgent("tmc-auth"));
 
         HTTPResponse response;
         try {
             response = httpRequest.send();
         } catch (Throwable e) {
-            throw new SdkServiceException(String
+            throw new AuthSdkServiceException(String
                 .format("Unexpected issue communicating with tokenUrl [%s]", this.tokenUrl), e);
         }
         try {
             return TokenResponse.parse(response);
         } catch (Throwable e) {
-            throw new SdkClientException(String
+            throw new AuthSdkClientException(String
                 .format("Unexpected issue parsing token response: [%s]", response.getContent()), e);
         }
     }

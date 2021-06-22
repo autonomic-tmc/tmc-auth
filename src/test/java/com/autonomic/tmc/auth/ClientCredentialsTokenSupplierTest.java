@@ -34,9 +34,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.of;
 import static org.mockito.Mockito.when;
 
-import com.autonomic.tmc.auth.exception.ProjectProperties;
-import com.autonomic.tmc.auth.exception.SdkClientException;
-import com.autonomic.tmc.auth.exception.SdkServiceException;
+import com.autonomic.tmc.auth.exception.AuthSdkClientException;
+import com.autonomic.tmc.auth.exception.AuthSdkServiceException;
+import com.autonomic.tmc.exception.ProjectProperties;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import java.net.URISyntaxException;
@@ -93,15 +93,15 @@ class ClientCredentialsTokenSupplierTest {
         RuntimeException cause = new RuntimeException("Bada!");
         final String expectedMessage = "Boom!";
         return Stream.of(
-            of(expectedMessage, new SdkClientException(expectedMessage, cause), SdkClientException.class),
-            of(expectedMessage, new SdkServiceException(expectedMessage, cause), SdkServiceException.class),
-            of("Undocumented exception occurred", new RuntimeException(expectedMessage), SdkClientException.class)
+            of(expectedMessage, new AuthSdkClientException(expectedMessage, cause), AuthSdkClientException.class),
+            of(expectedMessage, new AuthSdkServiceException(expectedMessage, cause), AuthSdkServiceException.class),
+            of("Undocumented exception occurred", new RuntimeException(expectedMessage), AuthSdkClientException.class)
         );
     }
 
     @Test
     void actuallyValidUrl_hasInvalidCharacters_wrapsAndPropagatesException() {
-        assertThatExceptionOfType(SdkServiceException.class).isThrownBy(() -> {
+        assertThatExceptionOfType(AuthSdkServiceException.class).isThrownBy(() -> {
             ClientCredentialsTokenSupplier.builder()
                 .clientSecret("a-secret")
                 .clientId("a-client-id")
@@ -116,7 +116,7 @@ class ClientCredentialsTokenSupplierTest {
 
         @Test
         void rfc2396_tokenUrlSyntax_throwsSdkClientException() {
-            assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> {
+            assertThatExceptionOfType(AuthSdkClientException.class).isThrownBy(() -> {
                 ClientCredentialsTokenSupplier.builder()
                     .clientSecret("a-secret")
                     .clientId("a-client-id")
@@ -149,7 +149,7 @@ class ClientCredentialsTokenSupplierTest {
 
         @Test
         void malFormedTokenUrl_throwsSdkClientException() {
-            assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> ClientCredentialsTokenSupplier.builder()
+            assertThatExceptionOfType(AuthSdkClientException.class).isThrownBy(() -> ClientCredentialsTokenSupplier.builder()
                 .clientSecret("a-secret")
                 .clientId("a-client-id")
                 .tokenUrl("\\\\")
@@ -160,7 +160,7 @@ class ClientCredentialsTokenSupplierTest {
 
         @Test
         void cannot_construct_without_clientId() {
-            assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> ClientCredentialsTokenSupplier.builder()
+            assertThatExceptionOfType(AuthSdkClientException.class).isThrownBy(() -> ClientCredentialsTokenSupplier.builder()
                 .clientId(null)
                 .clientSecret("a-secret")
                 .build())
@@ -170,7 +170,7 @@ class ClientCredentialsTokenSupplierTest {
 
         @Test
         void cannot_construct_without_clientSecret() {
-            assertThatExceptionOfType(SdkClientException.class).isThrownBy(() -> ClientCredentialsTokenSupplier.builder()
+            assertThatExceptionOfType(AuthSdkClientException.class).isThrownBy(() -> ClientCredentialsTokenSupplier.builder()
                 .clientId("a-client-id")
                 .clientSecret(null)
                 .build())
@@ -195,7 +195,7 @@ class ClientCredentialsTokenSupplierTest {
 
         // an auth failure exception is thrown when token is requested
         assertThatThrownBy(tokenSupplier::get)
-            .isInstanceOf(SdkServiceException.class)
+            .isInstanceOf(AuthSdkServiceException.class)
             .hasMessageContaining("Authorization failed for user [")
             .hasMessageContaining("at tokenUrl [")
             .hasFieldOrPropertyWithValue("httpStatusCode", responseCode);
@@ -218,7 +218,7 @@ class ClientCredentialsTokenSupplierTest {
 
         // a communication exception is thrown when token is requested
         assertThatThrownBy(tokenSupplier::get)
-            .isInstanceOf(SdkServiceException.class)
+            .isInstanceOf(AuthSdkServiceException.class)
             .hasMessageContaining("Unexpected response [")
             .hasMessageContaining("from tokenUrl [")
             .hasFieldOrPropertyWithValue("httpStatusCode", responseCode);
@@ -236,7 +236,7 @@ class ClientCredentialsTokenSupplierTest {
             .build();
 
         // an exception is thrown when token is requested
-        assertThrows(SdkServiceException.class, tokenSupplier::get);
+        assertThrows(AuthSdkServiceException.class, tokenSupplier::get);
     }
 
     @Test
@@ -275,7 +275,7 @@ class ClientCredentialsTokenSupplierTest {
         tokenSupplier.get();
 
         authServer.verify(1, postRequestedFor(urlEqualTo("/relative-token-url")).withHeader("User-Agent", equalTo(
-            ProjectProperties.get().getFormattedUserAgent())));
+            ProjectProperties.get(ClientCredentialsTokenSupplier.class).getFormattedUserAgent("tmc-auth"))));
     }
 
     @Test
