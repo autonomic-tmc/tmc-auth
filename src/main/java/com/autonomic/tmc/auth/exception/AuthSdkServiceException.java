@@ -21,7 +21,6 @@ package com.autonomic.tmc.auth.exception;
 
 import static java.util.Optional.ofNullable;
 
-import com.autonomic.tmc.exception.SdkClientException;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.TokenErrorResponse;
 import java.util.Objects;
@@ -36,7 +35,7 @@ public class AuthSdkServiceException extends com.autonomic.tmc.exception.SdkServ
     }
 
     public AuthSdkServiceException(String clientMessage, TokenErrorResponse errorResponse) {
-        super(buildMessage(clientMessage, errorResponse), SdkClientException.class);
+        super(buildMessage(clientMessage, errorResponse), AuthSdkServiceException.class);
         if (Objects.nonNull(errorResponse)) {
             final ErrorObject error = ofNullable(errorResponse.getErrorObject())
                 .orElseGet(() -> new ErrorObject("0"));

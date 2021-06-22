@@ -62,7 +62,7 @@ jobs:
           name: gradle build
           command: |
             cd ~/repo/examples/gradle-example
-            ./gradlew build -x test
+            ./gradlew build -x test -Ptmc-auth.version=LOCAL-SNAPSHOT
       - persist_to_workspace:
           root: /root
           paths:
@@ -106,7 +106,7 @@ jobs:
           name: Run gradle example test
           command: |
             cd ~/repo/examples/gradle-example
-            ./gradlew test
+            ./gradlew test -Ptmc-auth.version=LOCAL-SNAPSHOT
 
       - store_test_results:
           path: ~/test-output
