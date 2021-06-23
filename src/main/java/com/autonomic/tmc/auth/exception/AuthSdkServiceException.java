@@ -24,10 +24,12 @@ import static java.util.Optional.ofNullable;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.TokenErrorResponse;
 import java.util.Objects;
+import lombok.Getter;
 
 @SuppressWarnings("squid:S110")
 public class AuthSdkServiceException extends com.autonomic.tmc.exception.SdkServiceException {
 
+    @Getter
     private int httpStatusCode = 500;
 
     public AuthSdkServiceException(String clientMessage, Throwable cause) {
@@ -41,10 +43,6 @@ public class AuthSdkServiceException extends com.autonomic.tmc.exception.SdkServ
                 .orElseGet(() -> new ErrorObject("0"));
             httpStatusCode = error.getHTTPStatusCode();
         }
-    }
-
-    public int getHttpStatusCode() {
-        return httpStatusCode;
     }
 
     private static String buildMessage(String clientMessage, TokenErrorResponse errorResponse) {
