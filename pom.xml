@@ -39,7 +39,11 @@
   </properties>
 
   <dependencies>
-
+    <dependency>
+      <groupId>com.autonomic.tmc</groupId>
+      <artifactId>tmc-oss-sdk-common</artifactId>
+      <version>1.0.0-beta</version>
+    </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>

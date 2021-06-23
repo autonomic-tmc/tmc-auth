@@ -19,33 +19,41 @@
  */
 package com.autonomic.tmc.auth.exception;
 
-import static com.autonomic.tmc.auth.exception.ProjectProperties.DEFAULT_NAME;
-import static com.autonomic.tmc.auth.exception.ProjectProperties.DEFAULT_VERSION;
 import static java.util.Optional.ofNullable;
 
-import lombok.extern.slf4j.Slf4j;
+import com.nimbusds.oauth2.sdk.ErrorObject;
+import com.nimbusds.oauth2.sdk.TokenErrorResponse;
+import java.util.Objects;
+import lombok.Getter;
 
-@Slf4j
-public class BaseSdkException extends RuntimeException {
+@SuppressWarnings("squid:S110")
+public class AuthSdkServiceException extends com.autonomic.tmc.exception.SdkServiceException {
 
-    BaseSdkException(String message) {
-        super(message);
-        log.warn(message);
+    @Getter
+    private int httpStatusCode = 500;
+
+    public AuthSdkServiceException(String clientMessage, Throwable cause) {
+        super(clientMessage, cause, AuthSdkServiceException.class);
     }
 
-    BaseSdkException(String message, Throwable cause) {
-        super(message, cause);
-        log.warn(message, cause);
-    }
-
-    static String buildMessage(ErrorSourceType errorSourceType, String clientMessage) {
-        try {
-            final ProjectProperties properties = ProjectProperties.get();
-            final String name = ofNullable(properties.getName()).orElse(DEFAULT_NAME);
-            final String version = ofNullable(properties.getVersion()).orElse(DEFAULT_VERSION);
-            return String.format("%s-%s-%s: %s.", name, version, errorSourceType, clientMessage);
-        } catch (Throwable e) {
-            return DEFAULT_NAME + "~" + DEFAULT_VERSION + "~" + errorSourceType.toString() + clientMessage;
+    public AuthSdkServiceException(String clientMessage, TokenErrorResponse errorResponse) {
+        super(buildMessage(clientMessage, errorResponse), AuthSdkServiceException.class);
+        if (Objects.nonNull(errorResponse)) {
+            final ErrorObject error = ofNullable(errorResponse.getErrorObject())
+                .orElseGet(() -> new ErrorObject("0"));
+            httpStatusCode = error.getHTTPStatusCode();
         }
+    }
+
+    private static String buildMessage(String clientMessage, TokenErrorResponse errorResponse) {
+        StringBuilder sb = new StringBuilder(clientMessage);
+        if (Objects.nonNull(errorResponse)) {
+            final ErrorObject error = ofNullable(errorResponse.getErrorObject())
+                .orElseGet(() -> new ErrorObject("0"));
+            sb.append(String.format("Error: code=%s and httpStatusCode=%s",
+                ofNullable(error.getCode()).orElseGet(()->"0"),
+                error.getHTTPStatusCode()));
+        }
+        return sb.toString();
     }
 }

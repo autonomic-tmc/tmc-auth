@@ -4,7 +4,7 @@ import static java.lang.String.format;
 
 import com.autonomic.tmc.auth.ClientCredentialsTokenSupplier;
 import com.autonomic.tmc.auth.TokenSupplier;
-import com.autonomic.tmc.auth.exception.BaseSdkException;
+import com.autonomic.tmc.exception.BaseSdkException;
 import com.google.common.annotations.VisibleForTesting;
 import io.grpc.Channel;
 import java.net.MalformedURLException;

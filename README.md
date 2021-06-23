@@ -58,9 +58,9 @@ try {
 
 The [ClientCredentialsTokenSupplier.get()](src/main/java/com/autonomic/tmc/auth/ClientCredentialsTokenSupplier.java) primarily throws two exceptions:
 
-[SdkClientException](src/main/java/com/autonomic/tmc/auth/exception/SdkClientException.java) - An issue faced while parsing the tokenUrl or unable to parse the service response.
+[AuthSdkClientException](src/main/java/com/autonomic/tmc/auth/exception/AuthSdkClientException.java) - An issue faced while parsing the tokenUrl or unable to parse the service response.
 
-[SdkServiceException](src/main/java/com/autonomic/tmc/auth/exception/SdkServiceException.java) - Your credentials are incorrect and should be corrected before calling again. Or, there is another issue while communicating with the service.
+[AuthSdkServiceException](src/main/java/com/autonomic/tmc/auth/exception/AuthSdkServiceException.java) - Your credentials are incorrect and should be corrected before calling again. Or, there is another issue while communicating with the service.
 
 ## Building
 
