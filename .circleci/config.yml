@@ -145,7 +145,7 @@ jobs:
           at: /root
       - run:
           name: Analyze on SonarCloud
-          command: ../sonar.sh
+          command: /root/sonar.sh
 
   #publish artifact to OSS repo
   publish-public:
