@@ -17,7 +17,7 @@ executors:
   sonar-image:
     working_directory: ~/repo
     environment:
-      LANGUAGE: JAVA
+      LANGUAGE: JAVA-MULTI
       JAVA_TOOL_OPTIONS: -Xmx1024m
     docker:
       - image: docker.cloudsmith.io/autonomic/private-images/sonar
