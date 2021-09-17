@@ -47,6 +47,8 @@ To use this settings file, it needs to either be placed in your `~/.m2` director
 
 Add the `tmc-auth` client library to the `<dependencies>` section of your pom.xml. See the [pom.xml](pom.xml) file for an example.
 
+By default, our example uses the `LOCAL-SNAPSHOT` version of the `tmc-auth` client library. You can modify the example to use a different, released version listed on the [Github releases](https://github.com/autonomic-tmc/tmc-auth/releases) page. When using a different version, you might need to make code changes to the example.
+
 ### Optional: Configuration for Another Environment
 
 By default, this example assumes you want to connect to Autonomic's production environment.  However, Autonomic may have provided you access to another environment for testing and validation. To test tmc-auth in another environment, you should set the following value:

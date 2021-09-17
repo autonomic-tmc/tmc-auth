@@ -14,6 +14,15 @@ executors:
         auth:
           username: ${CS_PUBLIC_USERNAME}
           password: ${CS_PUBLIC_API_TOKEN}
+  snapshot-publisher-image:
+    working_directory: ~/repo
+    environment:
+      JAVA_TOOL_OPTIONS: -Xmx1024m
+    docker:
+      - image: docker.cloudsmith.io/autonomic/private-images/java
+        auth:
+          username: ${CS_PUBLIC_USERNAME}
+          password: ${CS_PUBLIC_API_TOKEN}
   sonar-image:
     working_directory: /root/repo
     environment:
@@ -150,13 +159,42 @@ jobs:
   #publish artifact to OSS repo
   publish-public:
     executor: java-image
+    working_directory: /root/repo/
     steps:
       - checkout
       - restore_cache:
           keys:
             - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
-      - run: mvn versions:set -DnewVersion=${CIRCLE_TAG}
-      - run: mvn deploy -Prun-revapi,public
+      - run:
+          name: Set new version
+          command: mvn versions:set -DnewVersion=${CIRCLE_TAG}
+      - run:
+          name: Publish to tmc-auth
+          command: /root/publish.sh publish_public
+
+  private-snapshot-dependency-track:
+    executor: snapshot-publisher-image
+    working_directory: /root/repo
+    steps:
+      - attach_workspace:
+          at: /root
+      - run:
+          name: set new version
+          command: mvn versions:set -DnewVersion=LATEST-SNAPSHOT
+      - run:
+          name: Publish tmc-auth-private to au-tmc-snapshots
+          command: /root/publish.sh publish_snapshot
+      - run:
+          name: Upload to Dependency Track
+          command: mvn validate -Ddependency-track.projectName=${CIRCLE_PROJECT_REPONAME} -Pdependency-track
+
+  push-to-public:
+    executor: snapshot-publisher-image
+    steps:
+      - checkout
+      - run:
+          name: Push to public repo
+          command: /root/publish.sh push_public tmc-auth ${CIRCLE_BRANCH} ${CIRCLE_BRANCH}
 
   dependency-track:
     executor: java-image
@@ -168,7 +206,7 @@ jobs:
       - run: mvn versions:set -DnewVersion=${CIRCLE_TAG}
       - run:
           name: Upload to Dependency Track
-          command: mvn validate -Pdependency-track
+          command: mvn validate -Ddependency-track.projectName=${CIRCLE_PROJECT_REPONAME} -Pdependency-track
 
 workflows:
   version: 2.1
@@ -198,16 +236,26 @@ workflows:
           context:
             - tmc-oss-context
             - tmc-cloudsmith-context
-      - dependency-track:
+      - private-snapshot-dependency-track:
+          context:
+            - tmc-cloudsmith-context
+            - tmc-oss-context
+          requires:
+            - test
           filters:
             branches:
-              only: master
-          requires:
-            - sonar
+              only: rc
+      - push-to-public:
           context:
-            - tmc-oss-context
             - tmc-cloudsmith-context
-
+            - tmc-oss-context
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - main
+                - /release\/.*/
   release:
     jobs:
       #Run Publish on GitHub release

@@ -2,11 +2,11 @@
  * ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
  * tmc-auth
  * ——————————————————————————————————————————————————————————————————————————————
- * Copyright (C) 2016 - 2019 Autonomic, LLC - All rights reserved
+ * Copyright (C) 2016 - 2021 Autonomic, LLC
  * ——————————————————————————————————————————————————————————————————————————————
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
- * the License at:
+ * the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -14,7 +14,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations
- * under the License
+ * under the License.
  * ______________________________________________________________________________
  */
 package com.autonomic.tmc.auth;
@@ -36,13 +36,19 @@ import static org.mockito.Mockito.when;
 
 import com.autonomic.tmc.auth.exception.AuthSdkClientException;
 import com.autonomic.tmc.auth.exception.AuthSdkServiceException;
-import com.autonomic.tmc.exception.ProjectProperties;
+import com.autonomic.tmc.environment.EnvironmentDetails;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -268,14 +274,15 @@ class ClientCredentialsTokenSupplierTest {
     }
 
     @Test
-    void sends_a_user_agent_to_server() {
+    void sends_a_user_agent_to_server() throws IOException, XmlPullParserException {
         startAuthStub();
         ClientCredentialsTokenSupplier tokenSupplier = buildSupplierForStub();
 
         tokenSupplier.get();
 
+        final Model model = new MavenXpp3Reader().read(new FileReader("pom.xml"));
         authServer.verify(1, postRequestedFor(urlEqualTo("/relative-token-url")).withHeader("User-Agent", equalTo(
-            ProjectProperties.get(ClientCredentialsTokenSupplier.class).getFormattedUserAgent("tmc-auth"))));
+            new EnvironmentDetails(model.getArtifactId(),model.getVersion()).get())));
     }
 
     @Test

@@ -1,6 +1,6 @@
 /*-
  * ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
- * tmc-auth
+ * TMC Auth SDK
  * ——————————————————————————————————————————————————————————————————————————————
  * Copyright (C) 2016 - 2021 Autonomic, LLC
  * ——————————————————————————————————————————————————————————————————————————————
@@ -17,23 +17,35 @@
  * under the License.
  * ______________________________________________________________________________
  */
-/**
- * Using the <code>tmc-auth</code> library with your Autonomic provided client credentials, you can obtain an access token
- * that can be used when calling any of the Transportation Mobility Cloud (TMC) services. With this library,
- * you don't need to worry about the TMC's expiring tokens. The token you <code>get()</code> is always valid. If a token
- * expires, this library will automatically get a new one.
- *
- * <p>Using this library is easy:</p>
- * <pre>
- *     TokenSupplier supplier = ClientCredentialsTokenSupplier.builder()
- *         .clientId("{your-client-id}")
- *         .clientSecret("{your-client-secret}")
- *         .tokenUrl("{your-token-url-if-not-using-default}")
- *         .build());
- *
- *     String token = supplier.get()
- * </pre>
- *
- * Calling <code>supplier.get()</code> before passing the client credential token ensures that you will always have a valid token.
- */
 package com.autonomic.tmc.auth;
+
+import com.autonomic.tmc.environment.EnvironmentDetails;
+import java.io.IOException;
+import java.util.Properties;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public final class ProjectProperties {
+
+    private static final Properties properties = new Properties();
+    @Getter private static String artifactId = "tmc-auth";
+    @Getter private static String version = "unknown";
+    @Getter private static final EnvironmentDetails environmentDetails;
+
+    static {
+        try {
+            properties.load(ProjectProperties.class.getClassLoader()
+                .getResourceAsStream("project.properties"));
+            artifactId = properties.getProperty("artifactId", "tmc-auth");
+            version = properties.getProperty("version", "unknown");
+        } catch (IOException e) {
+            log.warn("Could not find project.properties file, version of SDK is unknown.", e);
+        }
+        environmentDetails = new EnvironmentDetails(artifactId, version);
+    }
+
+    private ProjectProperties() {
+        // Hide constructor
+    }
+}

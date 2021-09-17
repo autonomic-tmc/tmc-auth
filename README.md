@@ -6,9 +6,19 @@ Using the tmc-auth SDK with credentials provided by Autonomic, you can obtain a 
 
 With this library, you don't need to worry about expiring tokens. The token you `get()` is always valid.  If a token expires, this library will automatically get a new one.
 
-## Let's get authenticated with an example application
+## Getting started: Building the SDK
+
+```shell
+mvn clean install
+```
+
+> You must run this build step before you run any of our [examples](examples).
+
+## Get authenticated with an example application
 
 We have built a runnable example application that demonstrates how to authenticate on the TMC using the `tmc-auth` SDK. This example application will login and retrieve an access token which is used when accessing TMC services.
+
+> You must run the [build step](#getting-started-building-the-sdk) before you run any of the following examples.
 
 - [Getting authenticated using the Maven Example](./examples/maven-example)
 - [Getting authenticated using the Gradle Example](./examples/gradle-example)
@@ -54,20 +64,6 @@ try {
 | clientSecret | This is your TMC Client secret provided to you by Au. | Required | none |
 | tokenUrl | The authentication url | Optional | https://accounts.autonomic.ai/v1/auth/oidc/token|
 
-## Troubleshooting
-
-The [ClientCredentialsTokenSupplier.get()](src/main/java/com/autonomic/tmc/auth/ClientCredentialsTokenSupplier.java) primarily throws two exceptions:
-
-[AuthSdkClientException](src/main/java/com/autonomic/tmc/auth/exception/AuthSdkClientException.java) - An issue faced while parsing the tokenUrl or unable to parse the service response.
-
-[AuthSdkServiceException](src/main/java/com/autonomic/tmc/auth/exception/AuthSdkServiceException.java) - Your credentials are incorrect and should be corrected before calling again. Or, there is another issue while communicating with the service.
-
-## Building
-
-```shell
-mvn clean install
-```
-
 ## Running the Integration Tests
 
 *NOTE:* You will need to run the `integration-tests` profile with the following environment variables to run integration tests.
@@ -88,6 +84,14 @@ For example:
 ```shell
 (export TMC_CLIENT_ID=your-client-id && export TMC_CLIENT_SECRET=your-client-secret && mvn -Pintegration-tests clean verify)
 ```
+
+## Troubleshooting
+
+The [ClientCredentialsTokenSupplier.get()](src/main/java/com/autonomic/tmc/auth/ClientCredentialsTokenSupplier.java) primarily throws two exceptions:
+
+[AuthSdkClientException](src/main/java/com/autonomic/tmc/auth/exception/AuthSdkClientException.java) - An issue faced while parsing the tokenUrl or unable to parse the service response.
+
+[AuthSdkServiceException](src/main/java/com/autonomic/tmc/auth/exception/AuthSdkServiceException.java) - Your credentials are incorrect and should be corrected before calling again. Or, there is another issue while communicating with the service.
 
 ## 3rd Party Components
 

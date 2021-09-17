@@ -55,4 +55,7 @@ Be sure to give yourself enough time to review the PR.  We are looking for good 
 ***
 ## Reviewers for this PR: 
 - [ ] @autonomic-tmc/sdk-team
-- [ ] @autonomic-tmc/fe-pr-reviewers
+
+## Reviewers for PR when merging to main:
+- [ ] Legal team
+- [ ] Security team

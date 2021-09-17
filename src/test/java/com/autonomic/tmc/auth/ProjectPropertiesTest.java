@@ -1,6 +1,6 @@
 /*-
  * ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
- * tmc-auth
+ * TMC Auth SDK
  * ——————————————————————————————————————————————————————————————————————————————
  * Copyright (C) 2016 - 2021 Autonomic, LLC
  * ——————————————————————————————————————————————————————————————————————————————
@@ -17,23 +17,42 @@
  * under the License.
  * ______________________________________________________________________________
  */
-/**
- * Using the <code>tmc-auth</code> library with your Autonomic provided client credentials, you can obtain an access token
- * that can be used when calling any of the Transportation Mobility Cloud (TMC) services. With this library,
- * you don't need to worry about the TMC's expiring tokens. The token you <code>get()</code> is always valid. If a token
- * expires, this library will automatically get a new one.
- *
- * <p>Using this library is easy:</p>
- * <pre>
- *     TokenSupplier supplier = ClientCredentialsTokenSupplier.builder()
- *         .clientId("{your-client-id}")
- *         .clientSecret("{your-client-secret}")
- *         .tokenUrl("{your-token-url-if-not-using-default}")
- *         .build());
- *
- *     String token = supplier.get()
- * </pre>
- *
- * Calling <code>supplier.get()</code> before passing the client credential token ensures that you will always have a valid token.
- */
 package com.autonomic.tmc.auth;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class ProjectPropertiesTest {
+
+    private static Model model;
+
+    @BeforeAll
+    public static void setUp() throws IOException, XmlPullParserException {
+        model = new MavenXpp3Reader().read(new FileReader("pom.xml"));
+    }
+
+    @Test
+    void getArtifactId() {
+        assertThat(ProjectProperties.getArtifactId()).isEqualTo(model.getArtifactId());
+    }
+
+    @Test
+    void getVersion() {
+        assertThat(ProjectProperties.getVersion()).isEqualTo(model.getVersion());
+    }
+
+    @Test
+    void getEnvironmentDetails() {
+        assertThat(ProjectProperties.getEnvironmentDetails()).isNotNull();
+    }
+}

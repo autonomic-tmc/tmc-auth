@@ -13,7 +13,7 @@
   <parent>
     <groupId>com.autonomic.tmc</groupId>
     <artifactId>tmc-oss-parent</artifactId>
-    <version>1.3.1-beta</version>
+    <version>2.0.1</version>
   </parent>
 
   <name>TMC Auth SDK</name>
@@ -26,8 +26,8 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <tmc.integration.tests/>
     <lombok.version>1.18.0</lombok.version>
-    <oauth2.version>6.23</oauth2.version>
-    <maven-model.version>3.6.3</maven-model.version>
+    <oauth2.version>9.9.1</oauth2.version>
+    <maven-model.version>3.8.2</maven-model.version>
     <slf4j.version>1.7.30</slf4j.version>
     <junit.version>5.5.2</junit.version>
     <junit.platform.version>1.5.2</junit.platform.version>
@@ -42,7 +42,7 @@
     <dependency>
       <groupId>com.autonomic.tmc</groupId>
       <artifactId>tmc-oss-sdk-common</artifactId>
-      <version>1.0.0-beta</version>
+      <version>3.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -141,6 +141,13 @@
   </dependencies>
 
   <build>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -230,6 +237,48 @@
             <id>attach-javadocs</id>
             <goals>
               <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>first</id>
+            <goals>
+              <goal>update-project-license</goal>
+              <goal>update-file-header</goal>
+            </goals>
+            <phase>process-sources</phase>
+            <configuration>
+              <roots>
+                <root>src/main</root>
+                <root>src/test</root>
+                <root>examples/gradle-example/src/main</root>
+                <root>examples/gradle-example/src/test</root>
+                <root>examples/maven-example/src/main</root>
+                <root>examples/maven-example/src/test</root>
+              </roots>
+              <includes>
+                <include>**/*.java</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>whitespace-maven-plugin</artifactId>
+        <groupId>com.github.dantwining.whitespace-maven-plugin</groupId>
+        <executions>
+          <execution>
+            <phase>process-sources</phase>
+            <configuration>
+              <projectBasedir>.</projectBasedir>
+            </configuration>
+            <goals>
+              <goal>trim</goal>
             </goals>
           </execution>
         </executions>
