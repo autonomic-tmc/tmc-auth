@@ -13,7 +13,7 @@ plugins {
 
 repositories {
     mavenLocal()
-    jcenter()
+    mavenCentral()
     maven {
         url "https://dl.cloudsmith.io/public/autonomic/au-tmc-oss/maven/"
     }

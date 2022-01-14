@@ -13,7 +13,7 @@
   <parent>
     <groupId>com.autonomic.tmc</groupId>
     <artifactId>tmc-oss-parent</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
   </parent>
 
   <name>TMC Auth SDK</name>
@@ -42,7 +42,7 @@
     <dependency>
       <groupId>com.autonomic.tmc</groupId>
       <artifactId>tmc-oss-sdk-common</artifactId>
-      <version>3.0.0</version>
+      <version>3.0.1</version>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -225,19 +225,6 @@
                 </rule>
               </rules>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.1.0</version>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>

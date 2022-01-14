@@ -12,7 +12,7 @@ RESULTING FROM ANY USE OR DISTRIBUTION OF THIS LIST.
 
 In case of any license issues related to TMC Auth SDK, please contact support@autonomic.ai.
 
-Date Generated: 2021-09-14 21:27
+Date Generated: 2022-01-12 15:53
 
  (Apache License, Version 2.0) TMC OSS SDK Common Classes (com.autonomic.tmc:tmc-oss-sdk-common:3.0.0 - https://github.com/autonomic-tmc/tmc-oss-sdk-common)
  (Apache License, Version 2.0) Jackson-annotations (com.fasterxml.jackson.core:jackson-annotations:2.10.2 - http://github.com/FasterXML/jackson)

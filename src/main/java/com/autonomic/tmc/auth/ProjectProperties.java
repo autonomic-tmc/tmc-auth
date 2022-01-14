@@ -2,7 +2,7 @@
  * ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
  * TMC Auth SDK
  * ——————————————————————————————————————————————————————————————————————————————
- * Copyright (C) 2016 - 2021 Autonomic, LLC
+ * Copyright (C) 2016 - 2022 Autonomic, LLC
  * ——————————————————————————————————————————————————————————————————————————————
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,11 +36,11 @@ public final class ProjectProperties {
     static {
         try {
             properties.load(ProjectProperties.class.getClassLoader()
-                .getResourceAsStream("project.properties"));
+                .getResourceAsStream("auth.properties"));
             artifactId = properties.getProperty("artifactId", "tmc-auth");
             version = properties.getProperty("version", "unknown");
         } catch (IOException e) {
-            log.warn("Could not find project.properties file, version of SDK is unknown.", e);
+            log.warn("Could not find auth.properties file, version of SDK is unknown.", e);
         }
         environmentDetails = new EnvironmentDetails(artifactId, version);
     }
