@@ -26,12 +26,12 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <tmc.integration.tests/>
     <lombok.version>1.18.0</lombok.version>
-    <oauth2.version>9.9.1</oauth2.version>
+    <oauth2.version>11.18</oauth2.version>
     <maven-model.version>3.8.2</maven-model.version>
-    <slf4j.version>1.7.30</slf4j.version>
+    <slf4j.version>1.7.36</slf4j.version>
     <junit.version>5.5.2</junit.version>
     <junit.platform.version>1.5.2</junit.platform.version>
-    <wiremock.version>2.26.0</wiremock.version>
+    <wiremock.version>2.35.2</wiremock.version>
     <mockito-core.version>2.23.0</mockito-core.version>
     <hamcrest-core.version>2.1</hamcrest-core.version>
     <assertj-core.version>3.11.1</assertj-core.version>
@@ -73,8 +73,18 @@
     - - - - - - - - - - - - - - - - - - -->
     <dependency>
       <groupId>com.github.tomakehurst</groupId>
-      <artifactId>wiremock</artifactId>
+      <artifactId>wiremock-jre8</artifactId>
       <version>${wiremock.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>jakarta.activation</groupId>
+          <artifactId>jakarta.activation-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>jakarta.xml.bind</groupId>
+          <artifactId>jakarta.xml.bind-api</artifactId>
+        </exclusion>
+      </exclusions>
       <scope>test</scope>
     </dependency>
 

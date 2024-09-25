@@ -4,7 +4,7 @@ package com.autonomic.tmc.auth;
  * ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
  * tmc-auth
  * ——————————————————————————————————————————————————————————————————————————————
- * Copyright (C) 2016 - 2022 Autonomic, LLC
+ * Copyright (C) 2016 - 2024 Autonomic, LLC
  * ——————————————————————————————————————————————————————————————————————————————
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -48,10 +48,10 @@ import lombok.NonNull;
 @EqualsAndHashCode
 public class Token {
 
-    private Clock clock = java.time.Clock.systemDefaultZone();
+    private final Clock clock = java.time.Clock.systemDefaultZone();
 
-    private String value;
-    private Instant expiration;
+    private final String value;
+    private final Instant expiration;
 
     /**
      * Public Constructor.
