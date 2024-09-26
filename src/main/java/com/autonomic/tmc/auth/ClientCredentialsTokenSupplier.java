@@ -2,7 +2,7 @@
  * ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
  * tmc-auth
  * ——————————————————————————————————————————————————————————————————————————————
- * Copyright (C) 2016 - 2022 Autonomic, LLC
+ * Copyright (C) 2016 - 2024 Autonomic, LLC
  * ——————————————————————————————————————————————————————————————————————————————
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -182,7 +182,7 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
 
             throw new AuthSdkServiceException(String
                 .format("Unexpected response [%s] from tokenUrl [%s]: %s", responseCode,
-                    this.tokenUrl, httpResponse.getContent()), response.toErrorResponse());
+                    this.tokenUrl, httpResponse.getBody()), response.toErrorResponse());
         }
 
         AccessTokenResponse successResponse = response.toSuccessResponse();
@@ -197,15 +197,15 @@ public class ClientCredentialsTokenSupplier implements TokenSupplier {
         HTTPResponse response;
         try {
             response = httpRequest.send();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new AuthSdkServiceException(String
                 .format("Unexpected issue communicating with tokenUrl [%s]", this.tokenUrl), e);
         }
         try {
             return TokenResponse.parse(response);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new AuthSdkClientException(String
-                .format("Unexpected issue parsing token response: [%s]", response.getContent()), e);
+                .format("Unexpected issue parsing token response: [%s]", response.getBody()), e);
         }
     }
 

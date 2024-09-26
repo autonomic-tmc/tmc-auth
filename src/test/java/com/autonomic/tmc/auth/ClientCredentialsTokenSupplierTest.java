@@ -2,7 +2,7 @@
  * ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
  * tmc-auth
  * ——————————————————————————————————————————————————————————————————————————————
- * Copyright (C) 2016 - 2022 Autonomic, LLC
+ * Copyright (C) 2016 - 2024 Autonomic, LLC
  * ——————————————————————————————————————————————————————————————————————————————
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,7 +39,6 @@ import com.autonomic.tmc.auth.exception.AuthSdkServiceException;
 import com.autonomic.tmc.environment.EnvironmentDetails;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -309,11 +308,39 @@ class ClientCredentialsTokenSupplierTest {
 
         //then the mock auth token was retrieved
         assertEquals("mock-auth-token", token);
+    }
 
+    @Test
+    void receives_invalid_response_body_then_throw_parse_exception() {
+
+        //given a 200 response when params match
+        authServer.stubFor(
+            post("/relative-token-url")
+                .withRequestBody(containing("client_id=a-client-id"))
+                .withRequestBody(containing("client_secret=a-client-secret"))
+                .willReturn(
+                    aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withStatus(200)
+                        .withBody(invalidOauthResponse())
+                )
+        );
+
+        //and a client
+        ClientCredentialsTokenSupplier tokenSupplier = buildSupplierForStub();
+
+        assertThatThrownBy(tokenSupplier::get)
+            .isInstanceOf(AuthSdkClientException.class)
+            .hasMessageContaining("Unexpected issue parsing token")
+            .hasMessageContaining("response: [");
     }
 
     private String sampleOauthResponse() {
         return "{\"access_token\":\"mock-auth-token\",\"expires_in\":\"11\",\"token_type\":\"bearer\"}";
+    }
+
+    private String invalidOauthResponse() {
+        return "{\"invalid_access_token\":\"mock-auth-token\",\"expires_in\":\"11\",\"token_type\":\"bearer\"}";
     }
 
     private void startAuthStub() {
