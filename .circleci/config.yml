@@ -1,12 +1,8 @@
-# Java Maven CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-java/ for more details
-#
 version: 2.1
 
 executors:
   java-image:
-    working_directory: ~/repo
+    working_directory: /root/repo
     environment:
       JAVA_TOOL_OPTIONS: -Xmx1024m
     docker:
@@ -14,8 +10,9 @@ executors:
         auth:
           username: ${JFROG_USERNAME}
           password: ${JFROG_TOKEN}
+
   snapshot-publisher-image:
-    working_directory: ~/repo
+    working_directory: /root/repo
     environment:
       JAVA_TOOL_OPTIONS: -Xmx1024m
     docker:
@@ -23,45 +20,61 @@ executors:
         auth:
           username: ${JFROG_USERNAME}
           password: ${JFROG_TOKEN}
+
   gitleaks-image:
-    working_directory: ~/repo
+    working_directory: /root/repo
     docker:
       - image: ${JFROG_DOCKER_HOST}/tmc-private-images/gitleaks
         auth:
           username: ${JFROG_USERNAME}
           password: ${JFROG_TOKEN}
 
+commands:
+  checkout_https:
+    steps:
+      - run:
+          name: Checkout via HTTPS
+          command: |
+            git clone https://${GITHUB_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git .
+
 jobs:
   scan_secrets:
     executor: gitleaks-image
     steps:
-      - checkout
+      - checkout_https
+      - persist_to_workspace:
+          root: /root
+          paths:
+            - repo
       - run: gitleaks
 
   build:
     executor: java-image
     steps:
-      - checkout
+      - checkout_https
 
       - run: mvn clean
       - run:
           command: |
             cd ~/repo/examples/gradle-example
             ./gradlew clean
-      # Download and cache dependencies
+
       - restore_cache:
           keys:
             - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
+
       - run:
           name: maven install
           command: |
             cd ~/repo
             mvn install dependency:go-offline -DprocessAllModules -DskipTests
+
       - run:
           name: gradle build
           command: |
             cd ~/repo/examples/gradle-example
             ./gradlew build -x test -Ptmc-auth.version=LOCAL-SNAPSHOT
+
       - persist_to_workspace:
           root: /root
           paths:
@@ -124,8 +137,6 @@ jobs:
           at: /root
       - run:
           name: Run Maven Example
-          # M2_HOME so mvn can leverage the cache
-          # unset MAVEN_CONFIG so that mvn will not error
           command: |
             cd ~/repo/examples/maven-example
             export M2_HOME=$MAVEN_CONFIG
@@ -137,12 +148,11 @@ jobs:
             cd ~/repo/examples/gradle-example
             ./run.sh LOCAL-SNAPSHOT
 
-  #publish artifact to OSS repo
   publish-public:
     executor: java-image
     working_directory: /root/repo/
     steps:
-      - checkout
+      - checkout_https
       - restore_cache:
           keys:
             - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
@@ -156,6 +166,7 @@ jobs:
               -Pcloudsmith-autonomic-au-tmc-oss \
               -DaltDeploymentRepository="cloudsmith-autonomic-au-tmc-oss::https://maven.cloudsmith.io/autonomic/au-tmc-oss" \
               -DskipTests
+
   publish-public-jfrog:
     executor: snapshot-publisher-image
     working_directory: /root/repo
@@ -175,12 +186,10 @@ jobs:
   push-to-public:
     executor: snapshot-publisher-image
     steps:
-      - checkout
+      - checkout_https
       - run:
           name: Push to public repo
           command: /root/publish.sh push_public tmc-auth ${CIRCLE_BRANCH} ${CIRCLE_BRANCH}
-
-
 
 workflows:
   version: 2.1
@@ -188,21 +197,21 @@ workflows:
     jobs:
       - scan_secrets:
           context:
-          - tmc-cloudsmith-context
-          - ford-supplier-jfrog-context
+            - tmc-cloudsmith-context
+            - ford-supplier-jfrog-context
       - build:
           requires:
             - scan_secrets
           context:
-          - tmc-cloudsmith-context
-          - ford-supplier-jfrog-context
+            - tmc-cloudsmith-context
+            - ford-supplier-jfrog-context
       - test:
           requires:
             - build
           context:
-          - tmc-oss-context
-          - tmc-cloudsmith-context
-          - ford-supplier-jfrog-context
+            - tmc-oss-context
+            - tmc-cloudsmith-context
+            - ford-supplier-jfrog-context
       - examples:
           requires:
             - build
@@ -210,25 +219,35 @@ workflows:
             - tmc-oss-context
             - tmc-cloudsmith-context
             - ford-supplier-jfrog-context
-#      - push-to-public:
-#          context:
-#            - tmc-cloudsmith-context
-#            - tmc-oss-context
-#            - ford-supplier-jfrog-context
-#          requires:
-#            - test
-#          filters:
-#            branches:
-#              only:
-#                - main
-#                - /release\/.*/
+
   release:
     jobs:
-      #Run Publish on GitHub release
+      - scan_secrets:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+          context:
+            - tmc-cloudsmith-context
+            - ford-supplier-jfrog-context
+
+      - build:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+          requires:
+            - scan_secrets
+          context:
+            - tmc-cloudsmith-context
+            - ford-supplier-jfrog-context
+
       - publish-public:
           context:
-          - tmc-cloudsmith-context
-          - ford-supplier-jfrog-context
+            - tmc-cloudsmith-context
+            - ford-supplier-jfrog-context
           filters:
             tags:
               only: /.*/
@@ -246,4 +265,3 @@ workflows:
           context:
             - tmc-cloudsmith-context
             - ford-supplier-jfrog-context
-
