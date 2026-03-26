@@ -225,6 +225,26 @@ workflows:
   release:
     jobs:
       #Run Publish on GitHub release
+      - scan_secrets:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+          context:
+            - tmc-cloudsmith-context
+            - ford-supplier-jfrog-context
+      - build:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+          requires:
+            - scan_secrets
+          context:
+            - tmc-cloudsmith-context
+            - ford-supplier-jfrog-context
       - publish-public:
           context:
           - tmc-cloudsmith-context
