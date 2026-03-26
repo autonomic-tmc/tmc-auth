@@ -150,6 +150,7 @@ jobs:
           name: Set new version
           command: mvn versions:set -DnewVersion=${CIRCLE_TAG}
       - run:
+          name: Publish to cloudsmith
           command: |
             mvn deploy \
               -Pcloudsmith-autonomic-au-tmc-oss \
