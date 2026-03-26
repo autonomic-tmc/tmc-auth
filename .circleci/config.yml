@@ -6,7 +6,7 @@ version: 2.1
 
 executors:
   java-image:
-    working_directory: ~/repo
+    working_directory: /root/repo
     environment:
       JAVA_TOOL_OPTIONS: -Xmx1024m
     docker:
@@ -15,7 +15,7 @@ executors:
           username: ${JFROG_USERNAME}
           password: ${JFROG_TOKEN}
   snapshot-publisher-image:
-    working_directory: ~/repo
+    working_directory: /root/repo
     environment:
       JAVA_TOOL_OPTIONS: -Xmx1024m
     docker:
@@ -24,7 +24,7 @@ executors:
           username: ${JFROG_USERNAME}
           password: ${JFROG_TOKEN}
   gitleaks-image:
-    working_directory: ~/repo
+    working_directory: /root/repo
     docker:
       - image: ${JFROG_DOCKER_HOST}/tmc-private-images/gitleaks
         auth:
