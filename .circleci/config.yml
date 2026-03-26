@@ -36,6 +36,10 @@ jobs:
     executor: gitleaks-image
     steps:
       - checkout
+      - persist_to_workspace:
+          root: /root
+          paths:
+            - repo
       - run: gitleaks
 
   build:
