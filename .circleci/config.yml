@@ -35,7 +35,8 @@ jobs:
   scan_secrets:
     executor: gitleaks-image
     steps:
-      - checkout
+      - checkout:
+          method: https
       - persist_to_workspace:
           root: /root
           paths:
@@ -45,7 +46,8 @@ jobs:
   build:
     executor: java-image
     steps:
-      - checkout
+      - checkout:
+          method: https
 
       - run: mvn clean
       - run:
@@ -146,7 +148,8 @@ jobs:
     executor: java-image
     working_directory: /root/repo/
     steps:
-      - checkout
+      - checkout:
+          method: https
       - restore_cache:
           keys:
             - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
@@ -179,7 +182,8 @@ jobs:
   push-to-public:
     executor: snapshot-publisher-image
     steps:
-      - checkout
+      - checkout:
+          method: https
       - run:
           name: Push to public repo
           command: /root/publish.sh push_public tmc-auth ${CIRCLE_BRANCH} ${CIRCLE_BRANCH}
