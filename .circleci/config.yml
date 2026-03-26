@@ -29,12 +29,19 @@ executors:
           username: ${JFROG_USERNAME}
           password: ${JFROG_TOKEN}
 
+commands:
+  checkout_https:
+    steps:
+      - run:
+          name: Checkout via HTTPS
+          command: |
+            git clone https://${GITHUB_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git .
+
 jobs:
   scan_secrets:
     executor: gitleaks-image
     steps:
-      - checkout:
-          method: https
+      - checkout_https
       - persist_to_workspace:
           root: /root
           paths:
@@ -44,8 +51,7 @@ jobs:
   build:
     executor: java-image
     steps:
-      - checkout:
-          method: https
+      - checkout_https
 
       - run: mvn clean
       - run:
@@ -146,8 +152,7 @@ jobs:
     executor: java-image
     working_directory: /root/repo/
     steps:
-      - checkout:
-          method: https
+      - checkout_https
       - restore_cache:
           keys:
             - v3-dependencies-{{ checksum "pom.xml" }}-{{ checksum "examples/maven-example/pom.xml" }}-{{ checksum "examples/gradle-example/build.gradle" }}
@@ -181,8 +186,7 @@ jobs:
   push-to-public:
     executor: snapshot-publisher-image
     steps:
-      - checkout:
-          method: https
+      - checkout_https
       - run:
           name: Push to public repo
           command: /root/publish.sh push_public tmc-auth ${CIRCLE_BRANCH} ${CIRCLE_BRANCH}
