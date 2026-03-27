@@ -164,7 +164,7 @@ jobs:
           command: |
             mvn deploy \
               -Pcloudsmith-autonomic-au-tmc-oss \
-              -DaltDeploymentRepository="cloudsmith-autonomic-au-tmc-oss::https://maven.cloudsmith.io/autonomic/au-tmc-oss" \
+              -DaltDeploymentRepository="cloudsmith-autonomic-au-tmc-oss::default::https://maven.cloudsmith.io/autonomic/au-tmc-oss" \
               -DskipTests
 
   publish-public-jfrog:
