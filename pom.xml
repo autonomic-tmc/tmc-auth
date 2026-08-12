@@ -25,8 +25,8 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <tmc.integration.tests/>
-    <lombok.version>1.18.0</lombok.version>
-    <oauth2.version>11.18</oauth2.version>
+    <lombok.version>1.18.36</lombok.version>
+    <oauth2.version>11.38.2</oauth2.version>
     <maven-model.version>3.8.2</maven-model.version>
     <slf4j.version>1.7.36</slf4j.version>
     <junit.version>5.5.2</junit.version>
