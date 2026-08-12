@@ -25,16 +25,16 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <tmc.integration.tests/>
-    <lombok.version>1.18.0</lombok.version>
-    <oauth2.version>11.18</oauth2.version>
-    <maven-model.version>3.8.2</maven-model.version>
+    <lombok.version>1.18.36</lombok.version>
+    <oauth2.version>11.38.2</oauth2.version>
+    <maven-model.version>3.9.16</maven-model.version>
     <slf4j.version>1.7.36</slf4j.version>
     <junit.version>5.5.2</junit.version>
     <junit.platform.version>1.5.2</junit.platform.version>
-    <wiremock.version>2.35.2</wiremock.version>
-    <mockito-core.version>2.23.0</mockito-core.version>
+    <wiremock.version>3.0.1</wiremock.version>
+    <mockito-core.version>5.23.0</mockito-core.version>
     <hamcrest-core.version>2.1</hamcrest-core.version>
-    <assertj-core.version>3.11.1</assertj-core.version>
+    <assertj-core.version>3.27.7</assertj-core.version>
     <awaitility.version>4.0.2</awaitility.version>
   </properties>
 
